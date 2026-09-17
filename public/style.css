@@ -164,6 +164,7 @@ footer a { color: var(--ink); font-weight: 500; }
 .prose h2 { font: 500 22px 'Manrope', sans-serif; letter-spacing: -.7px; margin: 34px 0 10px; }
 .prose p, .prose dd { font-size: 14px; line-height: 1.8; color: #5f6870; margin: 0 0 14px; }
 .prose strong { color: var(--ink); font-weight: 600; }
+.prose strong a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
 .prose code { font: 12px var(--mono); background: var(--soft); padding: 1px 5px; border-radius: 3px; }
 .prose dl { margin: 0; }
 .prose dt { font-weight: 600; color: var(--ink); margin-top: 14px; }

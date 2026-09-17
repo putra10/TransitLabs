@@ -98,4 +98,7 @@ exporter are hand-nudged for a readable schematic, not survey positions.
 ## Deploy
 
 Import the folder into Vercel with framework **Other**, no build command and
-`public` as the output directory. `vercel.json` already says so.
+`public` as the output directory. `vercel.json` already says so. Every page
+loads `/_vercel/insights/script.js` for Vercel Web Analytics; turn Analytics
+on in the project dashboard and it starts counting (locally the script 404s,
+which is harmless).
