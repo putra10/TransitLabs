@@ -22,6 +22,24 @@ export const STATIONS = {
   'UI': [680, 540], 'SMPN 8': [560, 50],
 };
 
+// Real positions for the map view, WGS84 [lat, lon]. Geocoded from
+// OpenStreetMap via Nominatim (2026-09-17); the two marked "est." are halte not
+// mapped there and are placed on their road between neighbouring stops.
+export const GEO = {
+  'UI': [-6.35244, 106.83243],            // Halte Universitas Indonesia, Lenteng Agung Raya
+  'Stasiun UI': [-6.36043, 106.83178], 'Depok Baru': [-6.39113, 106.82169], 'Tanjung Barat': [-6.30804, 106.83895],
+  'Pasar Minggu': [-6.28333, 106.84486], 'Duren Kalibata': [-6.25520, 106.85517], 'Cawang': [-6.24255, 106.85869],
+  'Cawang-Sentral': [-6.25073, 106.87339], 'Cikoko': [-6.24348, 106.85707], 'Tebet': [-6.22640, 106.85844],
+  'Manggarai': [-6.21017, 106.84994], 'Cikini': [-6.19851, 106.84128], 'SMPN 8': [-6.20148, 106.84304],
+  'Sudirman': [-6.20252, 106.82364], 'Dukuh Atas': [-6.20080, 106.82279], 'Galunggung': [-6.20440, 106.82342],
+  'Kuningan': [-6.22885, 106.83322], 'Simpang Kuningan': [-6.23720, 106.82810], 'Tegal Parang': [-6.23950, 106.83550],   // est.
+  'Pancoran': [-6.24310, 106.84397], 'Tegal Mampang': [-6.24019, 106.83091], 'Hotel Maharadja': [-6.24028, 106.82513],
+  'Semanggi': [-6.22039, 106.81323], 'Bendungan Hilir': [-6.21503, 106.81795], 'Senayan': [-6.22430, 106.80568],
+  'Bundaran Senayan': [-6.22799, 106.80079], 'Kejaksaan Agung': [-6.23800, 106.80030],   // est. (Halte ASEAN)
+  'CSW': [-6.23989, 106.79839], 'Blok M': [-6.24444, 106.79812], 'Blok A': [-6.25697, 106.79692],
+  'Fatmawati': [-6.29247, 106.79245], 'Kantor Pos Fatmawati': [-6.29441, 106.79504],
+};
+
 // [dx, dy, text-anchor] relative to the station dot.
 export const LABEL = {
   'Fatmawati': [-14, 4, 'end'], 'Blok A': [-14, 4, 'end'], 'Blok M': [-16, 5, 'end'], 'Kejaksaan Agung': [-14, 4, 'end'],

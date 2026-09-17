@@ -2,8 +2,8 @@
 
 Replays cells 4, 8 and 10 of tgoptggraph.ipynb offline: parses the 64
 candidate routes, prices every hop (field fares first, official formulas as
-fallback), attaches Google Maps travel time from the frozen snapshot, then
-merges station aliases so the web schematic has one node per station.
+fallback), attaches Google Maps travel time from the frozen snapshot, and
+records which display station each raw node belongs to.
 
     python scripts/export_graph.py            # reads scripts/raw/, writes JSON
     python scripts/export_graph.py --refetch  # refresh the two sheet CSVs first
@@ -125,22 +125,6 @@ CANON = {
     "Bus Stop Pasar Minggu": "Pasar Minggu",
     "Senayan Bank Jakarta": "Senayan",
 }
-
-# Schematic positions (lat, lon), hand-nudged for legibility, not survey data.
-STATIONS = {
-    "UI": (-6.325, 106.827), "Stasiun UI": (-6.318, 106.834), "Depok Baru": (-6.345, 106.822),
-    "Tanjung Barat": (-6.295, 106.838), "Pasar Minggu": (-6.278, 106.844), "Duren Kalibata": (-6.256, 106.853),
-    "Cawang": (-6.243, 106.862), "Cawang-Sentral": (-6.247, 106.872), "Cikoko": (-6.240, 106.854),
-    "Tebet": (-6.226, 106.858), "Manggarai": (-6.210, 106.850), "Cikini": (-6.197, 106.841),
-    "SMPN 8": (-6.203, 106.836), "Sudirman": (-6.202, 106.823), "Dukuh Atas": (-6.199, 106.822),
-    "Galunggung": (-6.208, 106.829), "Pancoran": (-6.243, 106.844), "Tegal Parang": (-6.242, 106.834),
-    "Tegal Mampang": (-6.246, 106.824), "Hotel Maharadja": (-6.253, 106.822), "Kuningan": (-6.229, 106.831),
-    "Simpang Kuningan": (-6.226, 106.826), "Semanggi": (-6.219, 106.815), "Bendungan Hilir": (-6.213, 106.809),
-    "Senayan": (-6.227, 106.803), "Bundaran Senayan": (-6.234, 106.800), "Kejaksaan Agung": (-6.240, 106.801),
-    "CSW": (-6.237, 106.797), "Blok M": (-6.244, 106.798), "Blok A": (-6.256, 106.797),
-    "Fatmawati": (-6.292, 106.795), "Kantor Pos Fatmawati": (-6.286, 106.798),
-}
-
 
 def canon(name: str) -> str:
     return CANON.get(name) or apply_alias(name)
@@ -322,14 +306,11 @@ def main(refetch: bool = False) -> None:
     # minutes); each carries the display station the schematic draws it at.
     nodes = sorted({e["from"] for e in edges.values()} | {e["to"] for e in edges.values()})
     stations = sorted({canon(n) for n in nodes})
-    missing = [s for s in stations if s not in STATIONS]
-    if missing:
-        sys.exit(f"add STATIONS coordinates for: {missing}")
 
     out = {
         "meta": {"start": "UI", "end": "Blok M", "transfer_penalty": TRANSFER_PENALTY, "k": 10,
                  "source": "tgoptggraph.ipynb, Maps snapshot 2026-09-11 (Mon 2026-09-14 11:00 WIB)"},
-        "stations": [{"id": s, "lat": STATIONS[s][0], "lon": STATIONS[s][1]} for s in stations],
+        "stations": stations,  # layout + coordinates: public/lines.mjs
         "nodes": [{"id": n, "station": canon(n)} for n in nodes],
         "edges": list(edges.values()),
     }

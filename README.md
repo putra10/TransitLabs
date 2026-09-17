@@ -6,8 +6,9 @@ with a real fare and Google Maps travel time on every hop. Visitors press
 play to watch the best route light up, drag a fare-vs-time weight, and click
 any station to close it and see the engine reroute in real time.
 
-Plain HTML, CSS and ES modules. No framework, no build step, no backend, no
-API calls at runtime. The engine is a port of the graph-theory capstone
+Plain HTML, CSS and ES modules. No framework, no build step, no backend. The
+only runtime dependency is Leaflet (from cdnjs, with subresource integrity)
+and OpenStreetMap tiles for the optional map view. The engine is a port of the graph-theory capstone
 notebook (`tgoptggraph.ipynb`), FMIPA Universitas Indonesia.
 
 The schematic follows the logic of the FDTJ *Peta Integrasi Transportasi
@@ -50,6 +51,16 @@ renderer inserts the 45° elbows and the parallel offsets itself, so moving a
 station or re-ordering a line is a one-line edit. Where a TJ corridor's exact
 intermediate routing was not in the data it is drawn along the plausible
 road, and marked as such in that file.
+
+## Map view
+
+The **Map** toggle shows the same network, closures and route playback on
+OpenStreetMap tiles. Station positions in `GEO` were geocoded from OSM via
+Nominatim; two halte that are not mapped there (Tegal Parang, Kejaksaan
+Agung) are placed on their road between neighbouring stops and marked
+`est.` Lines run straight between consecutive stops rather than tracing the
+road, which is honest about what the data holds. OSM's tile usage policy
+allows light use like this; swap the tile URL if traffic ever grows.
 
 ## Data
 

@@ -7,166 +7,38 @@
   "source": "tgoptggraph.ipynb, Maps snapshot 2026-09-11 (Mon 2026-09-14 11:00 WIB)"
  },
  "stations": [
-  {
-   "id": "Bendungan Hilir",
-   "lat": -6.213,
-   "lon": 106.809
-  },
-  {
-   "id": "Blok A",
-   "lat": -6.256,
-   "lon": 106.797
-  },
-  {
-   "id": "Blok M",
-   "lat": -6.244,
-   "lon": 106.798
-  },
-  {
-   "id": "Bundaran Senayan",
-   "lat": -6.234,
-   "lon": 106.8
-  },
-  {
-   "id": "CSW",
-   "lat": -6.237,
-   "lon": 106.797
-  },
-  {
-   "id": "Cawang",
-   "lat": -6.243,
-   "lon": 106.862
-  },
-  {
-   "id": "Cawang-Sentral",
-   "lat": -6.247,
-   "lon": 106.872
-  },
-  {
-   "id": "Cikini",
-   "lat": -6.197,
-   "lon": 106.841
-  },
-  {
-   "id": "Cikoko",
-   "lat": -6.24,
-   "lon": 106.854
-  },
-  {
-   "id": "Depok Baru",
-   "lat": -6.345,
-   "lon": 106.822
-  },
-  {
-   "id": "Dukuh Atas",
-   "lat": -6.199,
-   "lon": 106.822
-  },
-  {
-   "id": "Duren Kalibata",
-   "lat": -6.256,
-   "lon": 106.853
-  },
-  {
-   "id": "Fatmawati",
-   "lat": -6.292,
-   "lon": 106.795
-  },
-  {
-   "id": "Galunggung",
-   "lat": -6.208,
-   "lon": 106.829
-  },
-  {
-   "id": "Hotel Maharadja",
-   "lat": -6.253,
-   "lon": 106.822
-  },
-  {
-   "id": "Kantor Pos Fatmawati",
-   "lat": -6.286,
-   "lon": 106.798
-  },
-  {
-   "id": "Kejaksaan Agung",
-   "lat": -6.24,
-   "lon": 106.801
-  },
-  {
-   "id": "Kuningan",
-   "lat": -6.229,
-   "lon": 106.831
-  },
-  {
-   "id": "Manggarai",
-   "lat": -6.21,
-   "lon": 106.85
-  },
-  {
-   "id": "Pancoran",
-   "lat": -6.243,
-   "lon": 106.844
-  },
-  {
-   "id": "Pasar Minggu",
-   "lat": -6.278,
-   "lon": 106.844
-  },
-  {
-   "id": "SMPN 8",
-   "lat": -6.203,
-   "lon": 106.836
-  },
-  {
-   "id": "Semanggi",
-   "lat": -6.219,
-   "lon": 106.815
-  },
-  {
-   "id": "Senayan",
-   "lat": -6.227,
-   "lon": 106.803
-  },
-  {
-   "id": "Simpang Kuningan",
-   "lat": -6.226,
-   "lon": 106.826
-  },
-  {
-   "id": "Stasiun UI",
-   "lat": -6.318,
-   "lon": 106.834
-  },
-  {
-   "id": "Sudirman",
-   "lat": -6.202,
-   "lon": 106.823
-  },
-  {
-   "id": "Tanjung Barat",
-   "lat": -6.295,
-   "lon": 106.838
-  },
-  {
-   "id": "Tebet",
-   "lat": -6.226,
-   "lon": 106.858
-  },
-  {
-   "id": "Tegal Mampang",
-   "lat": -6.246,
-   "lon": 106.824
-  },
-  {
-   "id": "Tegal Parang",
-   "lat": -6.242,
-   "lon": 106.834
-  },
-  {
-   "id": "UI",
-   "lat": -6.325,
-   "lon": 106.827
-  }
+  "Bendungan Hilir",
+  "Blok A",
+  "Blok M",
+  "Bundaran Senayan",
+  "CSW",
+  "Cawang",
+  "Cawang-Sentral",
+  "Cikini",
+  "Cikoko",
+  "Depok Baru",
+  "Dukuh Atas",
+  "Duren Kalibata",
+  "Fatmawati",
+  "Galunggung",
+  "Hotel Maharadja",
+  "Kantor Pos Fatmawati",
+  "Kejaksaan Agung",
+  "Kuningan",
+  "Manggarai",
+  "Pancoran",
+  "Pasar Minggu",
+  "SMPN 8",
+  "Semanggi",
+  "Senayan",
+  "Simpang Kuningan",
+  "Stasiun UI",
+  "Sudirman",
+  "Tanjung Barat",
+  "Tebet",
+  "Tegal Mampang",
+  "Tegal Parang",
+  "UI"
  ],
  "nodes": [
   {

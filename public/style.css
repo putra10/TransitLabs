@@ -17,6 +17,9 @@ h2 span { font-weight: 400; }
 button { background: var(--panel); color: var(--text); border: 1px solid var(--line); border-radius: 8px; padding: 8px 14px; font: inherit; cursor: pointer; }
 button:hover { border-color: var(--muted); }
 button.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.seg button { border: 0; border-radius: 0; }
+.seg button[aria-pressed="true"] { background: #1f2937; color: #fff; }
 .slider { display: grid; gap: 2px; font-size: 12px; color: var(--muted); min-width: 220px; }
 .slider input { width: 100%; accent-color: var(--accent); }
 .slider .ends { display: flex; justify-content: space-between; font-size: 11px; }
@@ -60,6 +63,16 @@ footer { padding: 4px 24px 24px; color: var(--muted); font-size: 12px; }
 
 /* SVG — FDTJ-style: light canvas, coloured lines, white station pills */
 #map { background: #f4f5f7; border-radius: 8px; }
+.geo { aspect-ratio: 870 / 600; border-radius: 8px; background: #e5e7eb; }
+.geo .leaflet-tooltip.glabel { background: #fff; border: 1px solid #1f2937; border-radius: 4px; box-shadow: 0 1px 2px #0003; font: 600 10.5px/1.2 system-ui, sans-serif; color: #111827; padding: 2px 5px; white-space: nowrap; }
+.geo .leaflet-tooltip.glabel.l0 { background: #e11d48; border-color: #fff; color: #fff; font-weight: 800; font-size: 12px; }
+.geo .leaflet-tooltip.glabel::before { display: none; }
+.geo.z1 .leaflet-tooltip.l1, .geo.z2 .leaflet-tooltip.l2 { display: none; }
+.geo.has-route .gline { opacity: .35; }
+.geo .gcasing { stroke: #fff; }
+.geo.playing .groute { stroke-dasharray: var(--len) var(--len); stroke-dashoffset: var(--len); animation: draw var(--dur) linear var(--delay) forwards; }
+.geo.playing .groute.gwalk { stroke-dasharray: 4 5; stroke-dashoffset: 0; animation: fade .2s linear var(--delay) both; }
+.geo .leaflet-control-attribution { font-size: 10px; }
 .walklink { fill: none; stroke: #6b7280; stroke-width: 2; stroke-dasharray: 3 4; opacity: .7; }
 .line { fill: none; stroke-width: 3.5; stroke-linecap: round; stroke-linejoin: round; transition: opacity .3s; }
 .line.rail { stroke-width: 4.5; }
@@ -100,5 +113,5 @@ footer { padding: 4px 24px 24px; color: var(--muted); font-size: 12px; }
   .station text { font-size: 12px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .playing .route path, .playing .station.on .dot, .playing .station.on .pulse { animation-duration: .01s; animation-delay: 0s; }
+  .playing .route path, .playing .station.on .dot, .playing .station.on .pulse, .geo.playing .groute { animation-duration: .01s; animation-delay: 0s; }
 }
