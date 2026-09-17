@@ -6,7 +6,7 @@
 <title>TransitLab · UI → Blok M</title>
 <meta name="description" content="Interactive public-transport route optimiser for Universitas Indonesia → Blok M. Dijkstra, Yen's k-shortest paths and a Pareto front on a real fare and time graph. Close a station and watch it reroute.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><circle cx='8' cy='8' r='6' fill='none' stroke='%23e11d48' stroke-width='3'/></svg>">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css?v=6">
 </head>
 <body>
 <header>
@@ -27,15 +27,16 @@
 
 <main>
   <section class="map">
-    <svg id="map" viewBox="0 0 900 620" role="img" aria-label="Schematic transit network from UI to Blok M"></svg>
+    <svg id="map" viewBox="30 25 870 600" role="img" aria-label="Schematic transit network from UI to Blok M"></svg>
     <div id="tip" class="tip" hidden></div>
     <p class="hint">Click a station to close it. The engine recomputes every route in real time.</p>
     <ul class="legend">
-      <li><i style="--c:var(--krl)"></i>KRL</li>
-      <li><i style="--c:var(--mrt)"></i>MRT</li>
-      <li><i style="--c:var(--lrt)"></i>LRT</li>
-      <li><i style="--c:var(--tj)"></i>TransJakarta</li>
-      <li><i style="--c:var(--walk)" class="dash"></i>walk</li>
+      <li><i style="--c:#e0262d"></i>KRL Bogor</li>
+      <li><i style="--c:#00aeef"></i>KRL Cikarang</li>
+      <li><i style="--c:#1b2a6b"></i>MRT</li>
+      <li><i style="--c:#0b7a3b"></i>LRT</li>
+      <li><i style="--c:#c8102e"></i>TJ 1</li><li><i style="--c:#3f2a7d"></i>4</li><li><i style="--c:#6cb33f"></i>6</li><li><i style="--c:#ec008c"></i>7</li><li><i style="--c:#00a99d"></i>9</li><li><i style="--c:#9b59b6"></i>13</li><li><i style="--c:#7f8c8d"></i>D</li>
+      <li><i style="--c:#6b7280" class="dash"></i>walk</li>
     </ul>
   </section>
 
@@ -51,6 +52,6 @@
   Graph theory final project, FMIPA Universitas Indonesia · data frozen 2026-09-11 · <a href="https://github.com/putra10" rel="noopener">source</a>
 </footer>
 
-<script type="module" src="app.js"></script>
+<script type="module" src="app.js?v=4"></script>
 </body>
 </html>

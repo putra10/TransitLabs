@@ -10,6 +10,12 @@ Plain HTML, CSS and ES modules. No framework, no build step, no backend, no
 API calls at runtime. The engine is a port of the graph-theory capstone
 notebook (`tgoptggraph.ipynb`), FMIPA Universitas Indonesia.
 
+The schematic follows the logic of the FDTJ *Peta Integrasi Transportasi
+Umum Jakarta*: each service is one continuous line through its stops, drawn
+only with horizontal, vertical and 45° segments, in its corridor colour;
+lines that share a corridor run side by side; interchanges are bold pills.
+A route lights up along the lines it actually rides, hop by hop.
+
 ## What the maths does
 
 - **Dijkstra** on state (station, arriving mode) with a 5-minute penalty per
@@ -33,6 +39,17 @@ Open http://127.0.0.1:8765. Modules need an HTTP server; `file://` will not work
 ```powershell
 node tests/engine.test.mjs
 ```
+
+## Layout
+
+`public/lines.mjs` holds the hand-placed station grid and the ordered stop
+list per line (KRL Bogor and Cikarang, MRT, LRT Jabodebek, and every
+TransJakarta corridor the 64 routes use). A `~name` entry is a stop the line
+passes but the graph never boards there; an `[x, y]` entry is a bend. The
+renderer inserts the 45° elbows and the parallel offsets itself, so moving a
+station or re-ordering a line is a one-line edit. Where a TJ corridor's exact
+intermediate routing was not in the data it is drawn along the plausible
+road, and marked as such in that file.
 
 ## Data
 

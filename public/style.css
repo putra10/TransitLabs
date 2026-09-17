@@ -1,6 +1,6 @@
 :root {
   --bg: #0b0f17; --panel: #121826; --line: #1f2937; --text: #e5e7eb; --muted: #8b94a7;
-  --krl: #ef4444; --mrt: #3b82f6; --lrt: #22c55e; --tj: #f59e0b; --walk: #9ca3af;
+  --krl: #e0262d; --mrt: #1b2a6b; --lrt: #0b7a3b; --tj: #00a99d; --walk: #6b7280;
   --accent: #e11d48; --closed: #f43f5e;
   color-scheme: dark;
 }
@@ -22,14 +22,14 @@ button.primary { background: var(--accent); border-color: var(--accent); color: 
 .slider .ends { display: flex; justify-content: space-between; font-size: 11px; }
 
 main { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 16px; padding: 0 24px 24px; }
-.map { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 8px; }
+.map { position: relative; background: #f4f5f7; border: 1px solid var(--line); border-radius: 12px; padding: 8px; color: #111827; }
 #map { width: 100%; height: auto; display: block; }
-.hint { position: absolute; left: 16px; top: 12px; margin: 0; font-size: 12px; color: var(--muted); }
-.legend { position: absolute; right: 16px; bottom: 10px; margin: 0; padding: 0; list-style: none; display: flex; gap: 12px; font-size: 12px; color: var(--muted); }
-.legend i { display: inline-block; width: 18px; height: 3px; background: var(--c); vertical-align: middle; margin-right: 5px; border-radius: 2px; }
+.hint { position: absolute; left: 16px; top: 12px; margin: 0; font-size: 12px; color: #374151; background: #ffffffcc; padding: 2px 6px; border-radius: 4px; }
+.legend { position: absolute; right: 16px; bottom: 12px; background: #ffffffcc; padding: 4px 8px; border-radius: 6px; color: #374151; margin: 0; padding: 0; list-style: none; display: flex; gap: 12px; font-size: 12px; color: var(--muted); }
+.legend i { display: inline-block; width: 18px; height: 4px; background: var(--c); vertical-align: middle; margin-right: 5px; border-radius: 2px; }
 .legend i.dash { background: repeating-linear-gradient(90deg, var(--c) 0 4px, transparent 4px 7px); }
 
-.tip { position: absolute; pointer-events: none; background: #000c; border: 1px solid var(--line); border-radius: 6px; padding: 6px 9px; font-size: 12px; white-space: nowrap; transform: translate(-50%, -130%); }
+.tip { position: absolute; pointer-events: none; color: var(--text); background: #000d; border: 1px solid var(--line); border-radius: 6px; padding: 6px 9px; font-size: 12px; white-space: nowrap; transform: translate(-50%, -130%); }
 .tip b { display: block; font-size: 13px; }
 
 .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; min-height: 400px; }
@@ -45,8 +45,9 @@ main { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 16px; pa
 #list li:hover { background: #1a2030; }
 #list li[aria-current] { border-color: var(--accent); background: #1a2030; }
 #list .n { color: var(--muted); font-variant-numeric: tabular-nums; }
-#list .modes { display: flex; gap: 3px; }
-#list .modes i { width: 14px; height: 4px; border-radius: 2px; background: var(--c); }
+#list .modes { display: flex; gap: 3px; flex-wrap: wrap; }
+#list .modes i, .tip .lines i { font: 700 10px/1 system-ui, sans-serif; font-style: normal; color: #fff; background: var(--c); border-radius: 3px; padding: 2px 4px; min-width: 14px; text-align: center; }
+.tip .lines { display: flex; gap: 3px; margin: 3px 0; }
 #list .via { color: var(--muted); font-size: 11px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 #list .stat { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
 #list .stat small { color: var(--muted); display: block; font-size: 11px; }
@@ -57,36 +58,47 @@ main { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 16px; pa
 
 footer { padding: 4px 24px 24px; color: var(--muted); font-size: 12px; }
 
-/* SVG */
-.edge { fill: none; stroke: var(--c); stroke-width: 2.5; stroke-linecap: round; opacity: .28; transition: opacity .3s; }
-.edge.walk { stroke-dasharray: 3 5; }
-.edge.dead { opacity: .06; }
-.route { fill: none; stroke: var(--c); stroke-width: 5; stroke-linecap: round; filter: drop-shadow(0 0 4px var(--c)); }
-.route.walk { stroke-dasharray: 4 6; }
-.playing .route { stroke-dasharray: var(--len) var(--len); stroke-dashoffset: var(--len); animation: draw var(--dur) linear var(--delay) forwards; }
-.playing .route.walk { stroke-dasharray: 4 6; stroke-dashoffset: 0; animation: fade .2s linear var(--delay) both; }
+/* SVG — FDTJ-style: light canvas, coloured lines, white station pills */
+#map { background: #f4f5f7; border-radius: 8px; }
+.walklink { fill: none; stroke: #6b7280; stroke-width: 2; stroke-dasharray: 3 4; opacity: .7; }
+.line { fill: none; stroke-width: 3.5; stroke-linecap: round; stroke-linejoin: round; transition: opacity .3s; }
+.line.rail { stroke-width: 4.5; }
+.line.dead { opacity: .12; }
+.has-route .line { opacity: .32; }
+.has-route .walklink { opacity: .35; }
+.route path { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.route .casing { stroke: #fff; stroke-width: 14; }
+.route .ink { stroke: var(--c); stroke-width: 7; }
+.route.walk .casing { stroke-width: 10; }
+.route.walk .ink { stroke: #111827; stroke-width: 3; stroke-dasharray: 4 5; }
+.playing .route path { stroke-dasharray: var(--len) var(--len); stroke-dashoffset: var(--len); animation: draw var(--dur) linear var(--delay) forwards; }
+.playing .route.walk path { stroke-dasharray: 4 5; stroke-dashoffset: 0; animation: fade .2s linear var(--delay) both; }
+.playing .route.walk .casing { stroke-dasharray: none; }
 @keyframes draw { to { stroke-dashoffset: 0; } }
-@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
-.station circle { fill: var(--bg); stroke: #cbd5e1; stroke-width: 2; cursor: pointer; transition: r .15s, stroke .15s; }
-.station:hover circle { r: 8; stroke: #fff; }
-.station.on circle { fill: #fff; stroke: #fff; }
-.station.closed circle { stroke: var(--closed); stroke-dasharray: 2 2; fill: #3f0d1c; }
-.station.terminal circle { r: 8; stroke-width: 3; fill: var(--accent); stroke: #fff; cursor: default; }
-.station text { font-size: 11px; fill: var(--text); pointer-events: none; paint-order: stroke; stroke: var(--panel); stroke-width: 3px; }
+@keyframes fade { from { opacity: 0; } to { opacity: .9; } }
+.station .dot { fill: #fff; stroke: #1f2937; stroke-width: 2; cursor: pointer; transition: r .15s, stroke .15s; }
+.station.xfer .dot { r: 6.5; stroke-width: 2.5; }
+.station:hover .dot { r: 8.5; }
+.station.on .dot { stroke: #111827; stroke-width: 3; }
+.station.closed .dot { stroke: var(--closed); stroke-dasharray: 2 2; fill: #fee2e2; }
+.station.terminal .dot { r: 8; stroke-width: 3; fill: var(--accent); stroke: #fff; cursor: default; }
+.station text { font-size: 10.5px; fill: #111827; cursor: pointer; paint-order: stroke; stroke: #f4f5f7; stroke-width: 3px; font-weight: 500; }
+.station.xfer text { font-weight: 700; }
 .station.closed text { fill: var(--closed); text-decoration: line-through; }
-.station.terminal text { font-weight: 700; font-size: 13px; }
-.playing .station.on circle { animation: pop .3s ease var(--delay) both; }
-@keyframes pop { from { r: 5; } 50% { r: 10; } to { r: 6; } }
+.station.terminal text { font-weight: 800; font-size: 13px; }
+.playing .station.on .dot { animation: pop .3s ease var(--delay) both; }
+@keyframes pop { from { r: 5; } 50% { r: 11; } to { r: 6.5; } }
 .pulse { fill: none; stroke: var(--accent); stroke-width: 2; opacity: 0; }
 .playing .station.on .pulse { animation: pulse 1.4s ease-out var(--delay) 1; }
 @keyframes pulse { 0% { r: 8; opacity: .9; } 100% { r: 30; opacity: 0; } }
 
 @media (max-width: 860px) {
-  main { grid-template-columns: 1fr; }
+  main { grid-template-columns: minmax(0, 1fr); }
+  .map, .panel { min-width: 0; }
   .legend { position: static; margin-top: 6px; flex-wrap: wrap; }
   .hint { position: static; margin-bottom: 6px; }
   .station text { font-size: 12px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .playing .route, .playing .station.on circle, .playing .pulse { animation-duration: .01s; animation-delay: 0s; }
+  .playing .route path, .playing .station.on .dot, .playing .station.on .pulse { animation-duration: .01s; animation-delay: 0s; }
 }
