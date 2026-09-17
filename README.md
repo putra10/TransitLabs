@@ -28,6 +28,10 @@ A route lights up along the lines it actually rides, hop by hop.
   min-max normalised values that the slider controls.
 - **Criticality** on hover: how many of the 10 routes pass through a station.
   A station on all 10 is a single point of failure.
+- **Constraints.** Untick a transport type to drop every ride of that mode;
+  add "must pass" stations (or shift-click them) and every journey returned
+  stops at or rides through each of them. Yen keeps enumerating until it has
+  k journeys that satisfy the constraint, which the small graph affords.
 - **Pass-through stations.** A graph edge like Stasiun UI → Manggarai is one
   KRL ride, but the train physically passes Tanjung Barat, Pasar Minggu,
   Duren Kalibata, Cawang and Tebet. Both views draw the hop along the line and

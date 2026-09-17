@@ -1,7 +1,7 @@
 // node tests/engine.test.mjs
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { buildGraph, solve, yen, paretoFront } from '../public/engine.mjs';
+import { buildGraph, solve, yen, paretoFront, passes } from '../public/engine.mjs';
 import { annotateVia } from '../public/lines.mjs';
 
 const data = annotateVia(JSON.parse(readFileSync(new URL('../public/data/optg.json', import.meta.url), 'utf8')));
@@ -45,7 +45,22 @@ assert.ok(cut.every(p => p.path.every(e => !e.via.includes('Duren Kalibata') && 
 assert.ok(cut.every(p => !p.path.some(e => e.route === 'Bogor Line' && p.stations.includes('Cawang'))), 'no KRL into Cawang');
 
 // Closing the only exit strands the traveller.
-assert.deepEqual(yen(g, 'UI', 'Blok M', 3, new Set(['Stasiun UI', 'Manggarai', 'Pasar Minggu', 'Fatmawati'])), []);
+assert.deepEqual(yen(g, 'UI', 'Blok M', 3, { closed: new Set(['Stasiun UI', 'Manggarai', 'Pasar Minggu', 'Fatmawati']) }), []);
+
+// Transport filter: buses only, then rail only.
+const busOnly = solve(g, data, { modes: new Set(['transjakarta']) }).paths;
+assert.ok(busOnly.length > 0 && busOnly.every(p => p.path.every(e => e.mode === 'walk' || e.mode === 'transjakarta')));
+const railOnly = solve(g, data, { modes: new Set(['krl', 'mrt', 'lrt']) }).paths;
+assert.ok(railOnly.length > 0 && railOnly.every(p => p.path.every(e => e.mode !== 'transjakarta')));
+assert.deepEqual(solve(g, data, { modes: new Set(['lrt']) }).paths, [], 'LRT alone cannot reach Blok M');
+
+// Must pass: every journey stops at or rides through the station.
+const viaTebet = solve(g, data, { must: ['Tebet'] }).paths;
+assert.ok(viaTebet.length > 0 && viaTebet.every(p => passes(p, 'Tebet')));
+assert.ok(viaTebet.some(p => !p.stations.includes('Tebet')), 'riding through counts, not only stopping');
+const viaTwo = solve(g, data, { must: ['Manggarai', 'Dukuh Atas'] }).paths;
+assert.ok(viaTwo.length > 0 && viaTwo.every(p => passes(p, 'Manggarai') && passes(p, 'Dukuh Atas')));
+assert.deepEqual(solve(g, data, { must: ['Tebet'], closed: new Set(['Tebet']) }).paths, [], 'must pass a closed station is impossible');
 
 // Pareto: dominated point excluded.
 assert.deepEqual([...paretoFront([{ fare: 1, time: 1 }, { fare: 2, time: 2 }, { fare: 0, time: 3 }])], [0, 2]);

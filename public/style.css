@@ -24,6 +24,18 @@ button.primary { background: var(--accent); border-color: var(--accent); color: 
 .slider input { width: 100%; accent-color: var(--accent); }
 .slider .ends { display: flex; justify-content: space-between; font-size: 11px; }
 
+.filters { display: flex; flex-wrap: wrap; gap: 10px 28px; align-items: center; padding: 0 24px 12px; font-size: 13px; }
+.filters .lbl { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .06em; margin-right: 4px; }
+.modes { border: 0; padding: 0; margin: 0; display: flex; gap: 6px; align-items: center; }
+.modes label { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border: 1px solid var(--line); border-radius: 999px; cursor: pointer; user-select: none; }
+.modes label::before { content: ''; width: 10px; height: 10px; border-radius: 50%; background: var(--c); }
+.modes label:has(input:not(:checked)) { opacity: .45; text-decoration: line-through; }
+.modes input { position: absolute; opacity: 0; pointer-events: none; }
+.must { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.must select { background: var(--panel); color: var(--text); border: 1px solid var(--line); border-radius: 8px; padding: 5px 8px; font: inherit; }
+.chips { display: inline-flex; gap: 6px; flex-wrap: wrap; }
+.chips button { display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px 3px 10px; border-radius: 999px; background: #3b2f0b; border-color: #a16207; color: #fde68a; font-size: 12px; }
+.chips button::after { content: '\00d7'; font-size: 14px; line-height: 1; opacity: .8; }
 main { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 16px; padding: 0 24px 24px; }
 .map { position: relative; background: #f4f5f7; border: 1px solid var(--line); border-radius: 12px; padding: 8px; color: #111827; }
 #map { width: 100%; height: auto; display: block; }
@@ -98,6 +110,8 @@ footer { padding: 4px 24px 24px; color: var(--muted); font-size: 12px; }
 .station:hover .dot { r: 8.5; }
 .station.on .dot { stroke: #111827; stroke-width: 3; }
 .station.closed .dot { stroke: var(--closed); stroke-dasharray: 2 2; fill: #fee2e2; }
+.station.must .dot { stroke: #d97706; stroke-width: 3.5; fill: #fde68a; }
+.station.must text { fill: #92400e; font-weight: 700; }
 .station.terminal .dot { r: 8; stroke-width: 3; fill: var(--accent); stroke: #fff; cursor: default; }
 .station text { font-size: 10.5px; fill: #111827; cursor: pointer; paint-order: stroke; stroke: #f4f5f7; stroke-width: 3px; font-weight: 500; }
 .station.xfer text { font-weight: 700; }

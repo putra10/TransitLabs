@@ -108,6 +108,7 @@ for (const e of data.edges) {
   gWalk.append(svgEl('path', { d: toD(elbow(pos(a), pos(b))), class: 'walklink' }));
 }
 
+const lineMode = new Map(LINES.map(l => [l.id, data.edges.find(e => l.routes.includes(e.route))?.mode]));
 const lineEls = new Map();   // line id -> [path]
 for (const line of LINES) {
   const els = [];
@@ -142,14 +143,17 @@ for (const [id, [x, y]] of Object.entries(STATIONS)) {
 }
 
 // ── State ─────────────────────────────────────────────────────────────────────
-const closed = new Set();
+const closed = new Set(), must = new Set();
+const modes = new Set(['krl', 'mrt', 'lrt', 'transjakarta']);
 let wFare = 0.5, result, selected = 0;
 
 function recompute() {
-  result = solve(g, data, { closed, wFare });
+  result = solve(g, data, { closed, modes, must: [...must], wFare });
   selected = 0;
-  for (const els of lineEls.values()) for (const el of els) el.classList.toggle('dead', closed.has(el.dataset.a) || closed.has(el.dataset.b));
-  for (const [id, el] of stationEls) el.classList.toggle('closed', closed.has(id));
+  for (const [lid, els] of lineEls) for (const el of els) el.classList.toggle('dead', !modes.has(lineMode.get(lid)) || closed.has(el.dataset.a) || closed.has(el.dataset.b));
+  if (geo) for (const [lid, pl] of geo.lines) pl.setStyle({ opacity: modes.has(lineMode.get(lid)) ? .9 : .15 });
+  for (const [id, el] of stationEls) { el.classList.toggle('closed', closed.has(id)); el.classList.toggle('must', must.has(id)); }
+  renderMust();
   if (geo) for (const id of geo.markers.keys()) geoStyle(id);
   renderList(); showPath(true);
 }
@@ -180,7 +184,8 @@ function showPath(play) {
   for (const el of stationEls.values()) { el.classList.remove('on', 'via'); el.style.removeProperty('--delay'); }
 
   if (!p) {
-    $('#best').innerHTML = `<div class="big none">No route</div><div>Blok M is unreachable with ${closed.size} station${closed.size > 1 ? 's' : ''} closed. Reopen one.</div>`;
+    const why = [closed.size && `${closed.size} station${closed.size > 1 ? 's' : ''} closed`, must.size && `must pass ${[...must].join(' and ')}`, modes.size < 4 && `only ${[...modes].map(m => MODE_LABEL[m]).join(', ')}`].filter(Boolean).join(', ');
+    $('#best').innerHTML = `<div class="big none">No route</div><div>Blok M is unreachable with ${why}. Relax one constraint.</div>`;
     return;
   }
   const steps = p.path.filter(e => e.mode !== 'walk' || st(e.from) !== st(e.to)).map(e => {
@@ -248,6 +253,7 @@ function geoStyle(id) {
   const mk = geo.markers.get(id), terminal = id === start || id === end, on = stationEls.get(id).classList.contains('on');
   mk.setStyle(closed.has(id)
     ? { color: '#f43f5e', dashArray: '2 2', fillColor: '#fee2e2', weight: 2 }
+    : must.has(id) ? { color: '#d97706', dashArray: null, fillColor: '#fde68a', weight: 3.5 }
     : { color: terminal ? '#fff' : '#1f2937', dashArray: null, fillColor: terminal ? '#e11d48' : '#fff', weight: on ? 3 : 2 });
   mk._path.classList.remove('gvia', 'gon'); mk._path.style.removeProperty('--delay');
 }
@@ -260,15 +266,15 @@ function initGeo() {
   m.createPane('labels').style.zIndex = 470;
   L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' }).addTo(m);
   const lines = L.layerGroup().addTo(m), routes = L.layerGroup().addTo(m), stations = L.layerGroup().addTo(m);
-  for (const line of LINES) L.polyline(geoLine(line), { color: line.color, weight: line.rail ? 5 : 3.5, opacity: .9, className: 'gline' }).addTo(lines);
+  const lineLayers = new Map(LINES.map(line => [line.id, L.polyline(geoLine(line), { color: line.color, weight: line.rail ? 5 : 3.5, opacity: .9, className: 'gline' }).addTo(lines)]));
   const markers = new Map();
   for (const [id, ll] of Object.entries(GEO)) {
     const terminal = id === start || id === end, xfer = stationEls.get(id).classList.contains('xfer');
     const mk = L.circleMarker(ll, { pane: 'stations', radius: terminal ? 8 : xfer ? 6.5 : 5, fillOpacity: 1, className: terminal ? '' : 'gstation' }).addTo(stations);
     const dir = GLABEL[id] || 'right', off = { right: [8, 0], left: [-8, 0], top: [0, -8], bottom: [0, 8] }[dir];
     mk.bindTooltip(id, { pane: 'labels', permanent: true, direction: dir, offset: off, className: 'glabel ' + (terminal ? 'l0' : xfer ? 'l1' : 'l2') });
-    if (!terminal) mk.on('click', () => { closed.has(id) ? closed.delete(id) : closed.add(id); recompute(); });
-    mk.on('mouseover', () => { const n = result.criticality.get(id) || 0, k = result.paths.length; mk.setTooltipContent(`${id} · ${closed.has(id) ? 'closed' : `${n}/${k} routes`}`); });
+    if (!terminal) mk.on('click', ev => { ev.originalEvent.shiftKey ? toggleMust(id) : toggleClosed(id); });
+    mk.on('mouseover', () => { const n = result.criticality.get(id) || 0, k = result.paths.length; mk.setTooltipContent(`${id} · ${closed.has(id) ? 'closed' : must.has(id) ? 'must pass' : `${n}/${k} routes`}`); });
     mk.on('mouseout', () => mk.setTooltipContent(id));
     markers.set(id, mk);
   }
@@ -276,7 +282,8 @@ function initGeo() {
   m.on('zoomend', tier);
   // Leaflet re-projects paths on zoom, so a dash length measured earlier would leave gaps.
   m.on('zoomstart', () => el.classList.remove('playing'));
-  geo = { el, m, routes, markers };
+  geo = { el, m, routes, markers, lines: lineLayers };
+  for (const [lid, pl] of lineLayers) pl.setStyle({ opacity: modes.has(lineMode.get(lid)) ? .9 : .15 });
   m.invalidateSize();
   m.fitBounds(L.latLngBounds(Object.values(GEO)), { padding: [16, 16] });
   tier();
@@ -330,20 +337,30 @@ function setView(which) {
 
 // ── Events ────────────────────────────────────────────────────────────────────
 const tip = $('#tip');
+function toggle(set, id) { set.has(id) ? set.delete(id) : set.add(id); }
+function toggleClosed(id) { toggle(closed, id); must.delete(id); recompute(); }
+function toggleMust(id) { toggle(must, id); closed.delete(id); recompute(); }
 gStations.addEventListener('click', ev => {
   const grp = ev.target.closest('.station');
   if (!grp || grp.classList.contains('terminal')) return;
-  const id = grp.dataset.id;
-  closed.has(id) ? closed.delete(id) : closed.add(id);
   tip.hidden = true;
-  recompute();
+  ev.shiftKey ? toggleMust(grp.dataset.id) : toggleClosed(grp.dataset.id);
 });
+// Must-pass picker: a select that adds, chips that remove.
+const mustSel = $('#mustsel');
+for (const id of Object.keys(STATIONS).filter(x => x !== start && x !== end).sort()) mustSel.append(new Option(id, id));
+mustSel.addEventListener('change', () => { if (mustSel.value) toggleMust(mustSel.value); mustSel.value = ''; });
+function renderMust() {
+  $('#mustchips').replaceChildren(...[...must].map(id => { const b = document.createElement('button'); b.type = 'button'; b.textContent = id; b.title = 'remove'; b.addEventListener('click', () => toggleMust(id)); return b; }));
+}
+for (const cb of document.querySelectorAll('.modes input')) cb.addEventListener('change', () => { cb.checked ? modes.add(cb.dataset.mode) : modes.delete(cb.dataset.mode); recompute(); });
 gStations.addEventListener('mousemove', ev => {
   const grp = ev.target.closest('.station');
   if (!grp) { tip.hidden = true; return; }
   const id = grp.dataset.id, n = result.criticality.get(id) || 0, k = result.paths.length;
   const lines = LINES.filter(l => l.stops.includes(id)).map(l => `<i style="--c:${l.color}">${l.id}</i>`).join('');
-  tip.innerHTML = `<b>${id}</b><span class="lines">${lines}</span>${closed.has(id) ? 'closed · line cut here · click to reopen' : n ? `on ${n} of ${k} routes${n === k && k ? ' · single point of failure' : ''}` : 'on no current route'}`;
+  const state = closed.has(id) ? 'closed · line cut here · click to reopen' : must.has(id) ? 'must pass · shift-click to release' : n ? `on ${n} of ${k} routes${n === k && k ? ' · single point of failure' : ''}` : 'on no current route';
+  tip.innerHTML = `<b>${id}</b><span class="lines">${lines}</span>${state}`;
   const r = $('.map').getBoundingClientRect();
   tip.style.left = `${ev.clientX - r.left}px`; tip.style.top = `${ev.clientY - r.top}px`;
   tip.hidden = false;
@@ -359,7 +376,11 @@ $('#w').addEventListener('input', () => { readWeight(); recompute(); });
 $('#play').addEventListener('click', () => showPath(true));
 $('#v-schematic').addEventListener('click', () => setView('schematic'));
 $('#v-map').addEventListener('click', () => setView('map'));
-$('#reset').addEventListener('click', () => { closed.clear(); recompute(); });
+$('#reset').addEventListener('click', () => {
+  closed.clear(); must.clear();
+  for (const cb of document.querySelectorAll('.modes input')) { cb.checked = true; modes.add(cb.dataset.mode); }
+  recompute();
+});
 
 readWeight();
 recompute();

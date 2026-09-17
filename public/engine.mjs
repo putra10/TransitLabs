@@ -48,7 +48,7 @@ const isTransfer = (prev, mode) => prev && prev !== mode && mode !== 'walk';
  * the notebook keys on node only, which can discard a slightly slower arrival
  * that would have avoided a later transfer.
  */
-function dijkstra(g, start, end, blockedNodes, blockedEdges, closed = new Set()) {
+function dijkstra(g, start, end, blockedNodes, blockedEdges, closed = new Set(), modes = null) {
   const best = new Map();           // "node|mode" -> cost
   const prev = new Map();           // "node|mode" -> [edge, prevKey]
   const pq = new Heap();
@@ -61,9 +61,10 @@ function dijkstra(g, start, end, blockedNodes, blockedEdges, closed = new Set())
     if (node === end) { endKey = key; break; }
     for (const e of g.adj.get(node) || []) {
       if (blockedNodes.has(e.to) && e.to !== end) continue;
-      if (blockedEdges.has(`${e.from}>${e.to}>${e.route}`)) continue;
+      if (blockedEdges.has(`${e.from}>${e.to}`)) continue;
       // A closed station cuts the line: a ride that passes through it is unavailable.
       if (e.via && e.via.some(s => closed.has(s))) continue;
+      if (modes && e.mode !== 'walk' && !modes.has(e.mode)) continue;
       const nc = cost + e.time + (isTransfer(mode, e.mode) ? g.penalty : 0);
       const nk = `${e.to}|${e.mode}`;
       if (nc < (best.get(nk) ?? Infinity)) {
@@ -98,22 +99,32 @@ function summarize(g, start, edges) {
   };
 }
 
+/** Does the journey stop at or ride through `station`? */
+export const passes = (p, station) => p.stations.includes(station) || p.path.some(e => e.via?.includes(station));
+
 /**
  * Yen's k-shortest simple paths by time (transfer penalty included).
  * Enumerates in the usual order but returns K *distinct journeys*: the line
  * graph reaches the same ride through several intermediate-stop edges, and
- * those would otherwise fill the list with copies. Capped at 10·K iterations.
+ * those would otherwise fill the list with copies.
+ *   closed  stations that cut the line (Set)
+ *   modes   allowed ride modes (Set), walk always allowed; null = all
+ *   must    stations every returned journey has to pass (array)
+ * With `must`, enumeration keeps going (up to 60·K iterations) until K
+ * distinct journeys satisfy it; the graph is small enough for that.
  */
-export function yen(g, start, end, K, closed = new Set()) {
+export function yen(g, start, end, K, { closed = new Set(), modes = null, must = [] } = {}) {
   // Closed stations block every raw node drawn at that station.
   const closedNodes = new Set([...g.station].filter(([, s]) => closed.has(s)).map(([n]) => n));
-  const first = dijkstra(g, start, end, closedNodes, new Set(), closed);
+  const ok = p => must.every(s => passes(p, s));
+  const first = dijkstra(g, start, end, closedNodes, new Set(), closed, modes);
   if (!first) return [];
   const A = [summarize(g, start, first)];
   const B = new Heap();
   const seen = new Set([A[0].nodes.join('>')]);
-  const journeys = new Set([A[0].journey]);
-  for (let k = 1; journeys.size < K && k < 10 * K; k++) {
+  const journeys = new Set(ok(A[0]) ? [A[0].journey] : []);
+  const cap = (must.length ? 60 : 10) * K;
+  for (let k = 1; journeys.size < K && k < cap; k++) {
     const prevPath = A[k - 1].path, prevNodes = A[k - 1].nodes;
     for (let i = 0; i < prevPath.length; i++) {
       const spur = prevNodes[i];
@@ -121,10 +132,12 @@ export function yen(g, start, end, K, closed = new Set()) {
       const blockedEdges = new Set();
       for (const p of A) {
         if (p.nodes.slice(0, i + 1).join('>') === prevNodes.slice(0, i + 1).join('>') && p.path[i]) {
-          const e = p.path[i]; blockedEdges.add(`${e.from}>${e.to}>${e.route}`);
+          // Block the node pair, not one route: parallel edges (D21 / TJ D21) would
+          // otherwise yield the same node sequence again and starve the search.
+          const e = p.path[i]; blockedEdges.add(`${e.from}>${e.to}`);
         }
       }
-      const spurPath = dijkstra(g, spur, end, rootNodes, blockedEdges, closed);
+      const spurPath = dijkstra(g, spur, end, rootNodes, blockedEdges, closed, modes);
       if (!spurPath) continue;
       const cand = summarize(g, start, [...prevPath.slice(0, i), ...spurPath]);
       const sig = cand.nodes.join('>');
@@ -133,10 +146,10 @@ export function yen(g, start, end, K, closed = new Set()) {
     }
     if (!B.size) break;
     const next = B.pop()[1];
-    A.push(next); journeys.add(next.journey);
+    A.push(next); if (ok(next)) journeys.add(next.journey);
   }
   const out = [], done = new Set();
-  for (const p of A) if (!done.has(p.journey)) { done.add(p.journey); out.push(p); }
+  for (const p of A) if (ok(p) && !done.has(p.journey)) { done.add(p.journey); out.push(p); }
   return out.slice(0, K);
 }
 
@@ -175,8 +188,8 @@ export function criticality(paths) {
   return c;
 }
 
-/** One call for the UI: closed stations + fare weight -> ranked paths. */
-export function solve(g, data, { closed = new Set(), wFare = 0.5 } = {}) {
-  const paths = rank(yen(g, data.meta.start, data.meta.end, data.meta.k, closed), wFare);
+/** One call for the UI: constraints + fare weight -> ranked paths. */
+export function solve(g, data, { closed = new Set(), modes = null, must = [], wFare = 0.5 } = {}) {
+  const paths = rank(yen(g, data.meta.start, data.meta.end, data.meta.k, { closed, modes, must }), wFare);
   return { paths, criticality: criticality(paths) };
 }
