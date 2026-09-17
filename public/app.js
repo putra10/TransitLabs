@@ -2,6 +2,31 @@ import { buildGraph, solve } from './engine.mjs';
 import { STATIONS, GEO, GLABEL, LABEL, LINES, ROUTE_LINE, stopsBetween, annotateVia } from './lines.mjs';
 
 const MODE_LABEL = { krl: 'KRL', mrt: 'MRT', lrt: 'LRT', transjakarta: 'TJ', walk: 'walk' };
+
+// Dynamic strings in both languages; static copy lives in index.html as lang="" spans.
+const STR = {
+  en: { walk: 'walk', via: 'via', direct: 'direct', min: 'min', xfer: 'xfer', of: (n, k) => `${n} of k = ${k}`,
+    transfers: n => `${n} transfer${n === 1 ? '' : 's'}`, unmeasured: '(TJ hops unmeasured)', rank: n => `rank #${n}`,
+    cheapest: 'cheapest', fastest: 'fastest', pareto: 'pareto',
+    noroute: 'No route', noroute_why: why => `Blok M is unreachable with ${why}. Relax one constraint.`,
+    closedN: n => `${n} station${n > 1 ? 's' : ''} closed`, mustN: list => `must pass ${list.join(' and ')}`, onlyModes: m => `only ${m}`,
+    tip_closed: 'closed · line cut here · click to reopen', tip_must: 'must pass · shift-click to release',
+    tip_on: (n, k) => `on ${n} of ${k} journeys`, tip_spof: ' · single point of failure', tip_none: 'on no current journey',
+    gtip_closed: 'closed', gtip_must: 'must pass', gtip_on: (n, k) => `${n}/${k} journeys`,
+    w_speed: 'Speed first', w_budget: 'Budget first', w_balanced: 'Balanced', add_station: 'add a station…', remove: 'remove' },
+  id: { walk: 'jalan kaki', via: 'lewat', direct: 'langsung', min: 'mnt', xfer: 'transit', of: (n, k) => `${n} dari k = ${k}`,
+    transfers: n => `${n} kali transit`, unmeasured: '(jarak TJ tidak terukur)', rank: n => `peringkat #${n}`,
+    cheapest: 'termurah', fastest: 'tercepat', pareto: 'pareto',
+    noroute: 'Tidak ada rute', noroute_why: why => `Blok M tidak terjangkau dengan ${why}. Longgarkan satu batasan.`,
+    closedN: n => `${n} stasiun ditutup`, mustN: list => `wajib lewat ${list.join(' dan ')}`, onlyModes: m => `hanya ${m}`,
+    tip_closed: 'ditutup · jalur terputus di sini · klik untuk membuka', tip_must: 'wajib lewat · shift-klik untuk melepas',
+    tip_on: (n, k) => `dilewati ${n} dari ${k} perjalanan`, tip_spof: ' · titik kegagalan tunggal', tip_none: 'tidak dilewati perjalanan mana pun',
+    gtip_closed: 'ditutup', gtip_must: 'wajib lewat', gtip_on: (n, k) => `${n}/${k} perjalanan`,
+    w_speed: 'Utamakan cepat', w_budget: 'Utamakan murah', w_balanced: 'Seimbang', add_station: 'tambah stasiun…', remove: 'hapus' },
+};
+let lang = 'en';
+try { lang = localStorage.getItem('transitlab.lang') === 'id' || (!localStorage.getItem('transitlab.lang') && navigator.language.startsWith('id')) ? 'id' : 'en'; } catch { /* storage unavailable */ }
+const T = () => STR[lang];
 const CSS_MODE = m => (m === 'transjakarta' ? 'tj' : m);
 const GAP = 4.5;                       // spacing between parallel lines
 
@@ -160,16 +185,16 @@ function recompute() {
 
 function renderList() {
   const { paths } = result;
-  $('#count').textContent = paths.length ? `· ${paths.length} of k = ${data.meta.k}` : '';
+  $('#count').textContent = paths.length ? T().of(paths.length, data.meta.k) : '';
   $('#list').replaceChildren(...paths.map((p, i) => {
     const li = document.createElement('li');
     const via = [], chips = [];
     for (const e of p.path) if (e.mode !== 'walk' && e.route !== chips.at(-1)?.route) { if (chips.length) via.push(st(e.from)); chips.push(e); }
     li.innerHTML = `<span class="n">${i + 1}</span>
       <span><span class="modes">${chips.map(e => `<i style="--c:${ROUTE_LINE.get(e.route)?.color ?? '#888'}" title="${e.route}">${ROUTE_LINE.get(e.route)?.id ?? e.route}</i>`).join('')}</span>
-        <span class="via">${via.length ? 'via ' + via.join(' · ') : 'direct'}</span>
-        ${p.tags.map(t => `<span class="tag ${t}">${t}</span>`).join('')}</span>
-      <span class="stat">${rp(p.fare)}<small>${p.time} min · ${p.transfers} xfer</small></span>`;
+        <span class="via">${via.length ? T().via + ' ' + via.join(' · ') : T().direct}</span>
+        ${p.tags.map(t => `<span class="tag ${t}">${T()[t]}</span>`).join('')}</span>
+      <span class="stat">${rp(p.fare)}<small>${p.time} ${T().min} · ${p.transfers} ${T().xfer}</small></span>`;
     li.addEventListener('click', () => { selected = i; showPath(true); });
     return li;
   }));
@@ -184,16 +209,17 @@ function showPath(play) {
   for (const el of stationEls.values()) { el.classList.remove('on', 'via'); el.style.removeProperty('--delay'); }
 
   if (!p) {
-    const why = [closed.size && `${closed.size} station${closed.size > 1 ? 's' : ''} closed`, must.size && `must pass ${[...must].join(' and ')}`, modes.size < 4 && `only ${[...modes].map(m => MODE_LABEL[m]).join(', ')}`].filter(Boolean).join(', ');
-    $('#best').innerHTML = `<div class="big none">No route</div><div>Blok M is unreachable with ${why}. Relax one constraint.</div>`;
+    const why = [closed.size && T().closedN(closed.size), must.size && T().mustN([...must]), modes.size < 4 && T().onlyModes([...modes].map(m => MODE_LABEL[m]).join(', '))].filter(Boolean).join(', ');
+    $('#best').innerHTML = `<div class="big none">${T().noroute}</div><div>${T().noroute_why(why)}</div>`;
     return;
   }
   const steps = p.path.filter(e => e.mode !== 'walk' || st(e.from) !== st(e.to)).map(e => {
     const line = ROUTE_LINE.get(e.route);
-    return `<li><i style="--c:${line?.color ?? 'var(--walk)'}"></i>${MODE_LABEL[e.mode]}${e.mode === 'walk' || line?.id === MODE_LABEL[e.mode] ? '' : ' ' + (line?.id ?? e.route)} · ${st(e.from)} → ${st(e.to)} <span>· ${e.time} min${e.fare ? ' · ' + rp(e.fare) : ''}</span></li>`;
+    const label = e.mode === 'walk' ? T().walk : MODE_LABEL[e.mode] + (line?.id === MODE_LABEL[e.mode] ? '' : ' ' + (line?.id ?? e.route));
+    return `<li><i style="--c:${line?.color ?? '#6b7280'}"></i>${label} · ${st(e.from)} → ${st(e.to)} <span>· ${e.time} ${T().min}${e.fare ? ' · ' + rp(e.fare) : ''}</span></li>`;
   });
   $('#best').innerHTML = `<div class="big">${rp(p.fare)} · ${p.time} min</div>
-    <div>${p.transfers} transfer${p.transfers === 1 ? '' : 's'} · ${(p.dist / 1000).toFixed(1)} km${p.dist ? '' : ' (TJ hops unmeasured)'} · rank #${selected + 1}${p.tags.map(t => `<span class="tag ${t}">${t}</span>`).join('')}</div>
+    <div>${T().transfers(p.transfers)} · ${(p.dist / 1000).toFixed(1)} km${p.dist ? '' : ' ' + T().unmeasured} · ${T().rank(selected + 1)}${p.tags.map(t => `<span class="tag ${t}">${T()[t]}</span>`).join('')}</div>
     <ul class="steps">${steps.join('')}</ul>`;
 
   // Route overlay: each hop drawn along its line's polyline, animated in sequence.
@@ -274,7 +300,7 @@ function initGeo() {
     const dir = GLABEL[id] || 'right', off = { right: [8, 0], left: [-8, 0], top: [0, -8], bottom: [0, 8] }[dir];
     mk.bindTooltip(id, { pane: 'labels', permanent: true, direction: dir, offset: off, className: 'glabel ' + (terminal ? 'l0' : xfer ? 'l1' : 'l2') });
     if (!terminal) mk.on('click', ev => { ev.originalEvent.shiftKey ? toggleMust(id) : toggleClosed(id); });
-    mk.on('mouseover', () => { const n = result.criticality.get(id) || 0, k = result.paths.length; mk.setTooltipContent(`${id} · ${closed.has(id) ? 'closed' : must.has(id) ? 'must pass' : `${n}/${k} routes`}`); });
+    mk.on('mouseover', () => { const n = result.criticality.get(id) || 0, k = result.paths.length; mk.setTooltipContent(`${id} · ${closed.has(id) ? T().gtip_closed : must.has(id) ? T().gtip_must : T().gtip_on(n, k)}`); });
     mk.on('mouseout', () => mk.setTooltipContent(id));
     markers.set(id, mk);
   }
@@ -349,9 +375,10 @@ gStations.addEventListener('click', ev => {
 // Must-pass picker: a select that adds, chips that remove.
 const mustSel = $('#mustsel');
 for (const id of Object.keys(STATIONS).filter(x => x !== start && x !== end).sort()) mustSel.append(new Option(id, id));
+mustSel.options[0].textContent = T().add_station;
 mustSel.addEventListener('change', () => { if (mustSel.value) toggleMust(mustSel.value); mustSel.value = ''; });
 function renderMust() {
-  $('#mustchips').replaceChildren(...[...must].map(id => { const b = document.createElement('button'); b.type = 'button'; b.textContent = id; b.title = 'remove'; b.addEventListener('click', () => toggleMust(id)); return b; }));
+  $('#mustchips').replaceChildren(...[...must].map(id => { const b = document.createElement('button'); b.type = 'button'; b.textContent = id; b.title = T().remove; b.addEventListener('click', () => toggleMust(id)); return b; }));
 }
 for (const cb of document.querySelectorAll('.modes input')) cb.addEventListener('change', () => { cb.checked ? modes.add(cb.dataset.mode) : modes.delete(cb.dataset.mode); recompute(); });
 gStations.addEventListener('mousemove', ev => {
@@ -359,7 +386,7 @@ gStations.addEventListener('mousemove', ev => {
   if (!grp) { tip.hidden = true; return; }
   const id = grp.dataset.id, n = result.criticality.get(id) || 0, k = result.paths.length;
   const lines = LINES.filter(l => l.stops.includes(id)).map(l => `<i style="--c:${l.color}">${l.id}</i>`).join('');
-  const state = closed.has(id) ? 'closed · line cut here · click to reopen' : must.has(id) ? 'must pass · shift-click to release' : n ? `on ${n} of ${k} routes${n === k && k ? ' · single point of failure' : ''}` : 'on no current route';
+  const state = closed.has(id) ? T().tip_closed : must.has(id) ? T().tip_must : n ? T().tip_on(n, k) + (n === k && k ? T().tip_spof : '') : T().tip_none;
   tip.innerHTML = `<b>${id}</b><span class="lines">${lines}</span>${state}`;
   const r = $('.map').getBoundingClientRect();
   tip.style.left = `${ev.clientX - r.left}px`; tip.style.top = `${ev.clientY - r.top}px`;
@@ -370,7 +397,7 @@ gStations.addEventListener('mouseleave', () => { tip.hidden = true; });
 function readWeight() {
   wFare = +$('#w').value;
   $('#wout').value = wFare.toFixed(2);
-  $('#wlabel').textContent = wFare < 0.35 ? 'Speed first' : wFare > 0.65 ? 'Budget first' : 'Balanced';
+  $('#wlabel').textContent = wFare < 0.35 ? T().w_speed : wFare > 0.65 ? T().w_budget : T().w_balanced;
 }
 $('#w').addEventListener('input', () => { readWeight(); recompute(); });
 $('#play').addEventListener('click', () => showPath(true));
@@ -382,6 +409,30 @@ $('#reset').addEventListener('click', () => {
   recompute();
 });
 
-readWeight();
+// Presets from the "break the network" strip.
+for (const b of document.querySelectorAll('[data-preset]')) b.addEventListener('click', () => {
+  const [kind, arg] = b.dataset.preset.split(':');
+  closed.clear(); must.clear();
+  for (const cb of document.querySelectorAll('.modes input')) { cb.checked = true; modes.add(cb.dataset.mode); }
+  if (kind === 'close') closed.add(arg);
+  if (kind === 'must') must.add(arg);
+  if (kind === 'modes') for (const cb of document.querySelectorAll('.modes input')) { cb.checked = cb.dataset.mode === arg; if (!cb.checked) modes.delete(cb.dataset.mode); }
+  recompute();
+  document.querySelector('#lab').scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
+
+// Language: static copy toggles via CSS; dynamic copy re-renders.
+function setLang(l) {
+  lang = l;
+  document.documentElement.lang = l; document.documentElement.dataset.lang = l;
+  for (const b of document.querySelectorAll('.lang button')) b.setAttribute('aria-pressed', String(b.dataset.lang === l));
+  try { localStorage.setItem('transitlab.lang', l); } catch { /* ignore */ }
+  mustSel.options[0].textContent = T().add_station;
+  readWeight();
+  if (result) { renderList(); showPath(false); }
+}
+for (const b of document.querySelectorAll('.lang button')) b.addEventListener('click', () => setLang(b.dataset.lang));
+
+setLang(lang);
 recompute();
 window.transitlab = { get geo() { return geo; }, get result() { return result; }, closed };

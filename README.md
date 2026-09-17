@@ -17,6 +17,11 @@ only with horizontal, vertical and 45° segments, in its corridor colour;
 lines that share a corridor run side by side; interchanges are bold pills.
 A route lights up along the lines it actually rides, hop by hop.
 
+The page is bilingual. Every piece of static copy exists twice in
+`index.html` as `<span lang="en">` / `<span lang="id">` pairs and CSS shows
+one set; the few dynamic strings live in a small dictionary in `app.js`.
+The choice persists in `localStorage` and defaults to the browser language.
+
 ## What the maths does
 
 - **Dijkstra** on state (station, arriving mode) with a 5-minute penalty per
