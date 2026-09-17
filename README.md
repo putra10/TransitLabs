@@ -1,0 +1,54 @@
+# TransitLab
+
+Interactive route optimiser for Universitas Indonesia → Blok M. The transit
+network (KRL, MRT, LRT Jabodebek, TransJakarta) is a directed weighted graph
+with a real fare and Google Maps travel time on every hop. Visitors press
+play to watch the best route light up, drag a fare-vs-time weight, and click
+any station to close it and see the engine reroute in real time.
+
+Plain HTML, CSS and ES modules. No framework, no build step, no backend, no
+API calls at runtime. The engine is a port of the graph-theory capstone
+notebook (`tgoptggraph.ipynb`), FMIPA Universitas Indonesia.
+
+## What the maths does
+
+- **Dijkstra** on state (station, arriving mode) with a 5-minute penalty per
+  mode change. Keying on the arriving mode keeps the penalty exact.
+- **Yen's k-shortest paths** for the 10 best distinct journeys. The line
+  graph reaches the same ride through several intermediate-stop edges, so
+  paths are deduplicated by journey (which line boarded at which station).
+- **Pareto front** on (fare, time), and a score `w·fare + (1−w)·time` on
+  min-max normalised values that the slider controls.
+- **Criticality** on hover: how many of the 10 routes pass through a station.
+  A station on all 10 is a single point of failure.
+
+## Run
+
+```powershell
+python -m http.server 8765 --bind 127.0.0.1 --directory public
+```
+
+Open http://127.0.0.1:8765. Modules need an HTTP server; `file://` will not work.
+
+```powershell
+node tests/engine.test.mjs
+```
+
+## Data
+
+`public/data/optg.json` is generated once from the notebook's inputs kept in
+`scripts/raw/`: the two public Google Sheet CSVs (64 candidate routes and the
+field-collected fares) and the frozen Maps snapshot (fetched 2026-09-11 for a
+Monday 11:00 WIB departure). Regenerate with:
+
+```powershell
+python scripts/export_graph.py
+```
+
+Pass `--refetch` to pull the sheets again first. Station coordinates in the
+exporter are hand-nudged for a readable schematic, not survey positions.
+
+## Deploy
+
+Import the folder into Vercel with framework **Other**, no build command and
+`public` as the output directory. `vercel.json` already says so.

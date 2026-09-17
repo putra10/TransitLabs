@@ -1,0 +1,47 @@
+// node tests/engine.test.mjs
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { buildGraph, solve, yen, paretoFront } from '../public/engine.mjs';
+
+const data = JSON.parse(readFileSync(new URL('../public/data/optg.json', import.meta.url), 'utf8'));
+const g = buildGraph(data);
+
+// Baseline. The notebook's k=10 held four copies of the KRL→KRL→MRT trip; with
+// one slot per distinct journey the fastest is still Rp 13,000 / 61 min and the
+// cheapest Rp 6,500 / 67 min, and the balanced weight now picks the cheap one.
+const { paths, criticality } = solve(g, data);
+assert.equal(paths.length, 10, 'ten paths');
+assert.equal(new Set(paths.map(p => p.journey)).size, 10, 'distinct journeys');
+const best = paths[0];
+assert.equal(best.fare, 6500);
+assert.equal(best.time, 67);
+const fastest = paths.find(p => p.tags.includes('fastest'));
+assert.equal(fastest.fare, 13000);
+assert.equal(fastest.time, 61);
+assert.equal(fastest.transfers, 2);
+assert.deepEqual(fastest.path.map(e => e.mode).filter(m => m !== 'walk'), ['krl', 'krl', 'mrt']);
+assert.ok(paths.every(p => p.nodes[0] === 'UI' && p.nodes.at(-1) === 'Blok M'));
+assert.ok(paths.every(p => new Set(p.nodes).size === p.nodes.length), 'simple paths');
+
+// Weight extremes reorder the same set.
+assert.equal(solve(g, data, { wFare: 1 }).paths[0].fare, 6500);
+assert.equal(solve(g, data, { wFare: 0 }).paths[0].time, 61);
+
+// Closing a station removes it from every path and the engine reroutes.
+const closed = new Set(['Manggarai']);
+const rerouted = solve(g, data, { closed }).paths;
+assert.ok(rerouted.length > 0, 'still reachable');
+assert.ok(rerouted.every(p => !p.stations.includes('Manggarai')));
+assert.ok(Math.min(...rerouted.map(p => p.time)) >= fastest.time, 'closure never speeds things up');
+
+// Closing the only exit strands the traveller.
+assert.deepEqual(yen(g, 'UI', 'Blok M', 3, new Set(['Stasiun UI', 'Manggarai', 'Pasar Minggu', 'Fatmawati'])), []);
+
+// Pareto: dominated point excluded.
+assert.deepEqual([...paretoFront([{ fare: 1, time: 1 }, { fare: 2, time: 2 }, { fare: 0, time: 3 }])], [0, 2]);
+
+// Criticality counts stations the traveller actually passes.
+assert.equal(criticality.get('UI'), 10);
+assert.equal(criticality.get('Blok M'), 10);
+
+console.log('ok:', paths.map(p => `${p.fare}/${p.time}`).join(' '));
