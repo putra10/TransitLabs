@@ -48,7 +48,7 @@ const isTransfer = (prev, mode) => prev && prev !== mode && mode !== 'walk';
  * the notebook keys on node only, which can discard a slightly slower arrival
  * that would have avoided a later transfer.
  */
-function dijkstra(g, start, end, blockedNodes, blockedEdges) {
+function dijkstra(g, start, end, blockedNodes, blockedEdges, closed = new Set()) {
   const best = new Map();           // "node|mode" -> cost
   const prev = new Map();           // "node|mode" -> [edge, prevKey]
   const pq = new Heap();
@@ -62,6 +62,8 @@ function dijkstra(g, start, end, blockedNodes, blockedEdges) {
     for (const e of g.adj.get(node) || []) {
       if (blockedNodes.has(e.to) && e.to !== end) continue;
       if (blockedEdges.has(`${e.from}>${e.to}>${e.route}`)) continue;
+      // A closed station cuts the line: a ride that passes through it is unavailable.
+      if (e.via && e.via.some(s => closed.has(s))) continue;
       const nc = cost + e.time + (isTransfer(mode, e.mode) ? g.penalty : 0);
       const nk = `${e.to}|${e.mode}`;
       if (nc < (best.get(nk) ?? Infinity)) {
@@ -105,7 +107,7 @@ function summarize(g, start, edges) {
 export function yen(g, start, end, K, closed = new Set()) {
   // Closed stations block every raw node drawn at that station.
   const closedNodes = new Set([...g.station].filter(([, s]) => closed.has(s)).map(([n]) => n));
-  const first = dijkstra(g, start, end, closedNodes, new Set());
+  const first = dijkstra(g, start, end, closedNodes, new Set(), closed);
   if (!first) return [];
   const A = [summarize(g, start, first)];
   const B = new Heap();
@@ -122,7 +124,7 @@ export function yen(g, start, end, K, closed = new Set()) {
           const e = p.path[i]; blockedEdges.add(`${e.from}>${e.to}>${e.route}`);
         }
       }
-      const spurPath = dijkstra(g, spur, end, rootNodes, blockedEdges);
+      const spurPath = dijkstra(g, spur, end, rootNodes, blockedEdges, closed);
       if (!spurPath) continue;
       const cand = summarize(g, start, [...prevPath.slice(0, i), ...spurPath]);
       const sig = cand.nodes.join('>');

@@ -2,8 +2,9 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { buildGraph, solve, yen, paretoFront } from '../public/engine.mjs';
+import { annotateVia } from '../public/lines.mjs';
 
-const data = JSON.parse(readFileSync(new URL('../public/data/optg.json', import.meta.url), 'utf8'));
+const data = annotateVia(JSON.parse(readFileSync(new URL('../public/data/optg.json', import.meta.url), 'utf8')));
 const g = buildGraph(data);
 
 // Baseline. The notebook's k=10 held four copies of the KRL→KRL→MRT trip; with
@@ -33,6 +34,15 @@ const rerouted = solve(g, data, { closed }).paths;
 assert.ok(rerouted.length > 0, 'still reachable');
 assert.ok(rerouted.every(p => !p.stations.includes('Manggarai')));
 assert.ok(Math.min(...rerouted.map(p => p.time)) >= fastest.time, 'closure never speeds things up');
+
+// A closed station cuts the line through it: with Duren Kalibata closed, no KRL
+// ride from Stasiun UI can reach Cawang or anything beyond, even though the
+// graph edge itself does not touch Duren Kalibata.
+assert.ok(paths.some(p => p.path.some(e => e.via.includes('Duren Kalibata'))), 'baseline rides through Duren Kalibata');
+const cut = solve(g, data, { closed: new Set(['Duren Kalibata']) }).paths;
+assert.ok(cut.length > 0, 'still reachable by other lines');
+assert.ok(cut.every(p => p.path.every(e => !e.via.includes('Duren Kalibata') && !p.stations.includes('Duren Kalibata'))));
+assert.ok(cut.every(p => !p.path.some(e => e.route === 'Bogor Line' && p.stations.includes('Cawang'))), 'no KRL into Cawang');
 
 // Closing the only exit strands the traveller.
 assert.deepEqual(yen(g, 'UI', 'Blok M', 3, new Set(['Stasiun UI', 'Manggarai', 'Pasar Minggu', 'Fatmawati'])), []);

@@ -103,3 +103,27 @@ export const LINES = [
 ];
 
 export const ROUTE_LINE = new Map(LINES.flatMap(l => l.routes.map(r => [r, l])));
+
+/** Real stops `line` passes strictly between a and b (either direction); [] if a or b is not on it. */
+export function stopsBetween(line, a, b) {
+  const names = line.stops.map(x => Array.isArray(x) ? null : x.replace(/^~/, ''));
+  const i = names.indexOf(a), j = names.indexOf(b);
+  if (i < 0 || j < 0) return [];
+  const step = i < j ? 1 : -1, out = [];
+  for (let k = i + step; k !== j; k += step) {
+    const x = line.stops[k];
+    if (!Array.isArray(x) && !x.startsWith('~')) out.push(names[k]);
+  }
+  return out;
+}
+
+/** Tag every graph edge with the stations its ride passes through, so a closed
+ *  station cuts the line, not just the boarding there. */
+export function annotateVia(data) {
+  const station = new Map(data.nodes.map(n => [n.id, n.station]));
+  for (const e of data.edges) {
+    const line = ROUTE_LINE.get(e.route);
+    e.via = line ? stopsBetween(line, station.get(e.from), station.get(e.to)) : [];
+  }
+  return data;
+}

@@ -31,9 +31,10 @@ A route lights up along the lines it actually rides, hop by hop.
 - **Pass-through stations.** A graph edge like Stasiun UI → Manggarai is one
   KRL ride, but the train physically passes Tanjung Barat, Pasar Minggu,
   Duren Kalibata, Cawang and Tebet. Both views draw the hop along the line and
-  blink those stations as it goes by. Closing a station blocks boarding,
-  alighting and transfers there; trains and buses still pass through it, as
-  they would in reality.
+  blink those stations as it goes by. Every edge carries that list, and
+  **closing a station cuts the line through it**: with Duren Kalibata closed
+  no KRL ride from Stasiun UI can reach Cawang, so the engine falls back to
+  the buses. This is the OPTG logic from the capstone graph.
 
 ## Run
 

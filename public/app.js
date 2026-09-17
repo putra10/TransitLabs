@@ -1,5 +1,5 @@
 import { buildGraph, solve } from './engine.mjs';
-import { STATIONS, GEO, GLABEL, LABEL, LINES, ROUTE_LINE } from './lines.mjs';
+import { STATIONS, GEO, GLABEL, LABEL, LINES, ROUTE_LINE, stopsBetween, annotateVia } from './lines.mjs';
 
 const MODE_LABEL = { krl: 'KRL', mrt: 'MRT', lrt: 'LRT', transjakarta: 'TJ', walk: 'walk' };
 const CSS_MODE = m => (m === 'transjakarta' ? 'tj' : m);
@@ -14,6 +14,7 @@ const svgEl = (tag, attrs = {}) => {
 const rp = n => 'Rp ' + n.toLocaleString('id-ID');
 
 const [data, GEOM] = await Promise.all([fetch('data/optg.json').then(r => r.json()), fetch('data/geometry.json').then(r => r.ok ? r.json() : {})]);
+annotateVia(data);
 const g = buildGraph(data);
 const { start, end } = data.meta;
 const st = n => g.station.get(n) ?? n;
@@ -83,15 +84,10 @@ const polyLen = pts => pts.reduce((s, p, i) => i ? s + Math.hypot(p[0] - pts[i -
 // Stations the line passes strictly between a and b (real stops only), with
 // their fraction of the way along `pathOf(a, x)` vs `pathOf(a, b)`.
 function viaStations(line, a, b, pathOf) {
-  const names = line.stops.map(nameOf);
-  const i = names.indexOf(a), j = names.indexOf(b);
-  if (i < 0 || j < 0) return [];
-  const step = i < j ? 1 : -1, total = polyLen(pathOf(a, b) || []) || 1, out = [];
-  for (let k = i + step; k !== j; k += step) {
-    const stop = line.stops[k];
-    if (Array.isArray(stop) || stop.startsWith('~')) continue;
-    const part = pathOf(a, names[k]);
-    if (part) out.push({ id: names[k], f: polyLen(part) / total });
+  const total = polyLen(pathOf(a, b) || []) || 1, out = [];
+  for (const id of stopsBetween(line, a, b)) {
+    const part = pathOf(a, id);
+    if (part) out.push({ id, f: polyLen(part) / total });
   }
   return out;
 }
@@ -347,7 +343,7 @@ gStations.addEventListener('mousemove', ev => {
   if (!grp) { tip.hidden = true; return; }
   const id = grp.dataset.id, n = result.criticality.get(id) || 0, k = result.paths.length;
   const lines = LINES.filter(l => l.stops.includes(id)).map(l => `<i style="--c:${l.color}">${l.id}</i>`).join('');
-  tip.innerHTML = `<b>${id}</b><span class="lines">${lines}</span>${closed.has(id) ? 'closed · click to reopen' : n ? `on ${n} of ${k} routes${n === k && k ? ' · single point of failure' : ''}` : 'on no current route'}`;
+  tip.innerHTML = `<b>${id}</b><span class="lines">${lines}</span>${closed.has(id) ? 'closed · line cut here · click to reopen' : n ? `on ${n} of ${k} routes${n === k && k ? ' · single point of failure' : ''}` : 'on no current route'}`;
   const r = $('.map').getBoundingClientRect();
   tip.style.left = `${ev.clientX - r.left}px`; tip.style.top = `${ev.clientY - r.top}px`;
   tip.hidden = false;
