@@ -7,9 +7,9 @@
 <title>TransitLab · a graph that reroutes</title>
 <meta name="description" content="Universitas Indonesia to Blok M as a weighted transit graph. Real fares, real travel minutes, Dijkstra and Yen's k-shortest paths. Close a station and watch it reroute.">
 <meta property="og:title" content="TransitLab · a graph that reroutes">
-<meta property="og:description" content="Sixty-four ways from campus to Blok M, one graph that recomputes when you break it.">
+<meta property="og:description" content="64 ways from campus to Blok M, one graph that recomputes when you break it.">
 <meta property="og:type" content="website">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><circle cx='8' cy='8' r='6' fill='none' stroke='%23c8102e' stroke-width='3'/></svg>">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" integrity="sha512-h9FcoyWjHcOcmEVkxOfTLnmZFWIH0iZhZT1H2TbOq55xssQGEJHEaIm+PgoUaZbRvQTNTluNOEfb1ZRy6D3BOw==" crossorigin="anonymous" referrerpolicy="no-referrer">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" integrity="sha512-puJW3E/qXDqYp9IfhAI54BJEaWIfloJ7JWs7OeD5i6ruC9JZL1gERT1wjtwXFlh7CjE7ZJ+/vcRZRkIYIb6p4g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <link rel="stylesheet" href="style.css">
@@ -31,7 +31,7 @@
   <section class="intro">
     <div>
       <div class="eyebrow"><span class="live-dot"></span> <span lang="en">GRAPH THEORY, MEET THE COMMUTE</span><span lang="id">TEORI GRAF, BERTEMU PERJALANAN HARIAN</span></div>
-      <h1><span lang="en">Sixty-four ways to Blok M.<br>One graph that reroutes.</span><span lang="id">Enam puluh empat jalan ke Blok M.<br>Satu graf yang mencari jalan lain.</span></h1>
+      <h1><span lang="en">64 ways to Blok M.<br>One graph that reroutes.</span><span lang="id">64 jalan ke Blok M.<br>Satu graf yang mencari jalan lain.</span></h1>
       <p><span lang="en"><strong>Every commute from Universitas Indonesia to Blok M, as a weighted graph.</strong> Real fares, real travel minutes, a transfer penalty. Press play to watch the best route light up. Close a station and the whole network recomputes in front of you.</span><span lang="id"><strong>Semua perjalanan dari Universitas Indonesia ke Blok M, sebagai graf berbobot.</strong> Tarif nyata, menit tempuh nyata, penalti pindah moda. Tekan putar dan rute terbaik menyala. Tutup satu stasiun dan seluruh jaringan dihitung ulang di depan mata.</span></p>
       <div class="hero-hook">
         <a class="cta" href="#lab"><span lang="en">Play the route</span><span lang="id">Putar rutenya</span> <span>↓</span></a>
@@ -137,7 +137,7 @@
     <div class="method-grid">
       <div>
         <h3>01 · <span lang="en">The graph</span><span lang="id">Grafnya</span></h3>
-        <p><span lang="en">The network is an <em>Ostensive Public Transportation Graph</em>: stations and bus stops are nodes, every ride between two of them is a directed edge labelled with its mode, fare and travel time. Sixty-four candidate routes from Universitas Indonesia to Blok M were surveyed on the ground, combining KRL Commuter Line, MRT, LRT Jabodebek and TransJakarta. Fares were recorded in the field; travel minutes come from a frozen Google Maps snapshot for a Monday late morning.</span><span lang="id">Jaringannya adalah <em>Ostensive Public Transportation Graph</em>: stasiun dan halte menjadi simpul, setiap perjalanan di antara dua simpul menjadi busur berarah dengan label moda, tarif, dan waktu tempuh. Enam puluh empat kandidat rute dari Universitas Indonesia ke Blok M disurvei langsung di lapangan, menggabungkan KRL Commuter Line, MRT, LRT Jabodebek, dan TransJakarta. Tarif dicatat di lapangan; menit tempuh diambil dari snapshot Google Maps yang dibekukan untuk Senin menjelang siang.</span></p>
+        <p><span lang="en">The network is an <em>Ostensive Public Transportation Graph</em>: stations and bus stops are nodes, every ride between two of them is a directed edge labelled with its mode, fare and travel time. 64 candidate routes from Universitas Indonesia to Blok M were surveyed on the ground, combining KRL Commuter Line, MRT, LRT Jabodebek and TransJakarta. Fares were recorded in the field; travel minutes come from a frozen Google Maps snapshot for a Monday late morning.</span><span lang="id">Jaringannya adalah <em>Ostensive Public Transportation Graph</em>: stasiun dan halte menjadi simpul, setiap perjalanan di antara dua simpul menjadi busur berarah dengan label moda, tarif, dan waktu tempuh. 64 kandidat rute dari Universitas Indonesia ke Blok M disurvei langsung di lapangan, menggabungkan KRL Commuter Line, MRT, LRT Jabodebek, dan TransJakarta. Tarif dicatat di lapangan; menit tempuh diambil dari snapshot Google Maps yang dibekukan untuk Senin menjelang siang.</span></p>
       </div>
       <div>
         <h3>02 · <span lang="en">Shortest paths</span><span lang="id">Lintasan terpendek</span></h3>
