@@ -28,14 +28,21 @@ A route lights up along the lines it actually rides, hop by hop.
   min-max normalised values that the slider controls.
 - **Criticality** on hover: how many of the 10 routes pass through a station.
   A station on all 10 is a single point of failure.
+- **Pass-through stations.** A graph edge like Stasiun UI → Manggarai is one
+  KRL ride, but the train physically passes Tanjung Barat, Pasar Minggu,
+  Duren Kalibata, Cawang and Tebet. Both views draw the hop along the line and
+  blink those stations as it goes by. Closing a station blocks boarding,
+  alighting and transfers there; trains and buses still pass through it, as
+  they would in reality.
 
 ## Run
 
 ```powershell
-python -m http.server 8765 --bind 127.0.0.1 --directory public
+python scripts/serve.py
 ```
 
-Open http://127.0.0.1:8765. Modules need an HTTP server; `file://` will not work.
+Open http://127.0.0.1:8765. Modules need an HTTP server; `file://` will not
+work. The script serves `public/` with caching off.
 
 ```powershell
 node tests/engine.test.mjs

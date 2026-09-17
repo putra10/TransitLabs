@@ -1,5 +1,5 @@
 import { buildGraph, solve } from './engine.mjs';
-import { STATIONS, GEO, LABEL, LINES, ROUTE_LINE } from './lines.mjs';
+import { STATIONS, GEO, GLABEL, LABEL, LINES, ROUTE_LINE } from './lines.mjs';
 
 const MODE_LABEL = { krl: 'KRL', mrt: 'MRT', lrt: 'LRT', transjakarta: 'TJ', walk: 'walk' };
 const CSS_MODE = m => (m === 'transjakarta' ? 'tj' : m);
@@ -13,7 +13,7 @@ const svgEl = (tag, attrs = {}) => {
 };
 const rp = n => 'Rp ' + n.toLocaleString('id-ID');
 
-const data = await fetch('data/optg.json').then(r => r.json());
+const [data, GEOM] = await Promise.all([fetch('data/optg.json').then(r => r.json()), fetch('data/geometry.json').then(r => r.ok ? r.json() : {})]);
 const g = buildGraph(data);
 const { start, end } = data.meta;
 const st = n => g.station.get(n) ?? n;
@@ -77,6 +77,23 @@ function slice(line, a, b) {
     out.push(...(out.length ? seg.slice(1) : seg));
   }
   return rev ? out.reverse() : out;
+}
+
+const polyLen = pts => pts.reduce((s, p, i) => i ? s + Math.hypot(p[0] - pts[i - 1][0], p[1] - pts[i - 1][1]) : 0, 0);
+// Stations the line passes strictly between a and b (real stops only), with
+// their fraction of the way along `pathOf(a, x)` vs `pathOf(a, b)`.
+function viaStations(line, a, b, pathOf) {
+  const names = line.stops.map(nameOf);
+  const i = names.indexOf(a), j = names.indexOf(b);
+  if (i < 0 || j < 0) return [];
+  const step = i < j ? 1 : -1, total = polyLen(pathOf(a, b) || []) || 1, out = [];
+  for (let k = i + step; k !== j; k += step) {
+    const stop = line.stops[k];
+    if (Array.isArray(stop) || stop.startsWith('~')) continue;
+    const part = pathOf(a, names[k]);
+    if (part) out.push({ id: names[k], f: polyLen(part) / total });
+  }
+  return out;
 }
 
 // ── Static network ────────────────────────────────────────────────────────────
@@ -164,7 +181,7 @@ function showPath(play) {
   gRoute.replaceChildren();
   map.classList.remove('playing');
   map.classList.toggle('has-route', !!p);
-  for (const el of stationEls.values()) { el.classList.remove('on'); el.style.removeProperty('--delay'); }
+  for (const el of stationEls.values()) { el.classList.remove('on', 'via'); el.style.removeProperty('--delay'); }
 
   if (!p) {
     $('#best').innerHTML = `<div class="big none">No route</div><div>Blok M is unreachable with ${closed.size} station${closed.size > 1 ? 's' : ''} closed. Reopen one.</div>`;
@@ -189,7 +206,7 @@ function showPath(play) {
     const el = svgEl('g', { class: `route ${CSS_MODE(e.mode)}`, style: `--c:${line?.color ?? 'var(--walk)'}` });
     el.append(svgEl('path', { d, class: 'casing' }), svgEl('path', { d, class: 'ink' }));
     gRoute.append(el);
-    segs.push({ el, b, len: el.lastChild.getTotalLength() });
+    segs.push({ el, a, b, line, len: el.lastChild.getTotalLength() });
   }
   const total = segs.reduce((s, x) => s + x.len, 0) || 1, DUR = 2.6;
   let t = 0;
@@ -198,21 +215,45 @@ function showPath(play) {
   for (const s of segs) {
     const dur = DUR * s.len / total;
     s.el.style.setProperty('--len', s.len.toFixed(1)); s.el.style.setProperty('--dur', `${dur.toFixed(2)}s`); s.el.style.setProperty('--delay', `${t.toFixed(2)}s`);
+    // Trains and buses pass stations the graph edge skips: let them blink by.
+    if (s.line) for (const v of viaStations(s.line, s.a, s.b, (x, y) => slice(s.line, x, y))) {
+      const el = stationEls.get(v.id); if (el.classList.contains('on')) continue;
+      el.classList.add('via'); el.style.setProperty('--delay', `${(t + dur * v.f).toFixed(2)}s`);
+    }
     t += dur;
-    const el = stationEls.get(s.b); el.classList.add('on'); el.style.setProperty('--delay', `${t.toFixed(2)}s`);
+    const el = stationEls.get(s.b); el.classList.add('on'); el.classList.remove('via'); el.style.setProperty('--delay', `${t.toFixed(2)}s`);
   }
-  if (geo) geoRoute(p, segs.map(x => x.b));
+  if (geo) geoRoute(p);
   if (play) requestAnimationFrame(() => { map.classList.add('playing'); geo?.el.classList.add('playing'); });
 }
 
 // ── Map view: Leaflet on OpenStreetMap tiles, same state ─────────────────────
 let geo = null;
-const NAMED = line => line.stops.filter(x => !Array.isArray(x)).map(nameOf);
+const RAIL = new Set(['Bogor', 'Cikarang', 'MRT', 'LRT']);
+// Stops a line's traced geometry runs through (rail skips "~" halte, which sit off the track).
+const GSTOPS = line => line.stops.filter(x => !Array.isArray(x) && !(RAIL.has(line.id) && x.startsWith('~'))).map(nameOf);
+// Traced path along the line between two of its stops, or null if untraced.
+function geoPath(line, a, b) {
+  const names = GSTOPS(line), cache = GEOM[line.id] || {};
+  let i = names.indexOf(a), j = names.indexOf(b);
+  if (i < 0 || j < 0) return null;
+  const rev = i > j; if (rev) [i, j] = [j, i];
+  const out = [];
+  for (let k = i; k < j; k++) {
+    const x = names[k], y = names[k + 1];
+    const seg = cache[`${x}|${y}`] || (cache[`${y}|${x}`] ? [...cache[`${y}|${x}`]].reverse() : null);
+    if (!seg) return null;
+    out.push(...(out.length ? seg.slice(1) : seg));
+  }
+  return rev ? out.reverse() : out;
+}
+const geoLine = line => { const n = GSTOPS(line); return geoPath(line, n[0], n.at(-1)) || n.map(x => GEO[x]); };
 function geoStyle(id) {
   const mk = geo.markers.get(id), terminal = id === start || id === end, on = stationEls.get(id).classList.contains('on');
   mk.setStyle(closed.has(id)
     ? { color: '#f43f5e', dashArray: '2 2', fillColor: '#fee2e2', weight: 2 }
     : { color: terminal ? '#fff' : '#1f2937', dashArray: null, fillColor: terminal ? '#e11d48' : '#fff', weight: on ? 3 : 2 });
+  mk._path.classList.remove('gvia', 'gon'); mk._path.style.removeProperty('--delay');
 }
 function initGeo() {
   const el = $('#geo');
@@ -223,12 +264,13 @@ function initGeo() {
   m.createPane('labels').style.zIndex = 470;
   L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' }).addTo(m);
   const lines = L.layerGroup().addTo(m), routes = L.layerGroup().addTo(m), stations = L.layerGroup().addTo(m);
-  for (const line of LINES) L.polyline(NAMED(line).map(n => GEO[n]), { color: line.color, weight: line.rail ? 5 : 3.5, opacity: .9, className: 'gline' }).addTo(lines);
+  for (const line of LINES) L.polyline(geoLine(line), { color: line.color, weight: line.rail ? 5 : 3.5, opacity: .9, className: 'gline' }).addTo(lines);
   const markers = new Map();
   for (const [id, ll] of Object.entries(GEO)) {
     const terminal = id === start || id === end, xfer = stationEls.get(id).classList.contains('xfer');
     const mk = L.circleMarker(ll, { pane: 'stations', radius: terminal ? 8 : xfer ? 6.5 : 5, fillOpacity: 1, className: terminal ? '' : 'gstation' }).addTo(stations);
-    mk.bindTooltip(id, { pane: 'labels', permanent: true, direction: 'right', offset: [8, 0], className: 'glabel ' + (terminal ? 'l0' : xfer ? 'l1' : 'l2') });
+    const dir = GLABEL[id] || 'right', off = { right: [8, 0], left: [-8, 0], top: [0, -8], bottom: [0, 8] }[dir];
+    mk.bindTooltip(id, { pane: 'labels', permanent: true, direction: dir, offset: off, className: 'glabel ' + (terminal ? 'l0' : xfer ? 'l1' : 'l2') });
     if (!terminal) mk.on('click', () => { closed.has(id) ? closed.delete(id) : closed.add(id); recompute(); });
     mk.on('mouseover', () => { const n = result.criticality.get(id) || 0, k = result.paths.length; mk.setTooltipContent(`${id} · ${closed.has(id) ? 'closed' : `${n}/${k} routes`}`); });
     mk.on('mouseout', () => mk.setTooltipContent(id));
@@ -242,34 +284,36 @@ function initGeo() {
   tier();
   for (const id of markers.keys()) geoStyle(id);
 }
-function geoRoute(p, stopsOn) {
+function geoRoute(p) {
   geo.routes.clearLayers();
   geo.el.classList.remove('playing');
   geo.el.classList.toggle('has-route', !!p);
   for (const id of geo.markers.keys()) geoStyle(id);
   if (!p) return;
-  // Same hop sequence and timing as the schematic; each hop follows its line's stop order.
+  // Same hop sequence as the schematic; each hop follows its traced geometry.
   const hops = [];
   for (const e of p.path) {
     const a = st(e.from), b = st(e.to);
     if (a === b) continue;
     const line = ROUTE_LINE.get(e.route);
-    let pts = [GEO[a], GEO[b]];
-    if (line) {
-      const names = NAMED(line); let i = names.indexOf(a), j = names.indexOf(b);
-      if (i >= 0 && j >= 0) { const rev = i > j; if (rev) [i, j] = [j, i]; pts = names.slice(i, j + 1).map(n => GEO[n]); if (rev) pts.reverse(); }
-    }
+    const pts = (line && geoPath(line, a, b)) || [GEO[a], GEO[b]];
     const walk = e.mode === 'walk';
     const casing = L.polyline(pts, { pane: 'routes', color: '#fff', weight: walk ? 9 : 14, className: 'groute gcasing' + (walk ? ' gwalk' : '') }).addTo(geo.routes);
     const ink = L.polyline(pts, { pane: 'routes', color: walk ? '#111827' : (line?.color ?? '#6b7280'), weight: walk ? 3 : 7, dashArray: walk ? '4 5' : null, className: 'groute' + (walk ? ' gwalk' : '') }).addTo(geo.routes);
-    hops.push({ els: [casing._path, ink._path], len: ink._path.getTotalLength() });
+    hops.push({ a, b, line, els: [casing._path, ink._path], len: ink._path.getTotalLength() });
   }
   const total = hops.reduce((s, h) => s + h.len, 0) || 1, DUR = 2.6;
   let t = 0;
+  const mark = (id, cls, delay) => { const el = geo.markers.get(id)._path; el.classList.add(cls); el.style.setProperty('--delay', `${delay.toFixed(2)}s`); };
+  mark(st(start), 'gon', 0);
   for (const h of hops) {
     const dur = DUR * h.len / total;
     for (const el of h.els) { el.style.setProperty('--len', h.len.toFixed(1)); el.style.setProperty('--dur', `${dur.toFixed(2)}s`); el.style.setProperty('--delay', `${t.toFixed(2)}s`); }
+    if (h.line) for (const v of viaStations(h.line, h.a, h.b, (x, y) => geoPath(h.line, x, y))) {
+      if (!geo.markers.get(v.id)._path.classList.contains('gon')) mark(v.id, 'gvia', t + dur * v.f);
+    }
     t += dur;
+    geo.markers.get(h.b)._path.classList.remove('gvia'); mark(h.b, 'gon', t);
   }
 }
 function setView(which) {

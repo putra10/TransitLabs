@@ -73,6 +73,10 @@ footer { padding: 4px 24px 24px; color: var(--muted); font-size: 12px; }
 .geo.playing .groute { stroke-dasharray: var(--len) var(--len); stroke-dashoffset: var(--len); animation: draw var(--dur) linear var(--delay) forwards; }
 .geo.playing .groute.gwalk { stroke-dasharray: 4 5; stroke-dashoffset: 0; animation: fade .2s linear var(--delay) both; }
 .geo .leaflet-control-attribution { font-size: 10px; }
+.geo.playing .gon { animation: gpop .3s ease var(--delay) both; }
+.geo.playing .gvia { animation: gvia .35s ease var(--delay) both; }
+@keyframes gpop { from { stroke-width: 2; } 50% { stroke-width: 7; } to { stroke-width: 3; } }
+@keyframes gvia { from { stroke-width: 2; } 50% { stroke-width: 6; fill: #fde68a; } to { stroke-width: 2.5; fill: #fff; } }
 .walklink { fill: none; stroke: #6b7280; stroke-width: 2; stroke-dasharray: 3 4; opacity: .7; }
 .line { fill: none; stroke-width: 3.5; stroke-linecap: round; stroke-linejoin: round; transition: opacity .3s; }
 .line.rail { stroke-width: 4.5; }
@@ -100,6 +104,8 @@ footer { padding: 4px 24px 24px; color: var(--muted); font-size: 12px; }
 .station.closed text { fill: var(--closed); text-decoration: line-through; }
 .station.terminal text { font-weight: 800; font-size: 13px; }
 .playing .station.on .dot { animation: pop .3s ease var(--delay) both; }
+.playing .station.via .dot { animation: viapop .35s ease var(--delay) both; }
+@keyframes viapop { from { r: 5; stroke-width: 2; } 50% { r: 8; stroke-width: 3; fill: #fde68a; } to { r: 5.5; stroke-width: 2.5; fill: #fff; } }
 @keyframes pop { from { r: 5; } 50% { r: 11; } to { r: 6.5; } }
 .pulse { fill: none; stroke: var(--accent); stroke-width: 2; opacity: 0; }
 .playing .station.on .pulse { animation: pulse 1.4s ease-out var(--delay) 1; }
@@ -113,5 +119,5 @@ footer { padding: 4px 24px 24px; color: var(--muted); font-size: 12px; }
   .station text { font-size: 12px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .playing .route path, .playing .station.on .dot, .playing .station.on .pulse, .geo.playing .groute { animation-duration: .01s; animation-delay: 0s; }
+  .playing .route path, .playing .station.on .dot, .playing .station.via .dot, .playing .station.on .pulse, .geo.playing .groute, .geo.playing .gon, .geo.playing .gvia { animation-duration: .01s; animation-delay: 0s; }
 }

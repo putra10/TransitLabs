@@ -39,6 +39,14 @@ export const GEO = {
   'Fatmawati': [-6.29247, 106.79245], 'Kantor Pos Fatmawati': [-6.29441, 106.79504],
 };
 
+// Map-view label side where the default (right) would collide with a neighbour.
+export const GLABEL = {
+  'Simpang Kuningan': 'top', 'Tegal Parang': 'bottom', 'Kejaksaan Agung': 'left', 'CSW': 'right', 'Blok M': 'right',
+  'Cikoko': 'top', 'Cawang': 'bottom', 'Cawang-Sentral': 'right', 'Sudirman': 'top', 'Dukuh Atas': 'left', 'Galunggung': 'bottom',
+  'UI': 'left', 'Stasiun UI': 'right', 'Kuningan': 'right', 'Tegal Mampang': 'bottom', 'Hotel Maharadja': 'bottom',
+  'Senayan': 'left', 'Bundaran Senayan': 'left', 'Semanggi': 'right', 'Bendungan Hilir': 'right', 'SMPN 8': 'top', 'Cikini': 'right',
+};
+
 // [dx, dy, text-anchor] relative to the station dot.
 export const LABEL = {
   'Fatmawati': [-14, 4, 'end'], 'Blok A': [-14, 4, 'end'], 'Blok M': [-16, 5, 'end'], 'Kejaksaan Agung': [-14, 4, 'end'],
