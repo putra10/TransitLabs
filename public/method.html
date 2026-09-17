@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en" data-lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f6f5f0">
+<title>TransitLab · how it works</title>
+<meta name="description" content="Why Blok M, and how Dijkstra, Yen and a transfer penalty pick a route from Universitas Indonesia.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="./" aria-label="TransitLab home"><svg viewBox="0 0 36 36" aria-hidden="true"><path d="M6 27 14 19h8l8-8"/><circle cx="6" cy="27" r="3"/><circle cx="14" cy="19" r="3"/><circle cx="22" cy="19" r="3"/><circle cx="30" cy="11" r="3"/><path d="M14 19v8M22 19V9"/></svg>transitlab<span class="brand-dot">.</span></a>
+  <span class="top-tag"><span lang="en">UI → BLOK M · A GRAPH THAT REROUTES</span><span lang="id">UI → BLOK M · GRAF YANG MENCARI JALAN LAIN</span></span>
+  <nav>
+    <a href="./"><span lang="en">Lab</span><span lang="id">Lab</span></a>
+    <a href="method.html" aria-current="page"><span lang="en">How it works</span><span lang="id">Cara kerja</span></a>
+    <a href="data.html"><span lang="en">Data</span><span lang="id">Data</span></a>
+    <a href="https://www.putrarafy.com/Slide%20Presentasi%20Teori%20Graf-1_compressed.pdf" target="_blank" rel="noopener"><span lang="en">Slides ↗</span><span lang="id">Slide ↗</span></a>
+    <div class="lang" role="group" aria-label="Language"><button type="button" data-lang="en" aria-pressed="true">EN</button><button type="button" data-lang="id" aria-pressed="false">ID</button></div>
+  </nav>
+</header>
+<main class="page">
+  <section class="page-hero">
+    <span class="eyebrow"><span lang="en">NOTES FROM THE LAB</span><span lang="id">CATATAN DARI LAB</span></span>
+    <h1><span lang="en">How it works</span><span lang="id">Cara kerjanya</span></h1>
+    <p><span lang="en">A graph-theory final project that started with a question every UI student has asked: what is the best way to get to Blok M?</span><span lang="id">Proyek akhir Teori Graf yang berawal dari pertanyaan yang pernah diajukan setiap mahasiswa UI: bagaimana cara terbaik ke Blok M?</span></p>
+  </section>
+
+  <section class="prose">
+    <h2><span lang="en">Why Blok M</span><span lang="id">Mengapa Blok M</span></h2>
+    <p><span lang="en">The Depok campus of Universitas Indonesia sits at the southern edge of Greater Jakarta, and Blok M sits at the heart of South Jakarta's social life. For a UI student it is the default answer to "where do we go after this?": M Bloc Space for music and coffee, Blok M Plaza and the surrounding streets for food, Taman Literasi beside the MRT for a slow afternoon. In student slang it is a place to <em>healing</em>, to recover from a week of lectures and deadlines. Our team chose it because that trip is real: it is made thousands of times a week, by people who actually weigh fare against time, and who will happily take a slower train if it saves a transfer.</span><span lang="id">Kampus Depok Universitas Indonesia berada di tepi selatan Jabodetabek, sedangkan Blok M berada di jantung kehidupan sosial Jakarta Selatan. Bagi mahasiswa UI, Blok M adalah jawaban bawaan untuk "habis ini ke mana?": M Bloc Space untuk musik dan kopi, Blok M Plaza dan jalan-jalan di sekitarnya untuk makan, Taman Literasi di samping stasiun MRT untuk sore yang santai. Dalam bahasa sehari-hari mahasiswa, Blok M adalah tempat <em>healing</em>, memulihkan diri dari seminggu kuliah dan tenggat. Tim kami memilihnya karena perjalanan itu nyata: ditempuh ribuan kali setiap minggu, oleh orang-orang yang sungguh menimbang tarif melawan waktu, dan yang rela naik kereta lebih lambat asalkan tidak perlu pindah.</span></p>
+    <p><span lang="en">Blok M is also, conveniently for a graph, one of the best-connected places in the city. It is the southern terminus of the MRT, a TransJakarta terminal, and within walking distance of the CSW interchange. That is why 64 candidate routes exist between two points, and why the differences between them are interesting rather than trivial.</span><span lang="id">Blok M juga, dan ini menguntungkan untuk sebuah graf, termasuk tempat dengan koneksi terbaik di kota. Ia adalah ujung selatan MRT, terminal TransJakarta, dan bisa dicapai dengan berjalan kaki dari simpang CSW. Itulah sebabnya ada 64 kandidat rute di antara dua titik, dan mengapa perbedaan di antaranya menarik, bukan sepele.</span></p>
+
+    <h2><span lang="en">The graph</span><span lang="id">Grafnya</span></h2>
+    <p><span lang="en">The network is an <em>Ostensive Public Transportation Graph</em>: stations and bus stops are nodes, every ride between two of them is a directed edge labelled with its mode, fare and travel time. The 64 candidate routes were surveyed on the ground, combining KRL Commuter Line, MRT, LRT Jabodebek and TransJakarta. Fares were recorded in the field, because the official formulas do not capture free transfers inside the TransJakarta network. Travel minutes come from a Google Maps snapshot, frozen so that every run of the model gives the same answer.</span><span lang="id">Jaringannya adalah <em>Ostensive Public Transportation Graph</em>: stasiun dan halte menjadi simpul, setiap perjalanan di antara dua simpul menjadi busur berarah dengan label moda, tarif, dan waktu tempuh. 64 kandidat rute disurvei langsung di lapangan, menggabungkan KRL Commuter Line, MRT, LRT Jabodebek, dan TransJakarta. Tarif dicatat di lapangan, karena rumus resmi tidak menangkap transfer gratis di dalam jaringan TransJakarta. Menit tempuh diambil dari snapshot Google Maps yang dibekukan agar setiap kali dijalankan hasilnya sama.</span></p>
+
+    <h2><span lang="en">Shortest paths</span><span lang="id">Lintasan terpendek</span></h2>
+    <p><span lang="en"><strong>Dijkstra</strong> finds the fastest journey, with five minutes added at every change of mode. The search state is the station <em>and</em> the mode you arrived by, so the penalty is exact. <strong>Yen's algorithm</strong> then repeats Dijkstra with edges progressively blocked to enumerate the ten fastest distinct journeys. Fare and time are min-max normalised and combined as <code>w·fare + (1−w)·time</code>; the slider on the lab page is <code>w</code>. Journeys nobody beats on both axes form the Pareto front.</span><span lang="id"><strong>Dijkstra</strong> mencari perjalanan tercepat, dengan tambahan lima menit setiap kali berpindah moda. Keadaan pencariannya adalah stasiun <em>dan</em> moda kedatangan, sehingga penaltinya tepat. <strong>Algoritma Yen</strong> lalu mengulang Dijkstra dengan busur yang diblokir bertahap untuk menghitung sepuluh perjalanan berbeda tercepat. Tarif dan waktu dinormalisasi min-max lalu digabung sebagai <code>w·tarif + (1−w)·waktu</code>; slider di halaman lab itulah <code>w</code>. Perjalanan yang tak terkalahkan pada kedua sumbu membentuk batas Pareto.</span></p>
+
+    <h2><span lang="en">Passing through</span><span lang="id">Melewati stasiun</span></h2>
+    <p><span lang="en">A graph edge from Stasiun UI to Manggarai is one KRL ride, but the train passes Tanjung Barat, Pasar Minggu, Duren Kalibata, Cawang and Tebet. Every edge carries that list. Closing a station therefore cuts the line through it, requiring a station is satisfied by riding through it, and the animation blinks the stations as the train goes by.</span><span lang="id">Busur dari Stasiun UI ke Manggarai adalah satu perjalanan KRL, tetapi keretanya melewati Tanjung Barat, Pasar Minggu, Duren Kalibata, Cawang, dan Tebet. Setiap busur membawa daftar itu. Karena itu menutup stasiun memutus jalur yang melewatinya, mewajibkan stasiun terpenuhi dengan melewatinya, dan animasi mengedipkan stasiun-stasiun yang dilalui kereta.</span></p>
+
+    <h2><span lang="en">The drawing</span><span lang="id">Gambarnya</span></h2>
+    <p><span lang="en">The schematic follows the logic of the official Jakarta integration map: one continuous line per service, horizontal, vertical and 45° segments only, shared corridors side by side, interchanges as bold pills. The map view puts the same network on OpenStreetMap, with every line traced along the real track or road. Nothing is fetched at runtime; the geometry was computed once and shipped as JSON.</span><span lang="id">Skematiknya mengikuti logika peta integrasi resmi Jakarta: satu garis menerus per layanan, hanya segmen mendatar, tegak, dan 45°, koridor yang sama digambar bersisian, simpul transit sebagai pil tebal. Tampilan peta meletakkan jaringan yang sama di atas OpenStreetMap, dengan setiap garis mengikuti rel atau jalan sesungguhnya. Tidak ada yang diambil saat halaman dibuka; geometrinya dihitung sekali dan dikirim sebagai JSON.</span></p>
+
+    <p class="prose-cta"><a class="cta" href="./#lab"><span lang="en">Back to the lab</span><span lang="id">Kembali ke lab</span> <span>↗</span></a></p>
+  </section>
+  <footer>
+    <span><span lang="en">Built from a survey. Solved in your browser.</span><span lang="id">Dibangun dari survei. Dihitung di peramban Anda.</span></span>
+    <div>
+      <a href="https://www.putrarafy.com/Slide%20Presentasi%20Teori%20Graf-1_compressed.pdf" target="_blank" rel="noopener"><span lang="en">Project slides ↗</span><span lang="id">Slide proyek ↗</span></a>
+      <span>×</span>
+      <span><span lang="en">Map data © OpenStreetMap contributors</span><span lang="id">Data peta © kontributor OpenStreetMap</span></span>
+    </div>
+  </footer>
+</main>
+<script type="module">import { initLang } from './site.mjs'; initLang();</script>
+</body>
+</html>

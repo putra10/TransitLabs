@@ -152,6 +152,27 @@ footer { display: flex; justify-content: space-between; padding: 30px 0 34px; ga
 footer > div { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
 footer a { color: var(--ink); font-weight: 500; }
 
+/* standalone pages + why strip */
+.why { margin-top: 26px; padding: 26px 28px; border: 1px solid var(--line); border-radius: 10px; background: var(--white); display: grid; grid-template-columns: minmax(220px, .6fr) 1.4fr; gap: 20px 40px; align-items: start; }
+.why h2 { font: 500 22px 'Manrope', sans-serif; letter-spacing: -.7px; margin: 8px 0 0; }
+.why p { font-size: 13px; line-height: 1.75; color: #6a737b; margin: 0; }
+.why a { color: var(--accent); font-weight: 500; white-space: nowrap; }
+.page-hero { padding: 52px 0 28px; max-width: 70ch; }
+.page-hero h1 { margin: 12px 0 10px; }
+.page-hero p { font-size: 15px; color: #6f7880; line-height: 1.7; margin: 0; }
+.prose { max-width: 72ch; padding-bottom: 30px; }
+.prose h2 { font: 500 22px 'Manrope', sans-serif; letter-spacing: -.7px; margin: 34px 0 10px; }
+.prose p, .prose dd { font-size: 14px; line-height: 1.8; color: #5f6870; margin: 0 0 14px; }
+.prose strong { color: var(--ink); font-weight: 600; }
+.prose code { font: 12px var(--mono); background: var(--soft); padding: 1px 5px; border-radius: 3px; }
+.prose dl { margin: 0; }
+.prose dt { font-weight: 600; color: var(--ink); margin-top: 14px; }
+.prose dd { margin-left: 0; }
+.files { list-style: none; padding: 0; margin: 0; font-size: 14px; line-height: 1.8; color: #5f6870; }
+.files a { color: var(--accent); }
+.prose-cta { margin-top: 30px; }
+.page .data { padding-top: 0; }
+
 /* ── schematic + map drawing ─────────────────────────────────────────────── */
 #map { background: var(--map-bg); border-radius: 8px; display: block; width: 100%; height: auto; }
 .geo .leaflet-tooltip.glabel { background: #fff; border: 1px solid #1f2937; border-radius: 4px; box-shadow: 0 1px 2px #0003; font: 600 10.5px/1.2 system-ui, sans-serif; color: #111827; padding: 2px 5px; white-space: nowrap; }
@@ -212,6 +233,7 @@ footer a { color: var(--ink); font-weight: 500; }
   .method-grid { grid-template-columns: 1fr; }
   .data-grid { grid-template-columns: repeat(3, 1fr); }
   .experiment { grid-template-columns: 1fr; }
+  .why { grid-template-columns: 1fr; }
 }
 @media (max-width: 720px) {
   main { padding: 0 16px; }

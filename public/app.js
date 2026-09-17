@@ -1,5 +1,6 @@
 import { buildGraph, solve } from './engine.mjs';
 import { STATIONS, GEO, GLABEL, LABEL, LINES, ROUTE_LINE, stopsBetween, annotateVia } from './lines.mjs';
+import { initLang } from './site.mjs';
 
 const MODE_LABEL = { krl: 'KRL', mrt: 'MRT', lrt: 'LRT', transjakarta: 'TJ', walk: 'walk' };
 
@@ -25,7 +26,6 @@ const STR = {
     w_speed: 'Utamakan cepat', w_budget: 'Utamakan murah', w_balanced: 'Seimbang', add_station: 'tambah stasiun…', remove: 'hapus' },
 };
 let lang = 'en';
-try { lang = localStorage.getItem('transitlab.lang') === 'id' || (!localStorage.getItem('transitlab.lang') && navigator.language.startsWith('id')) ? 'id' : 'en'; } catch { /* storage unavailable */ }
 const T = () => STR[lang];
 const CSS_MODE = m => (m === 'transjakarta' ? 'tj' : m);
 const GAP = 4.5;                       // spacing between parallel lines
@@ -422,17 +422,11 @@ for (const b of document.querySelectorAll('[data-preset]')) b.addEventListener('
 });
 
 // Language: static copy toggles via CSS; dynamic copy re-renders.
-function setLang(l) {
+initLang(l => {
   lang = l;
-  document.documentElement.lang = l; document.documentElement.dataset.lang = l;
-  for (const b of document.querySelectorAll('.lang button')) b.setAttribute('aria-pressed', String(b.dataset.lang === l));
-  try { localStorage.setItem('transitlab.lang', l); } catch { /* ignore */ }
   mustSel.options[0].textContent = T().add_station;
   readWeight();
   if (result) { renderList(); showPath(false); }
-}
-for (const b of document.querySelectorAll('.lang button')) b.addEventListener('click', () => setLang(b.dataset.lang));
-
-setLang(lang);
+});
 recompute();
 window.transitlab = { get geo() { return geo; }, get result() { return result; }, closed };

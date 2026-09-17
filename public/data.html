@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en" data-lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f6f5f0">
+<title>TransitLab · data</title>
+<meta name="description" content="The 64 surveyed routes, fares, frozen travel times and OpenStreetMap geometry behind TransitLab.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="./" aria-label="TransitLab home"><svg viewBox="0 0 36 36" aria-hidden="true"><path d="M6 27 14 19h8l8-8"/><circle cx="6" cy="27" r="3"/><circle cx="14" cy="19" r="3"/><circle cx="22" cy="19" r="3"/><circle cx="30" cy="11" r="3"/><path d="M14 19v8M22 19V9"/></svg>transitlab<span class="brand-dot">.</span></a>
+  <span class="top-tag"><span lang="en">UI → BLOK M · A GRAPH THAT REROUTES</span><span lang="id">UI → BLOK M · GRAF YANG MENCARI JALAN LAIN</span></span>
+  <nav>
+    <a href="./"><span lang="en">Lab</span><span lang="id">Lab</span></a>
+    <a href="method.html"><span lang="en">How it works</span><span lang="id">Cara kerja</span></a>
+    <a href="data.html" aria-current="page"><span lang="en">Data</span><span lang="id">Data</span></a>
+    <a href="https://www.putrarafy.com/Slide%20Presentasi%20Teori%20Graf-1_compressed.pdf" target="_blank" rel="noopener"><span lang="en">Slides ↗</span><span lang="id">Slide ↗</span></a>
+    <div class="lang" role="group" aria-label="Language"><button type="button" data-lang="en" aria-pressed="true">EN</button><button type="button" data-lang="id" aria-pressed="false">ID</button></div>
+  </nav>
+</header>
+<main class="page">
+  <section class="page-hero">
+    <span class="eyebrow"><span lang="en">THE NUMBERS</span><span lang="id">ANGKA-ANGKANYA</span></span>
+    <h1><span lang="en">Data</span><span lang="id">Data</span></h1>
+    <p><span lang="en">Everything the model runs on, and where it came from.</span><span lang="id">Semua yang dipakai model, dan dari mana asalnya.</span></p>
+  </section>
+
+  <section class="data">
+    <div class="data-grid">
+      <div><span><span lang="en">CANDIDATE ROUTES</span><span lang="id">KANDIDAT RUTE</span></span><strong>64</strong><small><span lang="en">surveyed, four modes</span><span lang="id">disurvei, empat moda</span></small></div>
+      <div><span><span lang="en">GRAPH</span><span lang="id">GRAF</span></span><strong>50 · 93</strong><small><span lang="en">nodes · directed edges</span><span lang="id">simpul · busur berarah</span></small></div>
+      <div><span><span lang="en">STATIONS DRAWN</span><span lang="id">STASIUN DIGAMBAR</span></span><strong>32</strong><small><span lang="en">geocoded from OpenStreetMap</span><span lang="id">digeokode dari OpenStreetMap</span></small></div>
+      <div><span><span lang="en">TRANSFER PENALTY</span><span lang="id">PENALTI TRANSIT</span></span><strong>5 <small>min</small></strong><small><span lang="en">per change of mode</span><span lang="id">setiap ganti moda</span></small></div>
+      <div><span><span lang="en">TRAVEL TIMES</span><span lang="id">WAKTU TEMPUH</span></span><strong>128</strong><small><span lang="en">Maps hops, frozen 2026-09-11</span><span lang="id">segmen Maps, dibekukan 11-09-2026</span></small></div>
+      <div><span><span lang="en">SOLVE TIME</span><span lang="id">WAKTU HITUNG</span></span><strong>~2 <small>ms</small></strong><small><span lang="en">in your browser, no backend</span><span lang="id">di peramban, tanpa server</span></small></div>
+    </div>
+  </section>
+
+  <section class="prose">
+    <h2><span lang="en">Sources</span><span lang="id">Sumber</span></h2>
+    <dl class="sources">
+      <dt><span lang="en">Candidate routes and fares</span><span lang="id">Kandidat rute dan tarif</span></dt>
+      <dd><span lang="en">64 routes from Universitas Indonesia to Blok M, written down stop by stop and priced in the field by the team. Where a fare was missing, the official formulas fill it in: TransJakarta flat Rp 3,500; KRL Rp 3,000 for the first 25 km plus Rp 1,000 per 10 km; LRT Rp 5,000 plus Rp 700 per km; MRT Rp 1,500 plus Rp 850 per km rounded to the nearest thousand.</span><span lang="id">64 rute dari Universitas Indonesia ke Blok M, dicatat pemberhentian demi pemberhentian dan ditarifkan di lapangan oleh tim. Bila tarif kosong, rumus resmi mengisinya: TransJakarta rata Rp 3.500; KRL Rp 3.000 untuk 25 km pertama ditambah Rp 1.000 per 10 km; LRT Rp 5.000 ditambah Rp 700 per km; MRT Rp 1.500 ditambah Rp 850 per km dibulatkan ke ribuan terdekat.</span></dd>
+      <dt><span lang="en">Travel times</span><span lang="id">Waktu tempuh</span></dt>
+      <dd><span lang="en">128 hop durations from the Google Maps Directions API, fetched once on 11 September 2026 for a departure on Monday 14 September at 11:00 WIB, and frozen. The model never calls the API.</span><span lang="id">128 durasi segmen dari Google Maps Directions API, diambil sekali pada 11 September 2026 untuk keberangkatan Senin 14 September pukul 11.00 WIB, lalu dibekukan. Model tidak pernah memanggil API.</span></dd>
+      <dt><span lang="en">Station positions and line geometry</span><span lang="id">Posisi stasiun dan geometri jalur</span></dt>
+      <dd><span lang="en">OpenStreetMap, via Nominatim and Overpass. Each line is traced along the railway or the busway and major-road network between consecutive stops, computed offline and shipped as one JSON file.</span><span lang="id">OpenStreetMap, melalui Nominatim dan Overpass. Setiap jalur ditelusuri mengikuti rel atau jaringan busway dan jalan utama di antara pemberhentian berurutan, dihitung offline dan dikirim sebagai satu berkas JSON.</span></dd>
+      <dt><span lang="en">Schematic</span><span lang="id">Skematik</span></dt>
+      <dd><span lang="en">Hand-laid on a grid in the idiom of the FDTJ Jakarta public transportation integration map, with corridor colours approximated from it.</span><span lang="id">Disusun tangan pada kisi dengan gaya peta integrasi transportasi umum Jakarta dari FDTJ, dengan warna koridor yang didekati darinya.</span></dd>
+    </dl>
+
+    <h2><span lang="en">Files</span><span lang="id">Berkas</span></h2>
+    <ul class="files">
+      <li><a href="data/optg.json" target="_blank"><code>data/optg.json</code></a> · <span lang="en">the graph: nodes, edges with fare, time, mode and route</span><span lang="id">grafnya: simpul, busur dengan tarif, waktu, moda, dan rute</span></li>
+      <li><a href="data/geometry.json" target="_blank"><code>data/geometry.json</code></a> · <span lang="en">traced geometry for every consecutive stop pair</span><span lang="id">geometri hasil penelusuran untuk setiap pasangan pemberhentian berurutan</span></li>
+      <li><a href="https://www.putrarafy.com/Slide%20Presentasi%20Teori%20Graf-1_compressed.pdf" target="_blank" rel="noopener"><span lang="en">Project slides (PDF) ↗</span><span lang="id">Slide proyek (PDF) ↗</span></a></li>
+    </ul>
+
+    <h2><span lang="en">Team</span><span lang="id">Tim</span></h2>
+    <p><span lang="en">Graph Theory final project, FMIPA Universitas Indonesia: Firdha Nazla Soblia, Hafizhul Urfan, Putra Muhammad Rafy and Ryan Faiz. The route engine on this site is a port of the project notebook; the visual layer is new.</span><span lang="id">Proyek akhir mata kuliah Teori Graf, FMIPA Universitas Indonesia: Firdha Nazla Soblia, Hafizhul Urfan, Putra Muhammad Rafy, dan Ryan Faiz. Mesin rute di situs ini adalah porting dari notebook proyek; lapisan visualnya baru.</span></p>
+
+    <p class="prose-cta"><a class="cta" href="./#lab"><span lang="en">Back to the lab</span><span lang="id">Kembali ke lab</span> <span>↗</span></a></p>
+  </section>
+  <footer>
+    <span><span lang="en">Built from a survey. Solved in your browser.</span><span lang="id">Dibangun dari survei. Dihitung di peramban Anda.</span></span>
+    <div>
+      <a href="https://www.putrarafy.com/Slide%20Presentasi%20Teori%20Graf-1_compressed.pdf" target="_blank" rel="noopener"><span lang="en">Project slides ↗</span><span lang="id">Slide proyek ↗</span></a>
+      <span>×</span>
+      <span><span lang="en">Map data © OpenStreetMap contributors</span><span lang="id">Data peta © kontributor OpenStreetMap</span></span>
+    </div>
+  </footer>
+</main>
+<script type="module">import { initLang } from './site.mjs'; initLang();</script>
+</body>
+</html>

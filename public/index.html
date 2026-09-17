@@ -19,9 +19,9 @@
   <a class="brand" href="./" aria-label="TransitLab home"><svg viewBox="0 0 36 36" aria-hidden="true"><path d="M6 27 14 19h8l8-8"/><circle cx="6" cy="27" r="3"/><circle cx="14" cy="19" r="3"/><circle cx="22" cy="19" r="3"/><circle cx="30" cy="11" r="3"/><path d="M14 19v8M22 19V9"/></svg>transitlab<span class="brand-dot">.</span></a>
   <span class="top-tag"><span lang="en">UI → BLOK M · A GRAPH THAT REROUTES</span><span lang="id">UI → BLOK M · GRAF YANG MENCARI JALAN LAIN</span></span>
   <nav>
-    <a href="#lab"><span lang="en">Lab</span><span lang="id">Lab</span></a>
-    <a href="#method"><span lang="en">How it works</span><span lang="id">Cara kerja</span></a>
-    <a href="#data"><span lang="en">Data</span><span lang="id">Data</span></a>
+    <a href="./" aria-current="page"><span lang="en">Lab</span><span lang="id">Lab</span></a>
+    <a href="method.html"><span lang="en">How it works</span><span lang="id">Cara kerja</span></a>
+    <a href="data.html"><span lang="en">Data</span><span lang="id">Data</span></a>
     <a href="https://www.putrarafy.com/Slide%20Presentasi%20Teori%20Graf-1_compressed.pdf" target="_blank" rel="noopener"><span lang="en">Slides ↗</span><span lang="id">Slide ↗</span></a>
     <div class="lang" role="group" aria-label="Language"><button type="button" data-lang="en" aria-pressed="true">EN</button><button type="button" data-lang="id" aria-pressed="false">ID</button></div>
   </nav>
@@ -32,7 +32,7 @@
     <div>
       <div class="eyebrow"><span class="live-dot"></span> <span lang="en">GRAPH THEORY, MEET THE COMMUTE</span><span lang="id">TEORI GRAF, BERTEMU PERJALANAN HARIAN</span></div>
       <h1><span lang="en">64 ways to Blok M.<br>One graph that reroutes.</span><span lang="id">64 jalan ke Blok M.<br>Satu graf yang mencari jalan lain.</span></h1>
-      <p><span lang="en"><strong>Every commute from Universitas Indonesia to Blok M, as a weighted graph.</strong> Real fares, real travel minutes, a transfer penalty. Press play to watch the best route light up. Close a station and the whole network recomputes in front of you.</span><span lang="id"><strong>Semua perjalanan dari Universitas Indonesia ke Blok M, sebagai graf berbobot.</strong> Tarif nyata, menit tempuh nyata, penalti pindah moda. Tekan putar dan rute terbaik menyala. Tutup satu stasiun dan seluruh jaringan dihitung ulang di depan mata.</span></p>
+      <p><span lang="en"><strong>Blok M is where UI students go to unwind.</strong> After class, after exams, after a long week: the trip from the Depok campus to Blok M is one thousands of students actually make, by KRL, MRT, LRT and bus, in dozens of combinations. This page turns every one of those combinations into a weighted graph, with real fares, real travel minutes and a transfer penalty, and lets you watch the maths choose. Close a station and the whole network recomputes in front of you.</span><span lang="id"><strong>Blok M adalah tempat mahasiswa UI melepas penat.</strong> Sepulang kuliah, seusai ujian, setelah minggu yang panjang: perjalanan dari kampus Depok ke Blok M benar-benar ditempuh ribuan mahasiswa, dengan KRL, MRT, LRT, dan bus, dalam puluhan kombinasi. Halaman ini mengubah setiap kombinasi itu menjadi graf berbobot, dengan tarif nyata, menit tempuh nyata, dan penalti pindah moda, lalu membiarkan Anda menyaksikan matematikanya memilih. Tutup satu stasiun dan seluruh jaringan dihitung ulang di depan mata.</span></p>
       <div class="hero-hook">
         <a class="cta" href="#lab"><span lang="en">Play the route</span><span lang="id">Putar rutenya</span> <span>↓</span></a>
         <ul class="hero-stats">
@@ -52,7 +52,7 @@
   <section class="workspace" id="lab" aria-label="Network and routes">
     <article class="panel map-panel">
       <div class="panel-heading">
-        <div><span class="section-number">01</span><h2><span lang="en">The network</span><span lang="id">Jaringan</span></h2></div>
+        <div><h2><span lang="en">The network</span><span lang="id">Jaringan</span></h2></div>
         <div class="seg" role="group" aria-label="View"><button id="v-schematic" type="button" aria-pressed="true"><span lang="en">Schematic</span><span lang="id">Skematik</span></button><button id="v-map" type="button" aria-pressed="false"><span lang="en">Map</span><span lang="id">Peta</span></button></div>
       </div>
       <p class="panel-description"><span lang="en">Click a station to close it. Shift-click to require it. Every service is one line through its stops, in its corridor colour.</span><span lang="id">Klik stasiun untuk menutupnya. Shift-klik untuk mewajibkannya. Setiap layanan digambar sebagai satu garis melewati pemberhentiannya, dengan warna koridornya.</span></p>
@@ -86,7 +86,7 @@
     <div class="right-stack">
       <article class="panel route-panel">
         <div class="panel-heading">
-          <div><span class="section-number">02</span><h2><span lang="en">The route</span><span lang="id">Rutenya</span></h2></div>
+          <div><h2><span lang="en">The route</span><span lang="id">Rutenya</span></h2></div>
           <span class="live-badge"><span class="live-dot"></span> <span lang="en">LIVE ENGINE</span><span lang="id">MESIN LANGSUNG</span></span>
         </div>
         <div class="route-controls">
@@ -102,7 +102,7 @@
 
       <article class="panel list-panel">
         <div class="panel-heading">
-          <div><span class="section-number">03</span><h2><span lang="en">Ten shortest journeys</span><span lang="id">Sepuluh perjalanan terpendek</span></h2></div>
+          <div><h2><span lang="en">Ten shortest journeys</span><span lang="id">Sepuluh perjalanan terpendek</span></h2></div>
           <span id="count" class="quiet-label"></span>
         </div>
         <p class="panel-description"><span lang="en">Yen's algorithm, one row per distinct journey. Click a row to trace it. Tags mark the Pareto front: journeys no other beats on both fare and time.</span><span lang="id">Algoritma Yen, satu baris per perjalanan berbeda. Klik baris untuk menelusurinya. Label menandai batas Pareto: perjalanan yang tidak dikalahkan rute lain pada tarif dan waktu sekaligus.</span></p>
@@ -129,41 +129,12 @@
     </div>
   </section>
 
-  <section class="method" id="method">
-    <div class="method-title">
-      <span class="eyebrow"><span lang="en">NOTES FROM THE LAB</span><span lang="id">CATATAN DARI LAB</span></span>
-      <h2><span lang="en">How it works</span><span lang="id">Cara kerjanya</span></h2>
+  <section class="why" id="why">
+    <div>
+      <span class="eyebrow"><span lang="en">WHY BLOK M</span><span lang="id">MENGAPA BLOK M</span></span>
+      <h2><span lang="en">A destination students actually choose.</span><span lang="id">Tujuan yang benar-benar dipilih mahasiswa.</span></h2>
     </div>
-    <div class="method-grid">
-      <div>
-        <h3>01 · <span lang="en">The graph</span><span lang="id">Grafnya</span></h3>
-        <p><span lang="en">The network is an <em>Ostensive Public Transportation Graph</em>: stations and bus stops are nodes, every ride between two of them is a directed edge labelled with its mode, fare and travel time. 64 candidate routes from Universitas Indonesia to Blok M were surveyed on the ground, combining KRL Commuter Line, MRT, LRT Jabodebek and TransJakarta. Fares were recorded in the field; travel minutes come from a frozen Google Maps snapshot for a Monday late morning.</span><span lang="id">Jaringannya adalah <em>Ostensive Public Transportation Graph</em>: stasiun dan halte menjadi simpul, setiap perjalanan di antara dua simpul menjadi busur berarah dengan label moda, tarif, dan waktu tempuh. 64 kandidat rute dari Universitas Indonesia ke Blok M disurvei langsung di lapangan, menggabungkan KRL Commuter Line, MRT, LRT Jabodebek, dan TransJakarta. Tarif dicatat di lapangan; menit tempuh diambil dari snapshot Google Maps yang dibekukan untuk Senin menjelang siang.</span></p>
-      </div>
-      <div>
-        <h3>02 · <span lang="en">Shortest paths</span><span lang="id">Lintasan terpendek</span></h3>
-        <p><span lang="en"><strong>Dijkstra</strong> finds the fastest journey, with five minutes added at every change of mode. The search state is the station <em>and</em> the mode you arrived by, so the penalty is exact. <strong>Yen's algorithm</strong> then repeats Dijkstra with edges progressively blocked to enumerate the ten fastest distinct journeys. Fare and time are min-max normalised and combined as <code>w·fare + (1−w)·time</code>; the slider is <code>w</code>. Journeys nobody beats on both axes form the Pareto front.</span><span lang="id"><strong>Dijkstra</strong> mencari perjalanan tercepat, dengan tambahan lima menit setiap kali berpindah moda. Keadaan pencariannya adalah stasiun <em>dan</em> moda kedatangan, sehingga penaltinya tepat. <strong>Algoritma Yen</strong> lalu mengulang Dijkstra dengan busur yang diblokir bertahap untuk menghitung sepuluh perjalanan berbeda tercepat. Tarif dan waktu dinormalisasi min-max lalu digabung sebagai <code>w·tarif + (1−w)·waktu</code>; slider itulah <code>w</code>. Perjalanan yang tak terkalahkan pada kedua sumbu membentuk batas Pareto.</span></p>
-      </div>
-      <div>
-        <h3>03 · <span lang="en">Passing through</span><span lang="id">Melewati stasiun</span></h3>
-        <p><span lang="en">A graph edge from Stasiun UI to Manggarai is one KRL ride, but the train passes Tanjung Barat, Pasar Minggu, Duren Kalibata, Cawang and Tebet. Every edge carries that list. Closing a station therefore cuts the line, requiring a station is satisfied by riding through it, and the animation blinks the stations as the train goes by.</span><span lang="id">Busur dari Stasiun UI ke Manggarai adalah satu perjalanan KRL, tetapi keretanya melewati Tanjung Barat, Pasar Minggu, Duren Kalibata, Cawang, dan Tebet. Setiap busur membawa daftar itu. Karena itu menutup stasiun memutus jalurnya, mewajibkan stasiun terpenuhi dengan melewatinya, dan animasi mengedipkan stasiun-stasiun yang dilalui kereta.</span></p>
-      </div>
-      <div>
-        <h3>04 · <span lang="en">The drawing</span><span lang="id">Gambarnya</span></h3>
-        <p><span lang="en">The schematic follows the logic of the official Jakarta integration map: one continuous line per service, horizontal, vertical and 45° segments only, shared corridors side by side, interchanges as bold pills. The map view puts the same network on OpenStreetMap, with every line traced along the real track or road. Nothing is fetched at runtime; the geometry was computed once and shipped as JSON.</span><span lang="id">Skematiknya mengikuti logika peta integrasi resmi Jakarta: satu garis menerus per layanan, hanya segmen mendatar, tegak, dan 45°, koridor yang sama digambar bersisian, simpul transit sebagai pil tebal. Tampilan peta meletakkan jaringan yang sama di atas OpenStreetMap, dengan setiap garis mengikuti rel atau jalan sesungguhnya. Tidak ada yang diambil saat halaman dibuka; geometrinya dihitung sekali dan dikirim sebagai JSON.</span></p>
-      </div>
-    </div>
-  </section>
-
-  <section class="data" id="data">
-    <div class="data-grid">
-      <div><span><span lang="en">CANDIDATE ROUTES</span><span lang="id">KANDIDAT RUTE</span></span><strong>64</strong><small><span lang="en">surveyed, four modes</span><span lang="id">disurvei, empat moda</span></small></div>
-      <div><span><span lang="en">GRAPH</span><span lang="id">GRAF</span></span><strong>50 · 93</strong><small><span lang="en">nodes · directed edges</span><span lang="id">simpul · busur berarah</span></small></div>
-      <div><span><span lang="en">STATIONS DRAWN</span><span lang="id">STASIUN DIGAMBAR</span></span><strong>32</strong><small><span lang="en">geocoded from OpenStreetMap</span><span lang="id">digeokode dari OpenStreetMap</span></small></div>
-      <div><span><span lang="en">TRANSFER PENALTY</span><span lang="id">PENALTI TRANSIT</span></span><strong>5 <small>min</small></strong><small><span lang="en">per change of mode</span><span lang="id">setiap ganti moda</span></small></div>
-      <div><span><span lang="en">TRAVEL TIMES</span><span lang="id">WAKTU TEMPUH</span></span><strong>128</strong><small><span lang="en">Maps hops, frozen 2026-09-11</span><span lang="id">segmen Maps, dibekukan 11-09-2026</span></small></div>
-      <div><span><span lang="en">SOLVE TIME</span><span lang="id">WAKTU HITUNG</span></span><strong>~2 <small>ms</small></strong><small><span lang="en">in your browser, no backend</span><span lang="id">di peramban, tanpa server</span></small></div>
-    </div>
-    <p class="data-note"><span lang="en">Graph Theory final project, FMIPA Universitas Indonesia, by Firdha Nazla Soblia, Hafizhul Urfan, Putra Muhammad Rafy and Ryan Faiz. The route engine is a port of the project notebook; this page adds the visual layer.</span><span lang="id">Proyek akhir mata kuliah Teori Graf, FMIPA Universitas Indonesia, oleh Firdha Nazla Soblia, Hafizhul Urfan, Putra Muhammad Rafy, dan Ryan Faiz. Mesin rutenya adalah porting dari notebook proyek; halaman ini menambahkan lapisan visualnya.</span></p>
+    <p><span lang="en">Ask a UI student where they go to hang out or to "heal" after a hard week, and Blok M comes up again and again: M Bloc, the plaza, the cafés, the park by the MRT. It is also one of the best-connected places in Jakarta, the southern end of the MRT and a TransJakarta terminal, which is exactly why there are so many ways to get there and so many trade-offs between them. That made it the right destination for a graph-theory project: a trip people make, with alternatives worth comparing. <a href="method.html"><span lang="en">Read how it works →</span></a></span><span lang="id">Tanyakan pada mahasiswa UI ke mana mereka pergi untuk nongkrong atau "healing" setelah minggu yang berat, dan Blok M akan disebut berulang kali: M Bloc, plazanya, kafe-kafenya, taman di samping stasiun MRT. Blok M juga salah satu tempat dengan koneksi terbaik di Jakarta, ujung selatan MRT sekaligus terminal TransJakarta, dan justru karena itu ada begitu banyak cara ke sana dengan begitu banyak pertimbangan di antaranya. Itulah yang menjadikannya tujuan yang tepat untuk proyek teori graf: perjalanan yang sungguh ditempuh orang, dengan alternatif yang layak dibandingkan. <a href="method.html">Baca cara kerjanya →</a></span></p>
   </section>
 
   <footer>
