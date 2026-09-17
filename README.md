@@ -56,9 +56,7 @@ road, and marked as such in that file.
 
 The **Map** toggle shows the same network, closures and route playback on
 OpenStreetMap tiles. Station positions in `GEO` were geocoded from OSM via
-Nominatim; two halte that are not mapped there (Tegal Parang, Kejaksaan
-Agung) are placed on their road between neighbouring stops and marked
-`est.` Lines run straight between consecutive stops rather than tracing the
+Nominatim and Overpass. Lines run straight between consecutive stops rather than tracing the
 road, which is honest about what the data holds. OSM's tile usage policy
 allows light use like this; swap the tile URL if traffic ever grows.
 
