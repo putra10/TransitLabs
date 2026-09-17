@@ -189,7 +189,7 @@ function showPath(play) {
   }
   const steps = p.path.filter(e => e.mode !== 'walk' || st(e.from) !== st(e.to)).map(e => {
     const line = ROUTE_LINE.get(e.route);
-    return `<li><i style="--c:${line?.color ?? 'var(--walk)'}"></i>${MODE_LABEL[e.mode]} ${e.mode === 'walk' ? '' : (line?.id ?? e.route)} · ${st(e.from)} → ${st(e.to)} <span>· ${e.time} min${e.fare ? ' · ' + rp(e.fare) : ''}</span></li>`;
+    return `<li><i style="--c:${line?.color ?? 'var(--walk)'}"></i>${MODE_LABEL[e.mode]}${e.mode === 'walk' || line?.id === MODE_LABEL[e.mode] ? '' : ' ' + (line?.id ?? e.route)} · ${st(e.from)} → ${st(e.to)} <span>· ${e.time} min${e.fare ? ' · ' + rp(e.fare) : ''}</span></li>`;
   });
   $('#best').innerHTML = `<div class="big">${rp(p.fare)} · ${p.time} min</div>
     <div>${p.transfers} transfer${p.transfers === 1 ? '' : 's'} · ${(p.dist / 1000).toFixed(1)} km${p.dist ? '' : ' (TJ hops unmeasured)'} · rank #${selected + 1}${p.tags.map(t => `<span class="tag ${t}">${t}</span>`).join('')}</div>
@@ -278,6 +278,8 @@ function initGeo() {
   }
   const tier = () => { const z = m.getZoom(); el.classList.toggle('z1', z < 13); el.classList.toggle('z2', z < 14); };
   m.on('zoomend', tier);
+  // Leaflet re-projects paths on zoom, so a dash length measured earlier would leave gaps.
+  m.on('zoomstart', () => el.classList.remove('playing'));
   geo = { el, m, routes, markers };
   m.invalidateSize();
   m.fitBounds(L.latLngBounds(Object.values(GEO)), { padding: [16, 16] });
@@ -315,6 +317,9 @@ function geoRoute(p) {
     t += dur;
     geo.markers.get(h.b)._path.classList.remove('gvia'); mark(h.b, 'gon', t);
   }
+  // Once drawn, show the plain full-length line (dash arrays would break on the next zoom).
+  clearTimeout(geo.timer);
+  geo.timer = setTimeout(() => geo.el.classList.remove('playing'), (t + 0.6) * 1000);
 }
 function setView(which) {
   const isMap = which === 'map';
