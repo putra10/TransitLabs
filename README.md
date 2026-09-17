@@ -17,8 +17,10 @@ only with horizontal, vertical and 45° segments, in its corridor colour;
 lines that share a corridor run side by side; interchanges are bold pills.
 A route lights up along the lines it actually rides, hop by hop.
 
-The site is three pages: the lab (`index.html`), `method.html` (why Blok M
-and how the maths works) and `data.html` (sources, numbers, files, team).
+The site is three pages: the lab (`/`), `/method` (why Blok M and how the
+maths works) and `/data` (sources, numbers, files, team). `vercel.json` turns
+on `cleanUrls`, so `data.html` is served at `/data`; the dev server mirrors
+that, and a plain static server needs the `.html` suffix.
 The page is bilingual. Every piece of static copy exists twice in
 `index.html` as `<span lang="en">` / `<span lang="id">` pairs and CSS shows
 one set; the few dynamic strings live in a small dictionary in `app.js`.

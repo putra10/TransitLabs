@@ -1,4 +1,4 @@
-"""Dev server for public/ with caching disabled, so module edits show on reload.
+"""Dev server for public/ with caching disabled and Vercel-style clean URLs.
 
     python scripts/serve.py            # http://127.0.0.1:8765
 """
@@ -9,6 +9,14 @@ from pathlib import Path
 
 
 class NoCache(SimpleHTTPRequestHandler):
+    """Mirrors Vercel's cleanUrls: /data serves data.html."""
+    def translate_path(self, path):
+        full = super().translate_path(path)
+        clean = path.split("?")[0].rstrip("/")
+        if clean and "." not in clean.rsplit("/", 1)[-1] and Path(full + ".html").is_file():
+            return full + ".html"
+        return full
+
     def end_headers(self):
         self.send_header("Cache-Control", "no-store")
         super().end_headers()
