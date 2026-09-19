@@ -2,11 +2,16 @@
 spreadsheet.
 
 The team's Google Sheet already holds every route broken into hops:
-  Sheet13   route_id, origin, destination, mode, ttype, time_min
-  Sheet12   route_id, origin, destination, mode, ttype, dist_m, fare, note
-Rows are joined hop by hop, so each graph edge carries the sheet's travel
-minutes, distance and fare. Walking hops have no minutes in the sheet and
-get WALK_MIN. Station aliases collapse raw stop names onto display stations.
+  Sheet13      route_id, origin, destination, mode, ttype, time_min
+  Sheet12      route_id, origin, destination, mode, ttype, dist_m, fare, note
+  Rute Tabel   ID, Titik 1, Moda 1, Harga 1, Titik 2, ...   (fares recorded in the field)
+Rows are joined hop by hop. Minutes come from Sheet13, distance from Sheet12,
+and the fare from Rute Tabel first, because that is what the team paid; the
+Sheet12 fare is only the fallback when Rute Tabel has no value for the hop.
+Only routes listed in the clean tab are used. TransJakarta edges are marked
+BRT or not; the engine charges the flat tap-in except when a BRT corridor
+follows another BRT corridor, which is the pattern in the field fares. Walking hops have no
+minutes in the sheet and get WALK_MIN.
 
     python scripts/export_graph.py            # reads scripts/raw/sheet.xlsx
     python scripts/export_graph.py --refetch  # download the workbook again first
@@ -26,7 +31,10 @@ RAW = ROOT / "raw"
 OUT = ROOT.parent / "public" / "data" / "optg.json"
 SHEET_ID = "1nztzHDowgshQcoxeuiOERr5wlFW0CL8vNgXUy6WtCAc"
 XLSX_URL = f"https://docs.google.com/spreadsheets/d/{SHEET_ID}/export?format=xlsx"
-TIME_TAB, FARE_TAB = "Sheet13", "Sheet12"
+TIME_TAB, FARE_TAB, FIELD_TAB = "Sheet13", "Sheet12", "Rute Tabel"
+CLEAN_TAB = "Copy of Rute Mentah"   # the 64 vetted routes; other tabs carry drafts
+TJ_TAP_IN = 3500                    # flat TransJakarta fare
+NON_BRT = {"4B", "D11", "D21"}       # separate fare systems: boarding after them always pays
 
 TRANSFER_PENALTY = 5   # minutes per change of mode, as in the notebook
 WALK_MIN = 3           # the sheet leaves walking hops blank; notebook default
@@ -91,6 +99,59 @@ def canon(name: str) -> str:
 
 
 
+def classify_mode(line: str) -> str:
+    low = (line or "").lower().strip()
+    if not low or any(x in low for x in ("jalan kaki", "integrasi", "selesai")):
+        return "Walk"
+    if "mrt" in low or "lebak bulus" in low or "bundaran hi" in low:
+        return "MRT"
+    if "lrt" in low or "cibubur line" in low or "velodrome" in low:
+        return "LRT"
+    if any(x in low for x in ("bogor line", "cikarang line", "tangerang line", "rangkasbitung line", "tanjung priok line", "krl")):
+        return "KRL"
+    return "TJ"
+
+
+# ── Field fares (Rute Tabel) ──────────────────────────────────────────────────
+def load_field_fares(ws) -> dict[str, list[tuple]]:
+    """{route_id: [(titik, moda, harga_or_None), ...]} from the wide Rute Tabel layout."""
+    raw = [r for r in ws.iter_rows(values_only=True) if any(c is not None for c in r)]
+    header = [str(h or "").strip().lower() for h in raw[0]]
+    col = lambda kind: {int(m.group(1)): i for i, h in enumerate(header) if (m := re.match(rf"^{kind}\s*(\d+)$", h))}
+    titik, moda, harga = col("titik"), col("moda"), col("harga")
+    out = {}
+    for row in raw[1:]:
+        rid = str(row[0] or "").strip()
+        if not rid.startswith("Rute"):
+            continue
+        hops = []
+        for i in range(1, max(titik) + 1):
+            ti = titik.get(i)
+            if ti is None or ti >= len(row) or row[ti] in (None, ""):
+                break
+            m = row[moda[i]] if i in moda and moda[i] < len(row) else None
+            h = row[harga[i]] if i in harga and harga[i] < len(row) else None
+            h = int(h) if isinstance(h, (int, float)) else (int(re.sub(r"[^\d]", "", h)) if isinstance(h, str) and re.sub(r"[^\d]", "", h) else None)
+            hops.append((str(row[ti]).strip(), label(m) if m is not None else None, h))
+        out[rid] = hops
+    return out
+
+
+def field_fare(prices, rid, o, d, mode):
+    """The recorded fare for hop o->d on `rid`, matched by normalised stop names and mode class."""
+    hops = prices.get(rid) or []
+    cls = classify_mode(mode)
+    o, d = normalize(apply_alias(o)), normalize(apply_alias(d))
+    best = (0, None)
+    for i in range(len(hops) - 1):
+        titik, moda, harga = hops[i]
+        if harga is None or classify_mode(moda or "") != cls:
+            continue
+        so, sd = normalize(apply_alias(titik)), normalize(apply_alias(hops[i + 1][0]))
+        best = max(best, ((so == o) + (sd == d), harga), key=lambda t: t[0])
+    return best[1] if best[0] > 0 else None
+
+
 # ── Build ─────────────────────────────────────────────────────────────────────
 def rows(ws):
     return [r for r in ws.iter_rows(values_only=True) if any(c is not None for c in r)][1:]
@@ -111,7 +172,10 @@ def main(refetch: bool = False) -> None:
         xlsx.write_bytes(urllib.request.urlopen(XLSX_URL, timeout=60).read())
         print("fetched", xlsx.name)
     wb = openpyxl.load_workbook(xlsx, read_only=True)
-    times, fares = rows(wb[TIME_TAB]), rows(wb[FARE_TAB])
+    clean = {str(r[0]).strip() for r in rows(wb[CLEAN_TAB]) if r[0]}
+    times = [r for r in rows(wb[TIME_TAB]) if r[0] in clean]
+    fares = [r for r in rows(wb[FARE_TAB]) if r[0] in clean]
+    field = load_field_fares(wb[FIELD_TAB])
 
     # Same hop sequence per route in both tabs; join by position and check.
     by_t, by_f = {}, {}
@@ -139,7 +203,9 @@ def main(refetch: bool = False) -> None:
                     print(f"  [skip] {rid}: no minutes for {o} -> {d} ({mode})")
                     continue
                 minutes = WALK_MIN
-            fare, dist = int(num(f[7]) or 0), int(num(f[6]) or 0)
+            dist = int(num(f[6]) or 0)
+            recorded = None if ttype == "walk" else field_fare(field, rid, o, d, mode)
+            fare = recorded if recorded is not None else int(num(f[7]) or 0)
             key = (o, d, mode)
             if key in edges:
                 # Same hop priced in several routes: keep the tap-in fare so a TJ
@@ -148,12 +214,14 @@ def main(refetch: bool = False) -> None:
                 continue
             edges[key] = {"from": o, "to": d, "route": mode, "mode": ttype,
                           "fare": fare, "time": round(minutes, 2), "dist": dist}
+            if ttype == "transjakarta":
+                edges[key]["brt"] = re.sub(r"^TJ\s+", "", mode) not in NON_BRT
 
     nodes = sorted({e["from"] for e in edges.values()} | {e["to"] for e in edges.values()})
     stations = sorted({canon(n) for n in nodes})
     out = {
-        "meta": {"start": "UI", "end": "Blok M", "transfer_penalty": TRANSFER_PENALTY, "k": 10,
-                 "source": f"Project Google Sheet, tabs {TIME_TAB} (minutes) and {FARE_TAB} (distance, fare); walks {WALK_MIN} min"},
+        "meta": {"start": "UI", "end": "Blok M", "transfer_penalty": TRANSFER_PENALTY, "k": 10, "tj_tap_in": TJ_TAP_IN,
+                 "source": f"Project Google Sheet: {FIELD_TAB} (field fares), {FARE_TAB} (distance, fallback fare), {TIME_TAB} (minutes); walks {WALK_MIN} min"},
         "stations": stations,  # layout + coordinates: public/lines.mjs
         "nodes": [{"id": n, "station": canon(n)} for n in nodes],
         "edges": list(edges.values()),

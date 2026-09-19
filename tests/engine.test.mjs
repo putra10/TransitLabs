@@ -27,25 +27,35 @@ assert.ok(!mrt.stops.some(stop => typeof stop === 'string' && stop.replace(/^~/,
 assert.ok(data.edges.some(e => e.from === 'CSW' && e.to === 'Kejaksaan Agung' && e.mode === 'walk'));
 assert.ok(!LINES.some(line => line.stops.includes('CSW') && line.stops.includes('Kejaksaan Agung')));
 
-// Baseline from the project spreadsheet (Sheet13 minutes, Sheet12 fares).
-// Cheapest is TJ D21 then 1E with a free TransJakarta transfer, Rp 3,500 / 70 min;
-// fastest is D21 then MRT, Rp 10,500 / 52 min. The balanced weight picks the cheap one.
+// Baseline from the project spreadsheet: routes from the clean tab, field fares
+// from Rute Tabel, minutes from Sheet13. Cheapest is KRL then TransJakarta at
+// Rp 6,500 / 67 min; fastest is D21 then MRT at Rp 10,500 / 52 min.
 const { paths, criticality } = solve(g, data);
 assert.equal(paths.length, 10, 'ten paths');
 assert.equal(new Set(paths.map(p => p.journey)).size, 10, 'distinct journeys');
 const best = paths[0];
-assert.equal(best.fare, 3500);
-assert.equal(best.time, 70);
+assert.equal(best.fare, 6500);
+assert.equal(best.time, 67);
 const fastest = paths.find(p => p.tags.includes('fastest'));
 assert.equal(fastest.fare, 10500);
 assert.equal(fastest.time, 52);
 assert.equal(fastest.transfers, 1);
 assert.deepEqual(fastest.path.map(e => e.mode).filter(m => m !== 'walk'), ['transjakarta', 'mrt']);
+
+// Fare rules match the field fares. D21 is not BRT, so 1E after it pays again: Rp 7,000.
+const d21 = paths.find(p => p.journey === 'UI:D21>Kantor Pos Fatmawati:1E');
+assert.equal(d21.fare, 7000);
+assert.deepEqual(d21.legFares.filter(Boolean), [3500, 3500]);
+// A BRT corridor after another BRT corridor is free; KRL Bogor then Cikarang is one tap.
+const viaMgr = paths.find(p => p.journey.includes('Cikarang Line'));
+assert.equal(viaMgr.legFares.filter((f, i) => viaMgr.path[i].mode === 'krl').reduce((a, b) => a + b, 0), 3000, 'one KRL fare across two lines');
+const brt = paths.find(p => p.journey.includes('9>Pancoran:13B'));
+assert.deepEqual(brt.path.map((e, i) => e.mode === 'transjakarta' ? brt.legFares[i] : null).filter(x => x !== null), [3500, 0, 0]);
 assert.ok(paths.every(p => p.nodes[0] === 'UI' && p.nodes.at(-1) === 'Blok M'));
 assert.ok(paths.every(p => new Set(p.nodes).size === p.nodes.length), 'simple paths');
 
 // Weight extremes reorder the same set.
-assert.equal(solve(g, data, { wFare: 1 }).paths[0].fare, 3500);
+assert.equal(solve(g, data, { wFare: 1 }).paths[0].fare, 6500);
 assert.equal(solve(g, data, { wFare: 0 }).paths[0].time, 52);
 
 // Closing a station removes it from every path and the engine reroutes.

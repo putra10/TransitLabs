@@ -84,20 +84,28 @@ allows light use like this; swap the tile URL if traffic ever grows.
 ## Data
 
 `public/data/optg.json` is generated from the team's project spreadsheet,
-kept as `scripts/raw/sheet.xlsx`. Two tabs hold every route already broken
-into hops: `Sheet13` (minutes per ride) and `Sheet12` (distance and fare per
-hop, including TransJakarta tap-ins and free transfers). The exporter joins
-them hop by hop, gives blank walking hops 3 minutes, collapses raw stop names
-onto display stations, and writes the graph: 66 routes, 94 directed edges.
+kept as `scripts/raw/sheet.xlsx`:
+
+- `Copy of Rute Mentah`: the 64 vetted routes; only these are used.
+- `Rute Tabel`: the fares the team paid, matched hop by hop. They are the
+  primary fare source. `Sheet12` (the notebook's fare export) only fills a
+  hop the field row leaves blank, and supplies distances.
+- `Sheet13`: minutes per hop. Walking hops are blank and get 3 minutes.
+
+The engine applies the fare rules the field rows show: a TransJakarta BRT
+corridor after another BRT corridor is free, boarding after rail or after a
+non-BRT service (4B, D11, D21) pays the flat Rp 3,500, and consecutive KRL
+lines are one tap priced by the official tariff on the combined distance.
+Replaying all 64 routes this way reproduces the field total for 56; the
+other 8 field rows are incomplete or describe an older version of the trip.
 Regenerate with:
 
 ```powershell
 python scripts/export_graph.py
 ```
 
-Pass `--refetch` to download the workbook again first. The older
-`maps_*_cache.json`, `routes.csv` and `prices.csv` in `scripts/raw/` are the
-notebook's inputs and are kept for reference only.
+Pass `--refetch` to download the workbook again first. The notebook's older
+inputs in `scripts/raw/` are kept for reference only.
 
 ## Deploy
 

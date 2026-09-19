@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#f6f5f0">
 <title>Data Rute Transportasi Umum UI ke Blok M | TransitLab</title>
-<meta name="description" content="Data rute transportasi umum UI ke Blok M: 66 rute dari spreadsheet proyek, dengan tarif, jarak, dan waktu tempuh per segmen, KRL, MRT, LRT, dan TransJakarta.">
+<meta name="description" content="Data rute transportasi umum UI ke Blok M: 64 rute dari spreadsheet proyek, dengan tarif lapangan, jarak, dan waktu tempuh per segmen, KRL, MRT, LRT, dan TransJakarta.">
 <meta name="author" content="Putra Muhammad Rafy">
 <meta name="robots" content="index, follow, max-image-preview:large">
 <meta name="keywords" content="data rute UI Blok M, data transportasi umum Jakarta, tarif KRL MRT LRT TransJakarta, graf transportasi Jakarta, dataset rute publik, waktu tempuh UI Blok M">
@@ -39,10 +39,10 @@
 
   <section class="data">
     <div class="data-grid">
-      <div><span><span lang="en">CANDIDATE ROUTES</span><span lang="id">KANDIDAT RUTE</span></span><strong>66</strong><small><span lang="en">route records in the project sheet</span><span lang="id">catatan rute di spreadsheet proyek</span></small></div>
-      <div><span><span lang="en">GRAPH</span><span lang="id">GRAF</span></span><strong>50 · 94</strong><small><span lang="en">nodes · directed edges</span><span lang="id">simpul · busur berarah</span></small></div>
+      <div><span><span lang="en">CANDIDATE ROUTES</span><span lang="id">KANDIDAT RUTE</span></span><strong>64</strong><small><span lang="en">vetted routes in the project sheet</span><span lang="id">rute terverifikasi di spreadsheet proyek</span></small></div>
+      <div><span><span lang="en">GRAPH</span><span lang="id">GRAF</span></span><strong>50 · 93</strong><small><span lang="en">nodes · directed edges</span><span lang="id">simpul · busur berarah</span></small></div>
       <div><span><span lang="en">STATIONS DRAWN</span><span lang="id">STASIUN DIGAMBAR</span></span><strong>32</strong><small><span lang="en">geocoded from OpenStreetMap</span><span lang="id">digeokode dari OpenStreetMap</span></small></div>
-      <div><span><span lang="en">HOP RECORDS</span><span lang="id">CATATAN SEGMEN</span></span><strong>486</strong><small><span lang="en">minutes, metres and rupiah per hop</span><span lang="id">menit, meter, dan rupiah per segmen</span></small></div>
+      <div><span><span lang="en">HOP RECORDS</span><span lang="id">CATATAN SEGMEN</span></span><strong>56 / 64</strong><small><span lang="en">route totals matching the field fares exactly</span><span lang="id">total rute yang cocok persis dengan tarif lapangan</span></small></div>
     </div>
   </section>
 
@@ -50,10 +50,12 @@
     <article class="data-section source-section">
     <div class="data-section-heading"><span>01</span><div><h2><span lang="en">Sources</span><span lang="id">Sumber data</span></h2><p><span lang="en">Everything the engine runs on comes from the team's project spreadsheet, tab by tab, plus OpenStreetMap for the drawing.</span><span lang="id">Semua yang dipakai mesin berasal dari spreadsheet proyek tim, tab demi tab, ditambah OpenStreetMap untuk gambarnya.</span></p></div></div>
     <dl class="sources">
-      <dt><span lang="en">Routes, fares and distances</span><span lang="id">Rute, tarif, dan jarak</span></dt>
-      <dd><span lang="en">The project spreadsheet breaks all 66 UI to Blok M routes into hops. The <code>Sheet12</code> tab gives each hop its distance in metres and its fare in rupiah, including the free transfers inside the TransJakarta network and the tap-in that starts each bus leg. Every graph edge takes its fare and distance from that row.</span><span lang="id">Spreadsheet proyek memecah 66 rute UI ke Blok M menjadi segmen. Tab <code>Sheet12</code> memberi setiap segmen jarak dalam meter dan tarif dalam rupiah, termasuk transfer gratis di dalam jaringan TransJakarta dan tap-in yang mengawali setiap perjalanan bus. Setiap busur graf mengambil tarif dan jaraknya dari baris itu.</span></dd>
-      <dt><span lang="en">Travel times</span><span lang="id">Waktu tempuh</span></dt>
-      <dd><span lang="en">The <code>Sheet13</code> tab gives each ride its minutes. Walking hops are blank there, so they count as 3 minutes each, the same default the project notebook used. Five minutes are added per change of mode when routes are searched, as in the notebook.</span><span lang="id">Tab <code>Sheet13</code> memberi setiap perjalanan menit tempuhnya. Segmen jalan kaki dibiarkan kosong di sana, sehingga dihitung 3 menit masing-masing, sama seperti nilai bawaan notebook proyek. Lima menit ditambahkan setiap kali berganti moda saat rute dicari, seperti di notebook.</span></dd>
+      <dt><span lang="en">Routes</span><span lang="id">Rute</span></dt>
+      <dd><span lang="en">The 64 vetted routes in the sheet's first tab, <code>Copy of Rute Mentah</code>, each written stop by stop with the service used for every hop.</span><span lang="id">64 rute yang sudah diverifikasi di tab pertama spreadsheet, <code>Copy of Rute Mentah</code>, masing-masing ditulis pemberhentian demi pemberhentian beserta layanan yang dipakai di setiap segmen.</span></dd>
+      <dt><span lang="en">Fares</span><span lang="id">Tarif</span></dt>
+      <dd><span lang="en">The fares the team actually paid, from the <code>Rute Tabel</code> tab. Those rows reveal the rules the engine applies when it combines hops into new journeys: a TransJakarta BRT corridor boarded after another BRT corridor is free, boarding after rail or after a non-BRT service such as D21, D11 or 4B pays the flat Rp 3,500 again, and consecutive KRL lines are one tap priced by the official tariff on the combined distance. Where a field row leaves a hop blank, the notebook's fare export in <code>Sheet12</code> fills it.</span><span lang="id">Tarif yang benar-benar dibayar tim, dari tab <code>Rute Tabel</code>. Baris-baris itu memperlihatkan aturan yang dipakai mesin saat menggabungkan segmen menjadi perjalanan baru: koridor BRT TransJakarta yang dinaiki setelah koridor BRT lain gratis, naik setelah kereta atau setelah layanan non-BRT seperti D21, D11, atau 4B membayar lagi Rp 3.500, dan jalur KRL yang berurutan dihitung satu tap dengan tarif resmi berdasarkan jarak gabungan. Bila baris lapangan mengosongkan satu segmen, ekspor tarif notebook di <code>Sheet12</code> mengisinya.</span></dd>
+      <dt><span lang="en">Travel times and distances</span><span lang="id">Waktu tempuh dan jarak</span></dt>
+      <dd><span lang="en">Minutes per hop from the <code>Sheet13</code> tab, distances in metres from <code>Sheet12</code>. Both tabs list the same hops as the clean routes, checked one by one. Walking hops are blank there and count as 3 minutes each, the notebook's default; five minutes are added per change of mode during the search.</span><span lang="id">Menit per segmen dari tab <code>Sheet13</code>, jarak dalam meter dari <code>Sheet12</code>. Kedua tab memuat segmen yang sama persis dengan rute bersih, diperiksa satu per satu. Segmen jalan kaki dibiarkan kosong dan dihitung 3 menit, nilai bawaan notebook; lima menit ditambahkan setiap ganti moda saat pencarian.</span></dd>
       <dt><span lang="en">Station positions and line geometry</span><span lang="id">Posisi stasiun dan geometri jalur</span></dt>
       <dd><span lang="en">OpenStreetMap, via Nominatim and Overpass. Each line is traced along the railway or the busway and major-road network between consecutive stops, computed offline and shipped as one JSON file.</span><span lang="id">OpenStreetMap, melalui Nominatim dan Overpass. Setiap jalur ditelusuri mengikuti rel atau jaringan busway dan jalan utama di antara pemberhentian berurutan, dihitung offline dan dikirim sebagai satu berkas JSON.</span></dd>
       <dt><span lang="en">Schematic</span><span lang="id">Skematik</span></dt>

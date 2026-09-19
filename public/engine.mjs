@@ -38,7 +38,7 @@ export function buildGraph(data) {
     adj.get(e.from).push(e);
   }
   const station = new Map(data.nodes.map(n => [n.id, n.station]));
-  return { adj, station, penalty: data.meta.transfer_penalty };
+  return { adj, station, penalty: data.meta.transfer_penalty, tapIn: data.meta.tj_tap_in ?? 3500 };
 }
 
 const isTransfer = (prev, mode) => prev && prev !== mode && mode !== 'walk';
@@ -78,6 +78,28 @@ function dijkstra(g, start, end, blockedNodes, blockedEdges, closed = new Set(),
   return path.reverse();
 }
 
+/**
+ * Fare per leg, following the team's field fares.
+ *  TransJakarta: a BRT corridor boarded after another BRT corridor rides free
+ *    (walks inside the integrated halte do not break that); boarding after
+ *    rail, after a non-BRT service (4B, D11, D21) or at the start pays the
+ *    flat tap-in.
+ *  KRL: consecutive Commuter Line rides are one tap, priced by the official
+ *    tariff on the combined distance (Rp 3,000 to 25 km, +Rp 1,000 per 10 km).
+ *  MRT and LRT legs pay their own recorded fare.
+ */
+const krlTariff = m => (m <= 25000 ? 3000 : 3000 + Math.ceil((m - 25000) / 10000) * 1000);
+function legFares(g, edges) {
+  let prevBrt = false, krlSoFar = 0;
+  return edges.map(e => {
+    if (e.mode === 'walk') { if (!/integrasi/i.test(e.route)) { prevBrt = false; krlSoFar = 0; } return 0; }
+    if (e.mode === 'transjakarta') { krlSoFar = 0; const f = prevBrt && e.brt ? 0 : g.tapIn; prevBrt = !!e.brt; return f; }
+    prevBrt = false;
+    if (e.mode === 'krl') { const before = krlSoFar ? krlTariff(krlSoFar) : 0; krlSoFar += e.dist || 0; return krlTariff(krlSoFar) - before; }
+    krlSoFar = 0; return e.fare;
+  });
+}
+
 function summarize(g, start, edges) {
   let transfers = 0;
   for (let i = 1; i < edges.length; i++) if (isTransfer(edges[i - 1].mode, edges[i].mode)) transfers++;
@@ -92,7 +114,8 @@ function summarize(g, start, edges) {
   return {
     path: edges, nodes, journey,
     stations: [...new Set(nodes.map(n => g.station.get(n) ?? n))],
-    fare: edges.reduce((s, e) => s + e.fare, 0),
+    legFares: legFares(g, edges),
+    fare: legFares(g, edges).reduce((s, f) => s + f, 0),
     rawTime: raw, time: raw + transfers * g.penalty,
     dist: edges.reduce((s, e) => s + e.dist, 0),
     transfers,

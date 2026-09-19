@@ -4,7 +4,8 @@
   "end": "Blok M",
   "transfer_penalty": 5,
   "k": 10,
-  "source": "Project Google Sheet, tabs Sheet13 (minutes) and Sheet12 (distance, fare); walks 3 min"
+  "tj_tap_in": 3500,
+  "source": "Project Google Sheet: Rute Tabel (field fares), Sheet12 (distance, fallback fare), Sheet13 (minutes); walks 3 min"
  },
  "stations": [
   "Bendungan Hilir",
@@ -275,7 +276,7 @@
    "to": "Kuningan",
    "route": "Cibubur Line",
    "mode": "lrt",
-   "fare": 7100,
+   "fare": 6400,
    "time": 8.0,
    "dist": 3491
   },
@@ -286,7 +287,8 @@
    "mode": "transjakarta",
    "fare": 3500,
    "time": 32.0,
-   "dist": 0
+   "dist": 0,
+   "brt": true
   },
   {
    "from": "CSW",
@@ -304,7 +306,8 @@
    "mode": "transjakarta",
    "fare": 0,
    "time": 3.0,
-   "dist": 0
+   "dist": 0,
+   "brt": true
   },
   {
    "from": "UI",
@@ -313,7 +316,8 @@
    "mode": "transjakarta",
    "fare": 3500,
    "time": 110.0,
-   "dist": 0
+   "dist": 0,
+   "brt": false
   },
   {
    "from": "Manggarai",
@@ -367,7 +371,8 @@
    "mode": "transjakarta",
    "fare": 3500,
    "time": 34.0,
-   "dist": 0
+   "dist": 0,
+   "brt": true
   },
   {
    "from": "Manggarai",
@@ -376,7 +381,8 @@
    "mode": "transjakarta",
    "fare": 3500,
    "time": 13.0,
-   "dist": 0
+   "dist": 0,
+   "brt": true
   },
   {
    "from": "Galunggung",
@@ -394,7 +400,8 @@
    "mode": "transjakarta",
    "fare": 3500,
    "time": 54.0,
-   "dist": 0
+   "dist": 0,
+   "brt": false
   },
   {
    "from": "St. MRT Fatmawati",
@@ -439,7 +446,8 @@
    "mode": "transjakarta",
    "fare": 3500,
    "time": 34.0,
-   "dist": 0
+   "dist": 0,
+   "brt": true
   },
   {
    "from": "Bundaran Senayan 1",
@@ -448,28 +456,11 @@
    "mode": "transjakarta",
    "fare": 0,
    "time": 12.0,
-   "dist": 0
+   "dist": 0,
+   "brt": true
   },
   {
    "from": "Blok M Jalur 2",
-   "to": "Blok M",
-   "route": "Jalan Kaki (Selesai)",
-   "mode": "walk",
-   "fare": 0,
-   "time": 3,
-   "dist": 0
-  },
-  {
-   "from": "Bundaran Senayan 1",
-   "to": "Terminal Blok M",
-   "route": "Bogor - Blok M",
-   "mode": "transjakarta",
-   "fare": 0,
-   "time": 12.0,
-   "dist": 0
-  },
-  {
-   "from": "Terminal Blok M",
    "to": "Blok M",
    "route": "Jalan Kaki (Selesai)",
    "mode": "walk",
@@ -511,7 +502,8 @@
    "mode": "transjakarta",
    "fare": 3500,
    "time": 35.0,
-   "dist": 0
+   "dist": 0,
+   "brt": true
   },
   {
    "from": "Universitas Indonesia Train Station",
@@ -538,7 +530,8 @@
    "mode": "transjakarta",
    "fare": 3500,
    "time": 30.0,
-   "dist": 0
+   "dist": 0,
+   "brt": false
   },
   {
    "from": "UI",
@@ -547,7 +540,8 @@
    "mode": "transjakarta",
    "fare": 3500,
    "time": 31.0,
-   "dist": 0
+   "dist": 0,
+   "brt": false
   },
   {
    "from": "St. MRT Fatmawati",
@@ -563,9 +557,10 @@
    "to": "Blok M BCA",
    "route": "1E",
    "mode": "transjakarta",
-   "fare": 0,
+   "fare": 3500,
    "time": 28.0,
-   "dist": 0
+   "dist": 0,
+   "brt": true
   },
   {
    "from": "Cawang",
@@ -583,7 +578,8 @@
    "mode": "transjakarta",
    "fare": 3500,
    "time": 7.0,
-   "dist": 0
+   "dist": 0,
+   "brt": true
   },
   {
    "from": "Pancoran Arah Barat",
@@ -592,7 +588,8 @@
    "mode": "transjakarta",
    "fare": 3500,
    "time": 21.0,
-   "dist": 0
+   "dist": 0,
+   "brt": true
   },
   {
    "from": "CSW 1",
@@ -610,7 +607,8 @@
    "mode": "transjakarta",
    "fare": 3500,
    "time": 12.0,
-   "dist": 0
+   "dist": 0,
+   "brt": true
   },
   {
    "from": "Tegal Parang Arah Barat",
@@ -628,7 +626,8 @@
    "mode": "transjakarta",
    "fare": 0,
    "time": 17.0,
-   "dist": 0
+   "dist": 0,
+   "brt": true
   },
   {
    "from": "Pancoran Arah Barat",
@@ -637,7 +636,8 @@
    "mode": "transjakarta",
    "fare": 3500,
    "time": 7.0,
-   "dist": 0
+   "dist": 0,
+   "brt": true
   },
   {
    "from": "Tegal Parang 1",
@@ -655,7 +655,8 @@
    "mode": "transjakarta",
    "fare": 0,
    "time": 18.0,
-   "dist": 0
+   "dist": 0,
+   "brt": true
   },
   {
    "from": "Pancoran Arah Barat",
@@ -664,7 +665,8 @@
    "mode": "transjakarta",
    "fare": 3500,
    "time": 32.0,
-   "dist": 0
+   "dist": 0,
+   "brt": true
   },
   {
    "from": "Pancoran Arah Barat",
@@ -673,7 +675,8 @@
    "mode": "transjakarta",
    "fare": 3500,
    "time": 13.0,
-   "dist": 0
+   "dist": 0,
+   "brt": true
   },
   {
    "from": "Tegal Mampang",
@@ -682,7 +685,8 @@
    "mode": "transjakarta",
    "fare": 0,
    "time": 18.0,
-   "dist": 0
+   "dist": 0,
+   "brt": true
   },
   {
    "from": "Pancoran Arah Barat",
@@ -691,7 +695,8 @@
    "mode": "transjakarta",
    "fare": 3500,
    "time": 22.0,
-   "dist": 0
+   "dist": 0,
+   "brt": true
   },
   {
    "from": "Senayan Bank Jakarta",
@@ -700,7 +705,8 @@
    "mode": "transjakarta",
    "fare": 0,
    "time": 13.0,
-   "dist": 0
+   "dist": 0,
+   "brt": true
   },
   {
    "from": "Cikoko Arah Barat",
@@ -709,7 +715,8 @@
    "mode": "transjakarta",
    "fare": 3500,
    "time": 22.0,
-   "dist": 0
+   "dist": 0,
+   "brt": true
   },
   {
    "from": "Semanggi",
@@ -725,7 +732,7 @@
    "to": "Blok M BCA",
    "route": "Bundaran HI - Lebak Bulus",
    "mode": "mrt",
-   "fare": 5000,
+   "fare": 7000,
    "time": 9.0,
    "dist": 4312
   },
@@ -736,7 +743,8 @@
    "mode": "transjakarta",
    "fare": 3500,
    "time": 30.0,
-   "dist": 0
+   "dist": 0,
+   "brt": true
   },
   {
    "from": "Cikoko Arah Barat",
@@ -745,7 +753,8 @@
    "mode": "transjakarta",
    "fare": 3500,
    "time": 33.0,
-   "dist": 0
+   "dist": 0,
+   "brt": true
   },
   {
    "from": "Bundaran Senayan",
@@ -754,7 +763,8 @@
    "mode": "transjakarta",
    "fare": 0,
    "time": 10.0,
-   "dist": 0
+   "dist": 0,
+   "brt": true
   },
   {
    "from": "Cikoko Arah Barat",
@@ -763,7 +773,8 @@
    "mode": "transjakarta",
    "fare": 3500,
    "time": 29.0,
-   "dist": 0
+   "dist": 0,
+   "brt": true
   },
   {
    "from": "Cikoko Arah Barat",
@@ -772,7 +783,8 @@
    "mode": "transjakarta",
    "fare": 3500,
    "time": 14.0,
-   "dist": 0
+   "dist": 0,
+   "brt": true
   },
   {
    "from": "Simpang Kuningan",
@@ -788,9 +800,10 @@
    "to": "Blok M Jalur 3",
    "route": "6U",
    "mode": "transjakarta",
-   "fare": 0,
+   "fare": 3500,
    "time": 14.0,
-   "dist": 0
+   "dist": 0,
+   "brt": true
   },
   {
    "from": "Blok M Jalur 3",
@@ -808,14 +821,15 @@
    "mode": "transjakarta",
    "fare": 3500,
    "time": 21.0,
-   "dist": 0
+   "dist": 0,
+   "brt": true
   },
   {
    "from": "Cawang",
    "to": "Manggarai",
    "route": "Bogor Line",
    "mode": "krl",
-   "fare": 3000,
+   "fare": 0,
    "time": 11.0,
    "dist": 3951
   },
@@ -853,7 +867,8 @@
    "mode": "transjakarta",
    "fare": 3500,
    "time": 45.0,
-   "dist": 0
+   "dist": 0,
+   "brt": false
   },
   {
    "from": "Cawang-Sentral 2",
@@ -869,36 +884,40 @@
    "to": "Pancoran Arah Barat",
    "route": "9",
    "mode": "transjakarta",
-   "fare": 0,
+   "fare": 3500,
    "time": 17.0,
-   "dist": 0
+   "dist": 0,
+   "brt": true
   },
   {
    "from": "Cawang-Sentral",
    "to": "Tegal Parang Arah Barat",
    "route": "9",
    "mode": "transjakarta",
-   "fare": 0,
+   "fare": 3500,
    "time": 23.0,
-   "dist": 0
+   "dist": 0,
+   "brt": true
   },
   {
    "from": "Cawang-Sentral",
    "to": "Senayan Bank Jakarta",
    "route": "9C",
    "mode": "transjakarta",
-   "fare": 0,
+   "fare": 3500,
    "time": 49.0,
-   "dist": 0
+   "dist": 0,
+   "brt": true
   },
   {
    "from": "Cawang-Sentral",
    "to": "Bundaran Senayan",
    "route": "9C",
    "mode": "transjakarta",
-   "fare": 0,
+   "fare": 3500,
    "time": 47.0,
-   "dist": 0
+   "dist": 0,
+   "brt": true
   },
   {
    "from": "Cawang-Sentral",
@@ -907,25 +926,28 @@
    "mode": "transjakarta",
    "fare": 0,
    "time": 14.0,
-   "dist": 0
+   "dist": 0,
+   "brt": true
   },
   {
    "from": "Cawang-Sentral",
    "to": "Simpang Kuningan",
    "route": "9",
    "mode": "transjakarta",
-   "fare": 0,
+   "fare": 3500,
    "time": 30.0,
-   "dist": 0
+   "dist": 0,
+   "brt": true
   },
   {
    "from": "Cawang-Sentral",
    "to": "Cikoko",
    "route": "9",
    "mode": "transjakarta",
-   "fare": 0,
+   "fare": 3500,
    "time": 14.0,
-   "dist": 0
+   "dist": 0,
+   "brt": true
   },
   {
    "from": "Universitas Indonesia Train Station",
@@ -952,7 +974,8 @@
    "mode": "transjakarta",
    "fare": 3500,
    "time": 5.0,
-   "dist": 0
+   "dist": 0,
+   "brt": true
   },
   {
    "from": "Simpang Kuningan",
@@ -961,7 +984,8 @@
    "mode": "transjakarta",
    "fare": 0,
    "time": 8.0,
-   "dist": 0
+   "dist": 0,
+   "brt": true
   },
   {
    "from": "UI",
@@ -970,23 +994,25 @@
    "mode": "transjakarta",
    "fare": 3500,
    "time": 56.0,
-   "dist": 0
+   "dist": 0,
+   "brt": false
   },
   {
    "from": "Bus Stop Pasar Minggu",
    "to": "St. MRT Blok A",
    "route": "6T",
    "mode": "transjakarta",
-   "fare": 0,
+   "fare": 3500,
    "time": 53.0,
-   "dist": 0
+   "dist": 0,
+   "brt": true
   },
   {
    "from": "St. MRT Blok A",
    "to": "St. MRT Blok M",
    "route": "Lebak Bulus - Bundaran HI",
    "mode": "mrt",
-   "fare": 2000,
+   "fare": 3000,
    "time": 3.0,
    "dist": 1226
   },
@@ -1006,7 +1032,8 @@
    "mode": "transjakarta",
    "fare": 3500,
    "time": 53.0,
-   "dist": 0
+   "dist": 0,
+   "brt": true
   },
   {
    "from": "Universitas Indonesia Train Station",
@@ -1024,14 +1051,15 @@
    "mode": "transjakarta",
    "fare": 3500,
    "time": 40.0,
-   "dist": 0
+   "dist": 0,
+   "brt": true
   },
   {
    "from": "Cikoko",
    "to": "Dukuh Atas",
    "route": "Cibubur Line",
    "mode": "lrt",
-   "fare": 11300,
+   "fare": 9900,
    "time": 20.0,
    "dist": 9126
   },
@@ -1049,8 +1077,18 @@
    "to": "Terminal Blok M",
    "route": "6U",
    "mode": "transjakarta",
-   "fare": 0,
+   "fare": 3500,
    "time": 43.0,
+   "dist": 0,
+   "brt": true
+  },
+  {
+   "from": "Terminal Blok M",
+   "to": "Blok M",
+   "route": "Jalan Kaki (Selesai)",
+   "mode": "walk",
+   "fare": 0,
+   "time": 3,
    "dist": 0
   },
   {
@@ -1060,7 +1098,8 @@
    "mode": "transjakarta",
    "fare": 3500,
    "time": 110.0,
-   "dist": 0
+   "dist": 0,
+   "brt": false
   },
   {
    "from": "St. Manggarai",
@@ -1069,7 +1108,8 @@
    "mode": "transjakarta",
    "fare": 3500,
    "time": 43.0,
-   "dist": 0
+   "dist": 0,
+   "brt": true
   },
   {
    "from": "Universitas Indonesia Train Station",

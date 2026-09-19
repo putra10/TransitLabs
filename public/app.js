@@ -219,10 +219,10 @@ function showPath(play) {
     $('#best').innerHTML = `<div class="big none">${T().noroute}</div><div>${T().noroute_why(why)}</div>`;
     return;
   }
-  const steps = p.path.filter(e => e.mode !== 'walk' || st(e.from) !== st(e.to)).map(e => {
+  const steps = p.path.map((e, i) => [e, p.legFares[i]]).filter(([e]) => e.mode !== 'walk' || st(e.from) !== st(e.to)).map(([e, legFare]) => {
     const line = ROUTE_LINE.get(e.route);
     const label = e.mode === 'walk' ? T().walk : MODE_LABEL[e.mode] + (line?.id === MODE_LABEL[e.mode] ? '' : ' ' + (line?.id ?? e.route));
-    return `<li><i style="--c:${line?.color ?? '#6b7280'}"></i>${label} · ${st(e.from)} → ${st(e.to)} <span>· ${e.time} ${T().min}${e.fare ? ' · ' + rp(e.fare) : ''}</span></li>`;
+    return `<li><i style="--c:${line?.color ?? '#6b7280'}"></i>${label} · ${st(e.from)} → ${st(e.to)} <span>· ${e.time} ${T().min}${legFare ? ' · ' + rp(legFare) : ''}</span></li>`;
   });
   $('#best').innerHTML = `<div class="big">${rp(p.fare)} · ${p.time} min</div>
     <div>${T().transfers(p.transfers)} · ${(p.dist / 1000).toFixed(1)} km${p.dist ? '' : ' ' + T().unmeasured} · ${T().rank(selected + 1)}${p.tags.map(t => `<span class="tag ${t}">${T()[t]}</span>`).join('')}</div>
