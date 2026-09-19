@@ -2,10 +2,10 @@
 // the HTML as lang="en" / lang="id" spans and CSS shows one set; pages with
 // dynamic text pass an onChange to re-render it.
 export function initLang(onChange) {
-  let lang = 'en';
+  let lang = 'id';
   try {
     const saved = localStorage.getItem('transitlab.lang');
-    lang = saved === 'id' || saved === 'en' ? saved : navigator.language.startsWith('id') ? 'id' : 'en';
+    lang = saved === 'id' || saved === 'en' ? saved : 'id';
   } catch { /* storage unavailable */ }
   const apply = l => {
     lang = l;

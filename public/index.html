@@ -1,15 +1,22 @@
 <!doctype html>
-<html lang="en" data-lang="en">
+<html lang="id" data-lang="id">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#f6f5f0">
-<title>TransitLab · a graph that reroutes</title>
-<meta name="description" content="Universitas Indonesia to Blok M as a weighted transit graph. Real fares, real travel minutes, Dijkstra and Yen's k-shortest paths. Close a station and watch it reroute.">
-<meta property="og:title" content="TransitLab · a graph that reroutes">
-<meta property="og:description" content="64 ways from campus to Blok M, one graph that recomputes when you break it.">
+<title>Optimasi Rute Transportasi Umum UI ke Blok M | TransitLab</title>
+<meta name="description" content="Optimasi rute transportasi umum dari Universitas Indonesia ke Blok M berdasarkan harga dan waktu tempuh menggunakan model OPTG dan algoritma Dijkstra.">
+<meta name="author" content="Putra Muhammad Rafy">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="keywords" content="rute UI ke Blok M, transportasi umum Jakarta, optimasi rute Jakarta, teori graf, algoritma Dijkstra, KRL Commuter Line, MRT Jakarta, LRT Jabodebek, TransJakarta, rute termurah, rute tercepat">
+<meta property="og:title" content="Optimasi Rute Transportasi Umum UI ke Blok M | TransitLab">
+<meta property="og:description" content="Pelajari pemodelan OPTG, bandingkan harga dan waktu tempuh, lalu eksplorasi rute UI ke Blok M secara interaktif.">
 <meta property="og:type" content="website">
+<meta property="og:locale" content="id_ID">
+<meta property="og:locale:alternate" content="en_US">
+<link rel="canonical" href="https://transitlab.vercel.app/">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="manifest" href="site.webmanifest">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" integrity="sha512-h9FcoyWjHcOcmEVkxOfTLnmZFWIH0iZhZT1H2TbOq55xssQGEJHEaIm+PgoUaZbRvQTNTluNOEfb1ZRy6D3BOw==" crossorigin="anonymous" referrerpolicy="no-referrer">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" integrity="sha512-puJW3E/qXDqYp9IfhAI54BJEaWIfloJ7JWs7OeD5i6ruC9JZL1gERT1wjtwXFlh7CjE7ZJ+/vcRZRkIYIb6p4g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <link rel="stylesheet" href="style.css">
@@ -25,29 +32,29 @@
     <a href="/method"><span lang="en">How it works</span><span lang="id">Cara kerja</span></a>
     <a href="/data"><span lang="en">Data</span><span lang="id">Data</span></a>
     <a href="https://www.putrarafy.com/Slide%20Presentasi%20Teori%20Graf-1_compressed.pdf" target="_blank" rel="noopener"><span lang="en">Slides ↗</span><span lang="id">Slide ↗</span></a>
-    <div class="lang" role="group" aria-label="Language"><button type="button" data-lang="en" aria-pressed="true">EN</button><button type="button" data-lang="id" aria-pressed="false">ID</button></div>
+    <div class="lang" role="group" aria-label="Language"><button type="button" data-lang="en" aria-pressed="false">EN</button><button type="button" data-lang="id" aria-pressed="true">ID</button></div>
   </nav>
 </header>
 
 <main>
   <section class="intro">
     <div>
-      <div class="eyebrow"><span class="live-dot"></span> <span lang="en">GRAPH THEORY, MEET THE COMMUTE</span><span lang="id">TEORI GRAF, BERTEMU PERJALANAN HARIAN</span></div>
-      <h1><span lang="en">64 ways to Blok M.<br>One graph that reroutes.</span><span lang="id">64 jalan ke Blok M.<br>Satu graf yang mencari jalan lain.</span></h1>
-      <p><span lang="en"><strong>Blok M is where UI students go to unwind.</strong> After class, after exams, after a long week: the trip from the Depok campus to Blok M is one thousands of students actually make, by KRL, MRT, LRT and bus, in dozens of combinations. This page turns every one of those combinations into a weighted graph, with real fares, real travel minutes and a transfer penalty, and lets you watch the maths choose. Close a station and the whole network recomputes in front of you.</span><span lang="id"><strong>Blok M adalah tempat mahasiswa UI melepas penat.</strong> Sepulang kuliah, seusai ujian, setelah minggu yang panjang: perjalanan dari kampus Depok ke Blok M benar-benar ditempuh ribuan mahasiswa, dengan KRL, MRT, LRT, dan bus, dalam puluhan kombinasi. Halaman ini mengubah setiap kombinasi itu menjadi graf berbobot, dengan tarif nyata, menit tempuh nyata, dan penalti pindah moda, lalu membiarkan Anda menyaksikan matematikanya memilih. Tutup satu stasiun dan seluruh jaringan dihitung ulang di depan mata.</span></p>
+      <div class="eyebrow"><span class="live-dot"></span> <span lang="en">WEIGHTED GRAPH ROUTE OPTIMISATION</span><span lang="id">OPTIMASI RUTE DENGAN GRAF BERBOBOT</span></div>
+      <h1><span lang="en">UI to Blok M.<br>Optimised by fare and time.</span><span lang="id">UI ke Blok M.<br>Optimal menurut harga dan waktu.</span></h1>
+      <p><span lang="en"><strong>This project models public transport from Universitas Indonesia to Blok M as an Ostensive Public Transportation Graph.</strong> Routes, stations, vehicle types, distances, travel times, fares and transfer points are represented in one weighted network. Fare and time are normalised into one objective value, then Dijkstra's algorithm searches for the route with the smallest value. The interactive lab extends that original analysis so you can change priorities and test network constraints.</span><span lang="id"><strong>Proyek ini memodelkan transportasi umum dari Universitas Indonesia ke Blok M sebagai Ostensive Public Transportation Graph.</strong> Rute, stasiun, jenis kendaraan, jarak, waktu tempuh, tarif, dan titik transit direpresentasikan dalam satu jaringan berbobot. Harga dan waktu dinormalisasi menjadi satu nilai objektif, lalu algoritma Dijkstra mencari rute dengan nilai terkecil. Lab interaktif ini memperluas analisis asli agar prioritas dan batasan jaringan dapat diuji langsung.</span></p>
       <div class="hero-hook">
         <a class="cta" href="#lab"><span lang="en">Play the route</span><span lang="id">Putar rutenya</span> <span>↓</span></a>
         <ul class="hero-stats">
-          <li><b>64</b><span lang="en">candidate routes surveyed</span><span lang="id">kandidat rute disurvei</span></li>
+          <li><b>OPTG</b><span lang="en">one multimodal weighted graph</span><span lang="id">satu graf berbobot multimoda</span></li>
+          <li><b>2</b><span lang="en">main parameters: fare and time</span><span lang="id">parameter utama: harga dan waktu</span></li>
           <li><b>4</b><span lang="en">modes: KRL, MRT, LRT, TJ</span><span lang="id">moda: KRL, MRT, LRT, TJ</span></li>
-          <li><b>k = 10</b><span lang="en">shortest journeys, re-ranked live</span><span lang="id">perjalanan terpendek, diurutkan langsung</span></li>
         </ul>
       </div>
     </div>
     <div class="specimen" aria-hidden="true">
       <span class="specimen-id">OPTG · UI → BLOK M · 2026</span>
       <svg viewBox="0 0 260 140"><g fill="none" stroke-width="3" stroke-linecap="round"><path stroke="#e0262d" d="M232 122V60l-30-30h-40"/><path stroke="#00aeef" d="M162 30H60"/><path stroke="#1b2a6b" d="M60 30v90"/><path stroke="#00a99d" d="M202 70H60"/><path stroke="#6cb33f" d="M130 70v-40"/><path stroke="#9b59b6" d="M75 100h55V70"/><path stroke="#3f2a7d" d="M202 70l-40 30H120"/></g><g fill="#fdfdf9" stroke="#22303a" stroke-width="2"><circle cx="232" cy="122" r="5"/><circle cx="232" cy="60" r="4"/><circle cx="202" cy="30" r="4"/><circle cx="162" cy="30" r="4"/><circle cx="60" cy="30" r="5"/><circle cx="202" cy="70" r="4"/><circle cx="130" cy="70" r="4"/><circle cx="130" cy="30" r="4"/><circle cx="75" cy="100" r="4"/><circle cx="60" cy="70" r="4"/><circle cx="120" cy="100" r="4"/></g><circle cx="60" cy="120" r="6" fill="#c8102e" stroke="#fff" stroke-width="2"/></svg>
-      <span><span lang="en">ONE CAMPUS. TEN JOURNEYS. EVERY MODE.</span><span lang="id">SATU KAMPUS. SEPULUH PERJALANAN. SEMUA MODA.</span></span>
+      <span><span lang="en">FARE + TIME. ONE OBJECTIVE VALUE.</span><span lang="id">HARGA + WAKTU. SATU NILAI OBJEKTIF.</span></span>
     </div>
   </section>
 
@@ -107,7 +114,7 @@
           <div><h2><span lang="en">Ten shortest journeys</span><span lang="id">Sepuluh perjalanan terpendek</span></h2></div>
           <span id="count" class="quiet-label"></span>
         </div>
-        <p class="panel-description"><span lang="en">Yen's algorithm, one row per distinct journey. Click a row to trace it. Tags mark the Pareto front: journeys no other beats on both fare and time.</span><span lang="id">Algoritma Yen, satu baris per perjalanan berbeda. Klik baris untuk menelusurinya. Label menandai batas Pareto: perjalanan yang tidak dikalahkan rute lain pada tarif dan waktu sekaligus.</span></p>
+        <p class="panel-description"><span lang="en">The original result table ranks ten paths and marks the cheapest, fastest and Pareto options. This website makes that comparison interactive. Click a row to trace it on the network.</span><span lang="id">Tabel hasil proyek asli mengurutkan sepuluh lintasan serta menandai pilihan termurah, tercepat, dan Pareto. Situs ini membuat perbandingan tersebut interaktif. Klik satu baris untuk menelusurinya pada jaringan.</span></p>
         <ol id="list"></ol>
       </article>
     </div>
@@ -134,13 +141,13 @@
   <section class="why" id="why">
     <div>
       <span class="eyebrow"><span lang="en">WHY BLOK M</span><span lang="id">MENGAPA BLOK M</span></span>
-      <h2><span lang="en">A destination students actually choose.</span><span lang="id">Tujuan yang benar-benar dipilih mahasiswa.</span></h2>
+      <h2><span lang="en">High mobility, many public transport choices.</span><span lang="id">Mobilitas tinggi, pilihan moda yang beragam.</span></h2>
     </div>
-    <p><span lang="en">Ask a UI student where they go to hang out or to "heal" after a hard week, and Blok M comes up again and again: M Bloc, the plaza, the cafés, the park by the MRT. It is also one of the best-connected places in Jakarta, the southern end of the MRT and a TransJakarta terminal, which is exactly why there are so many ways to get there and so many trade-offs between them. That made it the right destination for a graph-theory project: a trip people make, with alternatives worth comparing. <a href="/method"><span lang="en">Read how it works →</span></a></span><span lang="id">Tanyakan pada mahasiswa UI ke mana mereka pergi untuk nongkrong atau "healing" setelah minggu yang berat, dan Blok M akan disebut berulang kali: M Bloc, plazanya, kafe-kafenya, taman di samping stasiun MRT. Blok M juga salah satu tempat dengan koneksi terbaik di Jakarta, ujung selatan MRT sekaligus terminal TransJakarta, dan justru karena itu ada begitu banyak cara ke sana dengan begitu banyak pertimbangan di antaranya. Itulah yang menjadikannya tujuan yang tepat untuk proyek teori graf: perjalanan yang sungguh ditempuh orang, dengan alternatif yang layak dibandingkan. <a href="/method">Baca cara kerjanya →</a></span></p>
+    <p><span lang="en">The original project chose Blok M because it is a popular Jakarta district with high public transport mobility and varied transport options. From Universitas Indonesia, the alternatives differ in travel time, fare and mode changes. Those differences create the route-selection problem addressed by the weighted graph: how should the network be modelled, how should fare and time become edge weights, and which route gives the smallest combined objective value? <a href="/method">Read the method from the project slides →</a></span><span lang="id">Proyek asli memilih Blok M karena kawasan ini populer di Jakarta, memiliki mobilitas transportasi umum yang tinggi, dan dilayani pilihan moda yang beragam. Dari Universitas Indonesia, setiap alternatif berbeda dalam waktu tempuh, tarif, dan perpindahan moda. Perbedaan tersebut membentuk masalah optimasi yang dijawab melalui graf berbobot: bagaimana jaringan dimodelkan, bagaimana harga dan waktu menjadi bobot, serta rute mana yang memberi nilai objektif gabungan paling kecil? <a href="/method">Baca metode berdasarkan slide proyek →</a></span></p>
   </section>
 
   <footer>
-    <span><span lang="en">Built from a survey. Solved in your browser.</span><span lang="id">Dibangun dari survei. Dihitung di peramban Anda.</span></span>
+    <span><span lang="en">Built from project data. Solved in your browser.</span><span lang="id">Dibangun dari data proyek. Dihitung di peramban Anda.</span></span>
     <div>
       <a href="https://www.putrarafy.com/Slide%20Presentasi%20Teori%20Graf-1_compressed.pdf" target="_blank" rel="noopener"><span lang="en">Project slides ↗</span><span lang="id">Slide proyek ↗</span></a>
       <span>×</span>

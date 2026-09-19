@@ -1,0 +1,16 @@
+{
+  "name": "TransitLab",
+  "short_name": "TransitLab",
+  "description": "Interactive route optimization from Universitas Indonesia to Blok M.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f4f1e9",
+  "theme_color": "#f4f1e9",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

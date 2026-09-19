@@ -8,7 +8,7 @@
 export const STATIONS = {
   // Sudirman corridor (MRT + TJ 1), x = 200
   'Fatmawati': [200, 570], 'Blok A': [200, 500], 'Blok M': [200, 440], 'Kejaksaan Agung': [200, 400],
-  'Bundaran Senayan': [200, 350], 'Senayan': [200, 310], 'Semanggi': [200, 260], 'Bendungan Hilir': [200, 210],
+  'Bundaran Senayan': [200, 350], 'Senayan': [200, 310], 'Bendungan Hilir': [200, 210], 'Semanggi': [280, 210],
   'Dukuh Atas': [200, 140], 'Sudirman': [240, 100], 'Galunggung': [250, 140],
   'Kantor Pos Fatmawati': [140, 540], 'CSW': [250, 400],
   // Rasuna Said / Tendean
@@ -44,13 +44,13 @@ export const GLABEL = {
   'Simpang Kuningan': 'top', 'Tegal Parang': 'bottom', 'Kejaksaan Agung': 'left', 'CSW': 'right', 'Blok M': 'right',
   'Cikoko': 'top', 'Cawang': 'bottom', 'Cawang-Sentral': 'right', 'Sudirman': 'top', 'Dukuh Atas': 'left', 'Galunggung': 'bottom',
   'UI': 'left', 'Stasiun UI': 'right', 'Kuningan': 'right', 'Tegal Mampang': 'bottom', 'Hotel Maharadja': 'bottom',
-  'Senayan': 'left', 'Bundaran Senayan': 'left', 'Semanggi': 'right', 'Bendungan Hilir': 'right', 'SMPN 8': 'top', 'Cikini': 'right',
+  'Senayan': 'left', 'Bundaran Senayan': 'left', 'Semanggi': 'right', 'Bendungan Hilir': 'left', 'SMPN 8': 'top', 'Cikini': 'right',
 };
 
 // [dx, dy, text-anchor] relative to the station dot.
 export const LABEL = {
   'Fatmawati': [-14, 4, 'end'], 'Blok A': [-14, 4, 'end'], 'Blok M': [-16, 5, 'end'], 'Kejaksaan Agung': [-14, 4, 'end'],
-  'Bundaran Senayan': [-14, 4, 'end'], 'Senayan': [-14, 4, 'end'], 'Semanggi': [-14, 4, 'end'], 'Bendungan Hilir': [-14, 4, 'end'],
+  'Bundaran Senayan': [-14, 4, 'end'], 'Senayan': [-14, 4, 'end'], 'Bendungan Hilir': [-12, 4, 'end'], 'Semanggi': [12, 4, 'start'],
   'Dukuh Atas': [-14, 4, 'end'], 'Sudirman': [12, -6, 'start'], 'Galunggung': [12, 14, 'start'],
   'Kantor Pos Fatmawati': [4, -10, 'middle'], 'CSW': [4, 18, 'middle'],
   'Kuningan': [12, 4, 'start'], 'Tegal Mampang': [12, 4, 'start'], 'Hotel Maharadja': [4, 18, 'middle'],
@@ -72,20 +72,23 @@ export const COLORS = {
 // between two graph stops is not in the data (4C, 4K, 6M, 7Q) it follows the
 // plausible road and is drawn for shape only.
 export const LINES = [
-  { id: '1', color: COLORS.tj1, routes: ['1'], stops: ['Blok M', 'Kejaksaan Agung', 'Bundaran Senayan', 'Senayan', 'Semanggi', 'Bendungan Hilir', 'Dukuh Atas'] },
+  // Corridor 1 serves Bendungan Hilir. Semanggi is a separate stop reached
+  // from Bendungan Hilir by the walking transfer encoded in optg.json.
+  { id: '1', color: COLORS.tj1, routes: ['1'], stops: ['Blok M', 'Kejaksaan Agung', 'Bundaran Senayan', 'Senayan', 'Bendungan Hilir', 'Dukuh Atas'] },
   { id: '1P', color: COLORS.tj1, routes: ['1P'], stops: ['Blok M', '~Kejaksaan Agung', 'Bundaran Senayan'] },
   { id: '1E', color: COLORS.tj1, routes: ['1E'], stops: ['Kantor Pos Fatmawati', 'Blok M'] },
   { id: '4', color: COLORS.tj4, routes: ['4'], stops: ['Manggarai', [600, 140], [410, 140], 'Galunggung'] },
   { id: '4B', color: COLORS.tj4, routes: ['TJ 4B', '4B'], stops: ['UI', [680, 480], 'Pasar Minggu', [700, 380], [700, 200], [640, 140], 'Manggarai'] },
-  { id: '4C', color: COLORS.tj4, routes: ['4C'], stops: ['SMPN 8', [600, 140], [410, 140], 'Galunggung', '~Dukuh Atas', '~Bendungan Hilir', '~Semanggi', '~Senayan', 'Bundaran Senayan'] },
-  { id: '4K', color: COLORS.tj4, routes: ['4K'], stops: ['Cikoko', 'Pancoran', 'Tegal Mampang', '~CSW', 'Kejaksaan Agung'] },
+  { id: '4C', color: COLORS.tj4, routes: ['4C'], stops: ['SMPN 8', [600, 140], [410, 140], 'Galunggung', '~Dukuh Atas', '~Bendungan Hilir', '~Senayan', 'Bundaran Senayan'] },
+  // Approach Kejaksaan Agung from above, clear of CSW and its walking link.
+  { id: '4K', color: COLORS.tj4, routes: ['4K'], stops: ['Cikoko', 'Pancoran', 'Tegal Mampang', [240, 360], 'Kejaksaan Agung'] },
   { id: '6', color: COLORS.tj6, routes: ['6'], stops: ['Tegal Mampang', 'Kuningan', [410, 140], 'Galunggung'] },
   { id: '6C', color: COLORS.tj6, routes: ['6C'], stops: ['Tebet', 'Kuningan'] },
   { id: '6D', color: COLORS.tj6, routes: ['6D'], stops: ['Tebet', [640, 320], [300, 320], 'Bundaran Senayan'] },
   { id: '6M', color: COLORS.tj6, routes: ['6M'], stops: ['Blok M', '~CSW', 'Tegal Mampang', 'Kuningan', [410, 140], [600, 140], 'Manggarai'] },
   { id: '6T', color: COLORS.tj6, routes: ['6T'], stops: ['Pasar Minggu', [640, 500], 'Blok A'] },
   { id: '6U', color: COLORS.tj6, routes: ['6U'], stops: ['Pasar Minggu', [640, 470], 'Hotel Maharadja', 'Blok M'] },
-  { id: '6V', color: COLORS.tj6, routes: ['6V'], stops: ['Tegal Mampang', 'Kejaksaan Agung'] },
+  { id: '6V', color: COLORS.tj6, routes: ['6V'], stops: ['Tegal Mampang', [240, 360], 'Kejaksaan Agung'] },
   { id: '7B', color: COLORS.tj7, routes: ['7B'], stops: ['Tegal Mampang', '~CSW', 'Blok M'] },
   { id: '7Q', color: COLORS.tj7, routes: ['7Q'], stops: ['Duren Kalibata', [640, 470], '~Hotel Maharadja', 'Blok M'] },
   { id: '9', color: COLORS.tj9, routes: ['9'], stops: ['Cawang-Sentral', 'Cikoko', 'Pancoran', 'Tegal Parang', 'Simpang Kuningan', 'Semanggi'] },
@@ -95,9 +98,10 @@ export const LINES = [
   { id: '13B', color: COLORS.tj13, routes: ['13B'], stops: ['CSW', 'Tegal Mampang', 'Pancoran'] },
   { id: '13E', color: COLORS.tj13, routes: ['13E'], stops: ['CSW', 'Tegal Mampang', 'Kuningan'] },
   { id: 'D21', color: COLORS.tjD, routes: ['D21', 'TJ D21'], stops: ['UI', 'Tanjung Barat', [720, 520], [640, 600], [230, 600], 'Fatmawati'] },
+  { id: 'BgrBM', color: COLORS.tjD, routes: ['Bogor - Blok M'], stops: ['Bundaran Senayan', '~Kejaksaan Agung', 'Blok M'] },
   { id: 'D11', color: COLORS.tjD, routes: ['TJ D11'], stops: ['Depok Baru', [820, 560], [820, 290], 'Cawang-Sentral'] },
   { id: 'LRT', color: COLORS.lrt, rail: true, routes: ['Cibubur Line'], stops: ['Cikoko', 'Pancoran', '~Tegal Parang', 'Kuningan', 'Dukuh Atas'] },
-  { id: 'MRT', color: COLORS.mrt, rail: true, routes: ['Bundaran HI - Lebak Bulus', 'Lebak Bulus - Bundaran HI'], stops: ['Fatmawati', 'Blok A', 'Blok M', '~Kejaksaan Agung', '~Bundaran Senayan', '~Senayan', '~Semanggi', 'Bendungan Hilir', 'Dukuh Atas'] },
+  { id: 'MRT', color: COLORS.mrt, rail: true, routes: ['Bundaran HI - Lebak Bulus', 'Lebak Bulus - Bundaran HI'], stops: ['Fatmawati', 'Blok A', 'Blok M', '~Kejaksaan Agung', '~Bundaran Senayan', '~Senayan', 'Bendungan Hilir', 'Dukuh Atas'] },
   { id: 'Cikarang', color: COLORS.krl_cikarang, rail: true, routes: ['Cikarang Line'], stops: ['Manggarai', 'Sudirman'] },
   { id: 'Bogor', color: COLORS.krl_bogor, rail: true, routes: ['Bogor Line'], stops: ['Depok Baru', 'Stasiun UI', 'Tanjung Barat', 'Pasar Minggu', 'Duren Kalibata', 'Cawang', 'Tebet', 'Manggarai', 'Cikini'] },
 ];

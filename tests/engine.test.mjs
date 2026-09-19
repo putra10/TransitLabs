@@ -2,31 +2,51 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { buildGraph, solve, yen, paretoFront, passes } from '../public/engine.mjs';
-import { annotateVia } from '../public/lines.mjs';
+import { annotateVia, LINES, STATIONS } from '../public/lines.mjs';
 
 const data = annotateVia(JSON.parse(readFileSync(new URL('../public/data/optg.json', import.meta.url), 'utf8')));
 const g = buildGraph(data);
 
-// Baseline. The notebook's k=10 held four copies of the KRL→KRL→MRT trip; with
-// one slot per distinct journey the fastest is still Rp 13,000 / 61 min and the
-// cheapest Rp 6,500 / 67 min, and the balanced weight now picks the cheap one.
+// Corridor 1 serves Bendungan Hilir, not Semanggi. The two stations connect
+// through the explicit directed walking transfer in the project graph.
+const corridor1 = LINES.find(line => line.id === '1');
+assert.ok(corridor1.stops.includes('Bendungan Hilir'));
+assert.ok(!corridor1.stops.includes('Semanggi'));
+const corridor1LongEdge = data.edges.find(e => e.route === '1' && e.from === 'Dukuh Atas' && e.to === 'Blok M');
+assert.ok(corridor1LongEdge.via.includes('Bendungan Hilir'));
+assert.ok(!corridor1LongEdge.via.includes('Semanggi'));
+assert.equal(STATIONS.Semanggi[1], STATIONS['Bendungan Hilir'][1], 'Semanggi and Bendungan Hilir align for the walking transfer');
+assert.ok(STATIONS.Semanggi[0] > STATIONS['Bendungan Hilir'][0], 'Semanggi sits to the right of Bendungan Hilir');
+assert.ok(data.edges.some(e => e.from === 'Semanggi' && e.to === 'Bendungan Hilir' && e.mode === 'walk'));
+const mrt = LINES.find(line => line.id === 'MRT');
+assert.ok(mrt.stops.includes('Bendungan Hilir'));
+assert.ok(!mrt.stops.some(stop => typeof stop === 'string' && stop.replace(/^~/, '') === 'Semanggi'));
+
+// Corridor 13 terminates at CSW and Corridor 1 starts at Kejaksaan Agung.
+// The interchange between them must remain an explicit walking edge.
+assert.ok(data.edges.some(e => e.from === 'CSW' && e.to === 'Kejaksaan Agung' && e.mode === 'walk'));
+assert.ok(!LINES.some(line => line.stops.includes('CSW') && line.stops.includes('Kejaksaan Agung')));
+
+// Baseline from the project spreadsheet (Sheet13 minutes, Sheet12 fares).
+// Cheapest is TJ D21 then 1E with a free TransJakarta transfer, Rp 3,500 / 70 min;
+// fastest is D21 then MRT, Rp 10,500 / 52 min. The balanced weight picks the cheap one.
 const { paths, criticality } = solve(g, data);
 assert.equal(paths.length, 10, 'ten paths');
 assert.equal(new Set(paths.map(p => p.journey)).size, 10, 'distinct journeys');
 const best = paths[0];
-assert.equal(best.fare, 6500);
-assert.equal(best.time, 67);
+assert.equal(best.fare, 3500);
+assert.equal(best.time, 70);
 const fastest = paths.find(p => p.tags.includes('fastest'));
-assert.equal(fastest.fare, 13000);
-assert.equal(fastest.time, 61);
-assert.equal(fastest.transfers, 2);
-assert.deepEqual(fastest.path.map(e => e.mode).filter(m => m !== 'walk'), ['krl', 'krl', 'mrt']);
+assert.equal(fastest.fare, 10500);
+assert.equal(fastest.time, 52);
+assert.equal(fastest.transfers, 1);
+assert.deepEqual(fastest.path.map(e => e.mode).filter(m => m !== 'walk'), ['transjakarta', 'mrt']);
 assert.ok(paths.every(p => p.nodes[0] === 'UI' && p.nodes.at(-1) === 'Blok M'));
 assert.ok(paths.every(p => new Set(p.nodes).size === p.nodes.length), 'simple paths');
 
 // Weight extremes reorder the same set.
-assert.equal(solve(g, data, { wFare: 1 }).paths[0].fare, 6500);
-assert.equal(solve(g, data, { wFare: 0 }).paths[0].time, 61);
+assert.equal(solve(g, data, { wFare: 1 }).paths[0].fare, 3500);
+assert.equal(solve(g, data, { wFare: 0 }).paths[0].time, 52);
 
 // Closing a station removes it from every path and the engine reroutes.
 const closed = new Set(['Manggarai']);

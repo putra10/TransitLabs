@@ -120,17 +120,23 @@ function viaStations(line, a, b, pathOf) {
 // ── Static network ────────────────────────────────────────────────────────────
 const map = $('#map');
 const gWalk = svgEl('g'), gLines = svgEl('g'), gRoute = svgEl('g'), gStations = svgEl('g');
-map.append(gWalk, gLines, gRoute, gStations);
+// Keep walking transfers above service lines so shared interchange links stay
+// visibly dashed, including Semanggi to Bendungan Hilir and CSW to Kejaksaan.
+map.append(gLines, gWalk, gRoute, gStations);
 
-// Walk links between distinct stations (dashed, under everything).
+// Walk links between distinct stations.
 const walked = new Set();
 for (const e of data.edges) {
   const a = st(e.from), b = st(e.to);
   if (e.mode !== 'walk' || a === b) continue;
   const k = key(pos(a), pos(b));
-  if (walked.has(k) || shared.has(k)) continue;
+  if (walked.has(k)) continue;
   walked.add(k);
-  gWalk.append(svgEl('path', { d: toD(elbow(pos(a), pos(b))), class: 'walklink' }));
+  const d = toD(elbow(pos(a), pos(b)));
+  gWalk.append(
+    svgEl('path', { d, class: 'walklink-casing' }),
+    svgEl('path', { d, class: 'walklink' })
+  );
 }
 
 const lineMode = new Map(LINES.map(l => [l.id, data.edges.find(e => l.routes.includes(e.route))?.mode]));
@@ -259,7 +265,7 @@ let geo = null;
 const RAIL = new Set(['Bogor', 'Cikarang', 'MRT', 'LRT']);
 // Stops a line's traced geometry runs through (rail skips "~" halte, which sit off the track).
 const GSTOPS = line => line.stops.filter(x => !Array.isArray(x) && !(RAIL.has(line.id) && x.startsWith('~'))).map(nameOf);
-// Traced path along the line between two of its stops, or null if untraced.
+// Path along the line between two of its stops (traced where cached), or null if not both on the line.
 function geoPath(line, a, b) {
   const names = GSTOPS(line), cache = GEOM[line.id] || {};
   let i = names.indexOf(a), j = names.indexOf(b);
@@ -268,8 +274,8 @@ function geoPath(line, a, b) {
   const out = [];
   for (let k = i; k < j; k++) {
     const x = names[k], y = names[k + 1];
-    const seg = cache[`${x}|${y}`] || (cache[`${y}|${x}`] ? [...cache[`${y}|${x}`]].reverse() : null);
-    if (!seg) return null;
+    // An untraced hop falls back to a straight segment on its own, not the whole line.
+    const seg = cache[`${x}|${y}`] || (cache[`${y}|${x}`] ? [...cache[`${y}|${x}`]].reverse() : [GEO[x], GEO[y]]);
     out.push(...(out.length ? seg.slice(1) : seg));
   }
   return rev ? out.reverse() : out;

@@ -2,7 +2,7 @@
 
 Interactive route optimiser for Universitas Indonesia → Blok M. The transit
 network (KRL, MRT, LRT Jabodebek, TransJakarta) is a directed weighted graph
-with a real fare and Google Maps travel time on every hop. Visitors press
+with the project spreadsheet's fare, distance and travel time on every hop. Visitors press
 play to watch the best route light up, drag a fare-vs-time weight, and click
 any station to close it and see the engine reroute in real time.
 
@@ -24,7 +24,7 @@ that, and a plain static server needs the `.html` suffix.
 The page is bilingual. Every piece of static copy exists twice in
 `index.html` as `<span lang="en">` / `<span lang="id">` pairs and CSS shows
 one set; the few dynamic strings live in a small dictionary in `app.js`.
-The choice persists in `localStorage` and defaults to the browser language.
+The choice persists in `localStorage` and defaults to Indonesian on a first visit.
 
 ## What the maths does
 
@@ -66,7 +66,7 @@ node tests/engine.test.mjs
 
 `public/lines.mjs` holds the hand-placed station grid and the ordered stop
 list per line (KRL Bogor and Cikarang, MRT, LRT Jabodebek, and every
-TransJakarta corridor the 64 routes use). A `~name` entry is a stop the line
+TransJakarta corridor the routes use). A `~name` entry is a stop the line
 passes but the graph never boards there; an `[x, y]` entry is a bend. The
 renderer inserts the 45° elbows and the parallel offsets itself, so moving a
 station or re-ordering a line is a one-line edit. Where a TJ corridor's exact
@@ -83,17 +83,21 @@ allows light use like this; swap the tile URL if traffic ever grows.
 
 ## Data
 
-`public/data/optg.json` is generated once from the notebook's inputs kept in
-`scripts/raw/`: the two public Google Sheet CSVs (64 candidate routes and the
-field-collected fares) and the frozen Maps snapshot (fetched 2026-09-11 for a
-Monday 11:00 WIB departure). Regenerate with:
+`public/data/optg.json` is generated from the team's project spreadsheet,
+kept as `scripts/raw/sheet.xlsx`. Two tabs hold every route already broken
+into hops: `Sheet13` (minutes per ride) and `Sheet12` (distance and fare per
+hop, including TransJakarta tap-ins and free transfers). The exporter joins
+them hop by hop, gives blank walking hops 3 minutes, collapses raw stop names
+onto display stations, and writes the graph: 66 routes, 94 directed edges.
+Regenerate with:
 
 ```powershell
 python scripts/export_graph.py
 ```
 
-Pass `--refetch` to pull the sheets again first. Station coordinates in the
-exporter are hand-nudged for a readable schematic, not survey positions.
+Pass `--refetch` to download the workbook again first. The older
+`maps_*_cache.json`, `routes.csv` and `prices.csv` in `scripts/raw/` are the
+notebook's inputs and are kept for reference only.
 
 ## Deploy
 

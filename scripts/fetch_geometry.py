@@ -13,6 +13,11 @@ for each pair of consecutive stops in public/lines.mjs.
     python scripts/fetch_geometry.py --refresh  # redo everything
 
 Overpass is public and rate-limited: this runs once, not at page load.
+
+Hand-edited after tracing: 4K and 6V "Tegal Mampang|Kejaksaan Agung" leave
+Trunojoyo ~80 m before the CSW junction and go straight to the halte, so
+neither line runs through CSW (they do not serve it). 1 and 4C stitch
+Senayan|Bendungan Hilir through Semanggi, which corridor 1 does not stop at.
 """
 from __future__ import annotations
 
