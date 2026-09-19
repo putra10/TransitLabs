@@ -251,7 +251,8 @@
    "mode": "walk",
    "fare": 0,
    "time": 3,
-   "dist": 0
+   "dist": 0,
+   "open": true
   },
   {
    "from": "Universitas Indonesia Train Station",
@@ -297,7 +298,8 @@
    "mode": "walk",
    "fare": 0,
    "time": 3,
-   "dist": 0
+   "dist": 0,
+   "open": false
   },
   {
    "from": "Kejaksaan Agung",
@@ -391,7 +393,8 @@
    "mode": "walk",
    "fare": 0,
    "time": 3,
-   "dist": 0
+   "dist": 0,
+   "open": false
   },
   {
    "from": "UI",
@@ -437,7 +440,8 @@
    "mode": "walk",
    "fare": 0,
    "time": 3,
-   "dist": 0
+   "dist": 0,
+   "open": true
   },
   {
    "from": "SMPN 8",
@@ -550,7 +554,8 @@
    "mode": "walk",
    "fare": 0,
    "time": 3,
-   "dist": 0
+   "dist": 0,
+   "open": true
   },
   {
    "from": "Kantor Pos Fatmawati",
@@ -598,7 +603,8 @@
    "mode": "walk",
    "fare": 0,
    "time": 3,
-   "dist": 0
+   "dist": 0,
+   "open": false
   },
   {
    "from": "Cikoko Arah Barat",
@@ -617,7 +623,8 @@
    "mode": "walk",
    "fare": 0,
    "time": 3,
-   "dist": 0
+   "dist": 0,
+   "open": false
   },
   {
    "from": "Tegal Mampang",
@@ -646,7 +653,8 @@
    "mode": "walk",
    "fare": 0,
    "time": 3,
-   "dist": 0
+   "dist": 0,
+   "open": false
   },
   {
    "from": "Tegal Mampang",
@@ -725,7 +733,8 @@
    "mode": "walk",
    "fare": 0,
    "time": 3,
-   "dist": 0
+   "dist": 0,
+   "open": true
   },
   {
    "from": "Bendungan Hilir",
@@ -793,7 +802,8 @@
    "mode": "walk",
    "fare": 0,
    "time": 3,
-   "dist": 0
+   "dist": 0,
+   "open": true
   },
   {
    "from": "Hotel Maharadja",
@@ -1128,6 +1138,3154 @@
    "fare": 3000,
    "time": 2.0,
    "dist": 1552
+  }
+ ],
+ "routes": [
+  {
+   "id": "Rute-1",
+   "hops": [
+    [
+     "UI",
+     "Universitas Indonesia Train Station",
+     "Jalan Kaki"
+    ],
+    [
+     "Universitas Indonesia Train Station",
+     "Cawang",
+     "Bogor Line"
+    ],
+    [
+     "Cawang",
+     "Cikoko",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Cikoko",
+     "Kuningan",
+     "Cibubur Line"
+    ],
+    [
+     "Kuningan",
+     "CSW",
+     "13E"
+    ],
+    [
+     "CSW",
+     "Kejaksaan Agung",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Kejaksaan Agung",
+     "Blok M",
+     "1"
+    ]
+   ],
+   "legFares": [
+    0,
+    3000,
+    0,
+    6400,
+    3500,
+    0,
+    0
+   ],
+   "fare": 12900
+  },
+  {
+   "id": "Rute-2",
+   "hops": [
+    [
+     "UI",
+     "Manggarai",
+     "TJ 4B"
+    ],
+    [
+     "Manggarai",
+     "Sudirman",
+     "Cikarang Line"
+    ],
+    [
+     "Sudirman",
+     "Dukuh Atas BNI",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Dukuh Atas BNI",
+     "Blok M BCA",
+     "Bundaran HI - Lebak Bulus"
+    ],
+    [
+     "Blok M BCA",
+     "Blok M",
+     "Jalan Kaki (Selesai)"
+    ]
+   ],
+   "legFares": [
+    3500,
+    3000,
+    0,
+    7000,
+    0
+   ],
+   "fare": 13500
+  },
+  {
+   "id": "Rute-4",
+   "hops": [
+    [
+     "UI",
+     "Manggarai",
+     "TJ 4B"
+    ],
+    [
+     "Manggarai",
+     "Sudirman",
+     "Cikarang Line"
+    ],
+    [
+     "Sudirman",
+     "Dukuh Atas",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Dukuh Atas",
+     "Blok M",
+     "1"
+    ]
+   ],
+   "legFares": [
+    3500,
+    3000,
+    0,
+    3500
+   ],
+   "fare": 10000
+  },
+  {
+   "id": "Rute-6",
+   "hops": [
+    [
+     "UI",
+     "Manggarai",
+     "TJ 4B"
+    ],
+    [
+     "Manggarai",
+     "Galunggung",
+     "4"
+    ],
+    [
+     "Galunggung",
+     "Dukuh Atas",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Dukuh Atas",
+     "Blok M",
+     "1"
+    ]
+   ],
+   "legFares": [
+    3500,
+    3500,
+    0,
+    0
+   ],
+   "fare": 7000
+  },
+  {
+   "id": "Rute-7",
+   "hops": [
+    [
+     "UI",
+     "St. MRT Fatmawati",
+     "TJ D21"
+    ],
+    [
+     "St. MRT Fatmawati",
+     "Fatmawati Indomaret",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Fatmawati Indomaret",
+     "Blok M BCA",
+     "Lebak Bulus - Bundaran HI"
+    ],
+    [
+     "Blok M BCA",
+     "Blok M",
+     "Jalan Kaki (Selesai)"
+    ]
+   ],
+   "legFares": [
+    3500,
+    0,
+    7000,
+    0
+   ],
+   "fare": 10500
+  },
+  {
+   "id": "Rute-8",
+   "hops": [
+    [
+     "UI",
+     "Universitas Indonesia Train Station",
+     "Jalan Kaki"
+    ],
+    [
+     "Universitas Indonesia Train Station",
+     "Cikini Station",
+     "Bogor Line"
+    ],
+    [
+     "Cikini Station",
+     "SMPN 8",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "SMPN 8",
+     "Bundaran Senayan 1",
+     "4C"
+    ],
+    [
+     "Bundaran Senayan 1",
+     "Blok M Jalur 2",
+     "1P"
+    ],
+    [
+     "Blok M Jalur 2",
+     "Blok M",
+     "Jalan Kaki (Selesai)"
+    ]
+   ],
+   "legFares": [
+    0,
+    3000,
+    0,
+    3500,
+    0,
+    0
+   ],
+   "fare": 6500
+  },
+  {
+   "id": "Rute-11",
+   "hops": [
+    [
+     "UI",
+     "Universitas Indonesia Train Station",
+     "Jalan Kaki"
+    ],
+    [
+     "Universitas Indonesia Train Station",
+     "Manggarai",
+     "Bogor Line"
+    ],
+    [
+     "Manggarai",
+     "Sudirman",
+     "Cikarang Line"
+    ],
+    [
+     "Sudirman",
+     "Dukuh Atas BNI",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Dukuh Atas BNI",
+     "Blok M BCA",
+     "Bundaran HI - Lebak Bulus"
+    ],
+    [
+     "Blok M BCA",
+     "Blok M",
+     "Jalan Kaki (Selesai)"
+    ]
+   ],
+   "legFares": [
+    0,
+    3000,
+    1000,
+    0,
+    7000,
+    0
+   ],
+   "fare": 11000
+  },
+  {
+   "id": "Rute-13",
+   "hops": [
+    [
+     "UI",
+     "Universitas Indonesia Train Station",
+     "Jalan Kaki"
+    ],
+    [
+     "Universitas Indonesia Train Station",
+     "Manggarai",
+     "Bogor Line"
+    ],
+    [
+     "Manggarai",
+     "Sudirman",
+     "Cikarang Line"
+    ],
+    [
+     "Sudirman",
+     "Dukuh Atas",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Dukuh Atas",
+     "Blok M",
+     "1"
+    ]
+   ],
+   "legFares": [
+    0,
+    3000,
+    1000,
+    0,
+    3500
+   ],
+   "fare": 4000
+  },
+  {
+   "id": "Rute-15",
+   "hops": [
+    [
+     "UI",
+     "Universitas Indonesia Train Station",
+     "Jalan Kaki"
+    ],
+    [
+     "Universitas Indonesia Train Station",
+     "Manggarai",
+     "Bogor Line"
+    ],
+    [
+     "Manggarai",
+     "Galunggung",
+     "4"
+    ],
+    [
+     "Galunggung",
+     "Dukuh Atas",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Dukuh Atas",
+     "Blok M",
+     "1"
+    ]
+   ],
+   "legFares": [
+    0,
+    3000,
+    3500,
+    0,
+    0
+   ],
+   "fare": 6500
+  },
+  {
+   "id": "Rute-16",
+   "hops": [
+    [
+     "UI",
+     "Universitas Indonesia Train Station",
+     "Jalan Kaki"
+    ],
+    [
+     "Universitas Indonesia Train Station",
+     "Tebet",
+     "Bogor Line"
+    ],
+    [
+     "Tebet",
+     "Stasiun Tebet",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Stasiun Tebet",
+     "Bundaran Senayan 1",
+     "6D"
+    ],
+    [
+     "Bundaran Senayan 1",
+     "Blok M Jalur 2",
+     "1P"
+    ],
+    [
+     "Blok M Jalur 2",
+     "Blok M",
+     "Jalan Kaki (Selesai)"
+    ]
+   ],
+   "legFares": [
+    0,
+    3000,
+    0,
+    3500,
+    0,
+    0
+   ],
+   "fare": 6500
+  },
+  {
+   "id": "Rute-18",
+   "hops": [
+    [
+     "UI",
+     "Universitas Indonesia Train Station",
+     "Jalan Kaki"
+    ],
+    [
+     "Universitas Indonesia Train Station",
+     "Tanjung Barat",
+     "Bogor Line"
+    ],
+    [
+     "Tanjung Barat",
+     "St. Tj. Barat 2",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "St. Tj. Barat 2",
+     "St. MRT Fatmawati",
+     "D21"
+    ],
+    [
+     "St. MRT Fatmawati",
+     "Fatmawati Indomaret",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Fatmawati Indomaret",
+     "Blok M BCA",
+     "Lebak Bulus - Bundaran HI"
+    ],
+    [
+     "Blok M BCA",
+     "Blok M",
+     "Jalan Kaki (Selesai)"
+    ]
+   ],
+   "legFares": [
+    0,
+    3000,
+    0,
+    3500,
+    0,
+    7000,
+    0
+   ],
+   "fare": 13500
+  },
+  {
+   "id": "Rute-19",
+   "hops": [
+    [
+     "UI",
+     "St. MRT Fatmawati",
+     "D21"
+    ],
+    [
+     "St. MRT Fatmawati",
+     "Kantor Pos Fatmawati",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Kantor Pos Fatmawati",
+     "Blok M BCA",
+     "1E"
+    ],
+    [
+     "Blok M BCA",
+     "Blok M",
+     "Jalan Kaki (Selesai)"
+    ]
+   ],
+   "legFares": [
+    3500,
+    0,
+    3500,
+    0
+   ],
+   "fare": 7000
+  },
+  {
+   "id": "Rute-20",
+   "hops": [
+    [
+     "UI",
+     "Universitas Indonesia Train Station",
+     "Jalan Kaki"
+    ],
+    [
+     "Universitas Indonesia Train Station",
+     "Cawang",
+     "Bogor Line"
+    ],
+    [
+     "Cawang",
+     "Cikoko Arah Barat",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Cikoko Arah Barat",
+     "Pancoran Arah Barat",
+     "9"
+    ],
+    [
+     "Pancoran Arah Barat",
+     "CSW 1",
+     "13B"
+    ],
+    [
+     "CSW 1",
+     "Kejaksaan Agung",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Kejaksaan Agung",
+     "Blok M",
+     "1"
+    ]
+   ],
+   "legFares": [
+    0,
+    3000,
+    0,
+    3500,
+    0,
+    0,
+    0
+   ],
+   "fare": 6500
+  },
+  {
+   "id": "Rute-21",
+   "hops": [
+    [
+     "UI",
+     "Universitas Indonesia Train Station",
+     "Jalan Kaki"
+    ],
+    [
+     "Universitas Indonesia Train Station",
+     "Cawang",
+     "Bogor Line"
+    ],
+    [
+     "Cawang",
+     "Cikoko Arah Barat",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Cikoko Arah Barat",
+     "Tegal Parang Arah Barat",
+     "9"
+    ],
+    [
+     "Tegal Parang Arah Barat",
+     "Tegal Mampang",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Tegal Mampang",
+     "CSW",
+     "13"
+    ],
+    [
+     "CSW",
+     "Kejaksaan Agung",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Kejaksaan Agung",
+     "Blok M",
+     "1"
+    ]
+   ],
+   "legFares": [
+    0,
+    3000,
+    0,
+    3500,
+    0,
+    0,
+    0,
+    0
+   ],
+   "fare": 6500
+  },
+  {
+   "id": "Rute-22",
+   "hops": [
+    [
+     "UI",
+     "Universitas Indonesia Train Station",
+     "Jalan Kaki"
+    ],
+    [
+     "Universitas Indonesia Train Station",
+     "Cawang",
+     "Bogor Line"
+    ],
+    [
+     "Cawang",
+     "Cikoko Arah Barat",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Cikoko Arah Barat",
+     "Pancoran Arah Barat",
+     "9"
+    ],
+    [
+     "Pancoran Arah Barat",
+     "Tegal Parang 1",
+     "9D"
+    ],
+    [
+     "Tegal Parang 1",
+     "Tegal Mampang",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Tegal Mampang",
+     "Blok M Jalur 2",
+     "7B"
+    ],
+    [
+     "Blok M Jalur 2",
+     "Blok M",
+     "Jalan Kaki (Selesai)"
+    ]
+   ],
+   "legFares": [
+    0,
+    3000,
+    0,
+    3500,
+    0,
+    0,
+    0,
+    0
+   ],
+   "fare": 6500
+  },
+  {
+   "id": "Rute-23",
+   "hops": [
+    [
+     "UI",
+     "Universitas Indonesia Train Station",
+     "Jalan Kaki"
+    ],
+    [
+     "Universitas Indonesia Train Station",
+     "Cawang",
+     "Bogor Line"
+    ],
+    [
+     "Cawang",
+     "Cikoko Arah Barat",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Cikoko Arah Barat",
+     "Pancoran Arah Barat",
+     "9"
+    ],
+    [
+     "Pancoran Arah Barat",
+     "Kejaksaan Agung",
+     "4K"
+    ],
+    [
+     "Kejaksaan Agung",
+     "Blok M",
+     "1"
+    ]
+   ],
+   "legFares": [
+    0,
+    3000,
+    0,
+    3500,
+    0,
+    0
+   ],
+   "fare": 6500
+  },
+  {
+   "id": "Rute-24",
+   "hops": [
+    [
+     "UI",
+     "Universitas Indonesia Train Station",
+     "Jalan Kaki"
+    ],
+    [
+     "Universitas Indonesia Train Station",
+     "Cawang",
+     "Bogor Line"
+    ],
+    [
+     "Cawang",
+     "Cikoko Arah Barat",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Cikoko Arah Barat",
+     "Pancoran Arah Barat",
+     "9"
+    ],
+    [
+     "Pancoran Arah Barat",
+     "Tegal Parang Arah Barat",
+     "9"
+    ],
+    [
+     "Tegal Parang Arah Barat",
+     "Tegal Mampang",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Tegal Mampang",
+     "Kejaksaan Agung",
+     "6V"
+    ],
+    [
+     "Kejaksaan Agung",
+     "Blok M",
+     "1"
+    ]
+   ],
+   "legFares": [
+    0,
+    3000,
+    0,
+    3500,
+    0,
+    0,
+    0,
+    0
+   ],
+   "fare": 6500
+  },
+  {
+   "id": "Rute-25",
+   "hops": [
+    [
+     "UI",
+     "Universitas Indonesia Train Station",
+     "Jalan Kaki"
+    ],
+    [
+     "Universitas Indonesia Train Station",
+     "Cawang",
+     "Bogor Line"
+    ],
+    [
+     "Cawang",
+     "Cikoko Arah Barat",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Cikoko Arah Barat",
+     "Pancoran Arah Barat",
+     "9"
+    ],
+    [
+     "Pancoran Arah Barat",
+     "Tegal Parang Arah Barat",
+     "9"
+    ],
+    [
+     "Tegal Parang Arah Barat",
+     "Tegal Mampang",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Tegal Mampang",
+     "Blok M Jalur 2",
+     "7B"
+    ],
+    [
+     "Blok M Jalur 2",
+     "Blok M",
+     "Jalan Kaki (Selesai)"
+    ]
+   ],
+   "legFares": [
+    0,
+    3000,
+    0,
+    3500,
+    0,
+    0,
+    0,
+    0
+   ],
+   "fare": 6500
+  },
+  {
+   "id": "Rute-26",
+   "hops": [
+    [
+     "UI",
+     "Universitas Indonesia Train Station",
+     "Jalan Kaki"
+    ],
+    [
+     "Universitas Indonesia Train Station",
+     "Cawang",
+     "Bogor Line"
+    ],
+    [
+     "Cawang",
+     "Cikoko Arah Barat",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Cikoko Arah Barat",
+     "Pancoran Arah Barat",
+     "9"
+    ],
+    [
+     "Pancoran Arah Barat",
+     "Senayan Bank Jakarta",
+     "9C"
+    ],
+    [
+     "Senayan Bank Jakarta",
+     "Blok M",
+     "1"
+    ]
+   ],
+   "legFares": [
+    0,
+    3000,
+    0,
+    3500,
+    0,
+    0
+   ],
+   "fare": 6500
+  },
+  {
+   "id": "Rute-27",
+   "hops": [
+    [
+     "UI",
+     "Universitas Indonesia Train Station",
+     "Jalan Kaki"
+    ],
+    [
+     "Universitas Indonesia Train Station",
+     "Cawang",
+     "Bogor Line"
+    ],
+    [
+     "Cawang",
+     "Cikoko Arah Barat",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Cikoko Arah Barat",
+     "Semanggi",
+     "9"
+    ],
+    [
+     "Semanggi",
+     "Bendungan Hilir",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Bendungan Hilir",
+     "Blok M BCA",
+     "Bundaran HI - Lebak Bulus"
+    ],
+    [
+     "Blok M BCA",
+     "Blok M",
+     "Jalan Kaki (Selesai)"
+    ]
+   ],
+   "legFares": [
+    0,
+    3000,
+    0,
+    3500,
+    0,
+    7000,
+    0
+   ],
+   "fare": 13500
+  },
+  {
+   "id": "Rute-28",
+   "hops": [
+    [
+     "UI",
+     "Universitas Indonesia Train Station",
+     "Jalan Kaki"
+    ],
+    [
+     "Universitas Indonesia Train Station",
+     "Cawang",
+     "Bogor Line"
+    ],
+    [
+     "Cawang",
+     "Cikoko Arah Barat",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Cikoko Arah Barat",
+     "Tegal Parang Arah Barat",
+     "9"
+    ],
+    [
+     "Tegal Parang Arah Barat",
+     "Tegal Mampang",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Tegal Mampang",
+     "Blok M Jalur 2",
+     "7B"
+    ],
+    [
+     "Blok M Jalur 2",
+     "Blok M",
+     "Jalan Kaki (Selesai)"
+    ]
+   ],
+   "legFares": [
+    0,
+    3000,
+    0,
+    3500,
+    0,
+    0,
+    0
+   ],
+   "fare": 6500
+  },
+  {
+   "id": "Rute-29",
+   "hops": [
+    [
+     "UI",
+     "Universitas Indonesia Train Station",
+     "Jalan Kaki"
+    ],
+    [
+     "Universitas Indonesia Train Station",
+     "Cawang",
+     "Bogor Line"
+    ],
+    [
+     "Cawang",
+     "Cikoko Arah Barat",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Cikoko Arah Barat",
+     "Senayan Bank Jakarta",
+     "9C"
+    ],
+    [
+     "Senayan Bank Jakarta",
+     "Blok M",
+     "1"
+    ]
+   ],
+   "legFares": [
+    0,
+    3000,
+    0,
+    3500,
+    0
+   ],
+   "fare": 6500
+  },
+  {
+   "id": "Rute-30",
+   "hops": [
+    [
+     "UI",
+     "Universitas Indonesia Train Station",
+     "Jalan Kaki"
+    ],
+    [
+     "Universitas Indonesia Train Station",
+     "Cawang",
+     "Bogor Line"
+    ],
+    [
+     "Cawang",
+     "Cikoko Arah Barat",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Cikoko Arah Barat",
+     "Bundaran Senayan",
+     "9C"
+    ],
+    [
+     "Bundaran Senayan",
+     "Blok M",
+     "1"
+    ]
+   ],
+   "legFares": [
+    0,
+    3000,
+    0,
+    3500,
+    0
+   ],
+   "fare": 6500
+  },
+  {
+   "id": "Rute-31",
+   "hops": [
+    [
+     "UI",
+     "Universitas Indonesia Train Station",
+     "Jalan Kaki"
+    ],
+    [
+     "Universitas Indonesia Train Station",
+     "Cawang",
+     "Bogor Line"
+    ],
+    [
+     "Cawang",
+     "Cikoko Arah Barat",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Cikoko Arah Barat",
+     "Kejaksaan Agung",
+     "4K"
+    ],
+    [
+     "Kejaksaan Agung",
+     "Blok M",
+     "1"
+    ]
+   ],
+   "legFares": [
+    0,
+    3000,
+    0,
+    3500,
+    0
+   ],
+   "fare": 6500
+  },
+  {
+   "id": "Rute-32",
+   "hops": [
+    [
+     "UI",
+     "Universitas Indonesia Train Station",
+     "Jalan Kaki"
+    ],
+    [
+     "Universitas Indonesia Train Station",
+     "Cawang",
+     "Bogor Line"
+    ],
+    [
+     "Cawang",
+     "Cikoko Arah Barat",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Cikoko Arah Barat",
+     "Simpang Kuningan",
+     "9"
+    ],
+    [
+     "Simpang Kuningan",
+     "Hotel Maharadja",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Hotel Maharadja",
+     "Blok M Jalur 3",
+     "6U"
+    ],
+    [
+     "Blok M Jalur 3",
+     "Blok M",
+     "Jalan Kaki (Selesai)"
+    ]
+   ],
+   "legFares": [
+    0,
+    3000,
+    0,
+    3500,
+    0,
+    3500,
+    0
+   ],
+   "fare": 10000
+  },
+  {
+   "id": "Rute-33",
+   "hops": [
+    [
+     "UI",
+     "Universitas Indonesia Train Station",
+     "Jalan Kaki"
+    ],
+    [
+     "Universitas Indonesia Train Station",
+     "Tebet",
+     "Bogor Line"
+    ],
+    [
+     "Tebet",
+     "Stasiun Tebet",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Stasiun Tebet",
+     "Kuningan",
+     "6C"
+    ],
+    [
+     "Kuningan",
+     "CSW",
+     "13E"
+    ],
+    [
+     "CSW",
+     "Kejaksaan Agung",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Kejaksaan Agung",
+     "Blok M",
+     "1"
+    ]
+   ],
+   "legFares": [
+    0,
+    3000,
+    0,
+    3500,
+    0,
+    0,
+    0
+   ],
+   "fare": 6500
+  },
+  {
+   "id": "Rute-34",
+   "hops": [
+    [
+     "UI",
+     "Universitas Indonesia Train Station",
+     "Jalan Kaki"
+    ],
+    [
+     "Universitas Indonesia Train Station",
+     "Cawang",
+     "Bogor Line"
+    ],
+    [
+     "Cawang",
+     "Manggarai",
+     "Bogor Line"
+    ],
+    [
+     "Manggarai",
+     "Sudirman",
+     "Cikarang Line"
+    ],
+    [
+     "Sudirman",
+     "Dukuh Atas BNI",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Dukuh Atas BNI",
+     "Blok M BCA",
+     "Bundaran HI - Lebak Bulus"
+    ],
+    [
+     "Blok M BCA",
+     "Blok M",
+     "Jalan Kaki (Selesai)"
+    ]
+   ],
+   "legFares": [
+    0,
+    3000,
+    0,
+    0,
+    0,
+    7000,
+    0
+   ],
+   "fare": 3000
+  },
+  {
+   "id": "Rute-36",
+   "hops": [
+    [
+     "UI",
+     "Universitas Indonesia Train Station",
+     "Jalan Kaki"
+    ],
+    [
+     "Universitas Indonesia Train Station",
+     "Cawang",
+     "Bogor Line"
+    ],
+    [
+     "Cawang",
+     "Manggarai",
+     "Bogor Line"
+    ],
+    [
+     "Manggarai",
+     "Sudirman",
+     "Cikarang Line"
+    ],
+    [
+     "Sudirman",
+     "Dukuh Atas",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Dukuh Atas",
+     "Blok M",
+     "1"
+    ]
+   ],
+   "legFares": [
+    0,
+    3000,
+    0,
+    0,
+    0,
+    3500
+   ],
+   "fare": 3000
+  },
+  {
+   "id": "Rute-38",
+   "hops": [
+    [
+     "UI",
+     "Universitas Indonesia Train Station",
+     "Jalan Kaki"
+    ],
+    [
+     "Universitas Indonesia Train Station",
+     "Cawang",
+     "Bogor Line"
+    ],
+    [
+     "Cawang",
+     "Manggarai",
+     "Bogor Line"
+    ],
+    [
+     "Manggarai",
+     "Galunggung",
+     "4"
+    ],
+    [
+     "Galunggung",
+     "Dukuh Atas",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Dukuh Atas",
+     "Blok M",
+     "1"
+    ]
+   ],
+   "legFares": [
+    0,
+    3000,
+    0,
+    3500,
+    0,
+    0
+   ],
+   "fare": 6500
+  },
+  {
+   "id": "Rute-39",
+   "hops": [
+    [
+     "UI",
+     "Universitas Indonesia Train Station",
+     "Jalan Kaki"
+    ],
+    [
+     "Universitas Indonesia Train Station",
+     "Cawang",
+     "Bogor Line"
+    ],
+    [
+     "Cawang",
+     "Cikoko",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Cikoko",
+     "Pancoran",
+     "Cibubur Line"
+    ],
+    [
+     "Pancoran",
+     "Pancoran Arah Barat",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Pancoran Arah Barat",
+     "CSW 1",
+     "13B"
+    ],
+    [
+     "CSW 1",
+     "Kejaksaan Agung",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Kejaksaan Agung",
+     "Blok M",
+     "1"
+    ]
+   ],
+   "legFares": [
+    0,
+    3000,
+    0,
+    5700,
+    0,
+    3500,
+    0,
+    0
+   ],
+   "fare": 12200
+  },
+  {
+   "id": "Rute-40",
+   "hops": [
+    [
+     "UI",
+     "Universitas Indonesia Train Station",
+     "Jalan Kaki"
+    ],
+    [
+     "Universitas Indonesia Train Station",
+     "Cawang",
+     "Bogor Line"
+    ],
+    [
+     "Cawang",
+     "Cikoko",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Cikoko",
+     "Pancoran",
+     "Cibubur Line"
+    ],
+    [
+     "Pancoran",
+     "Pancoran Arah Barat",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Pancoran Arah Barat",
+     "Tegal Parang 1",
+     "9D"
+    ],
+    [
+     "Tegal Parang 1",
+     "Tegal Mampang",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Tegal Mampang",
+     "Kejaksaan Agung",
+     "6V"
+    ],
+    [
+     "Kejaksaan Agung",
+     "Blok M",
+     "1"
+    ]
+   ],
+   "legFares": [
+    0,
+    3000,
+    0,
+    5700,
+    0,
+    3500,
+    0,
+    0,
+    0
+   ],
+   "fare": 12200
+  },
+  {
+   "id": "Rute-41",
+   "hops": [
+    [
+     "UI",
+     "Universitas Indonesia Train Station",
+     "Jalan Kaki"
+    ],
+    [
+     "Universitas Indonesia Train Station",
+     "Cawang",
+     "Bogor Line"
+    ],
+    [
+     "Cawang",
+     "Cikoko",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Cikoko",
+     "Pancoran",
+     "Cibubur Line"
+    ],
+    [
+     "Pancoran",
+     "Pancoran Arah Barat",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Pancoran Arah Barat",
+     "Tegal Parang 1",
+     "9D"
+    ],
+    [
+     "Tegal Parang 1",
+     "Tegal Mampang",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Tegal Mampang",
+     "Blok M Jalur 2",
+     "7B"
+    ],
+    [
+     "Blok M Jalur 2",
+     "Blok M",
+     "Jalan Kaki (Selesai)"
+    ]
+   ],
+   "legFares": [
+    0,
+    3000,
+    0,
+    5700,
+    0,
+    3500,
+    0,
+    0,
+    0
+   ],
+   "fare": 12200
+  },
+  {
+   "id": "Rute-42",
+   "hops": [
+    [
+     "UI",
+     "Universitas Indonesia Train Station",
+     "Jalan Kaki"
+    ],
+    [
+     "Universitas Indonesia Train Station",
+     "Cawang",
+     "Bogor Line"
+    ],
+    [
+     "Cawang",
+     "Cikoko",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Cikoko",
+     "Pancoran",
+     "Cibubur Line"
+    ],
+    [
+     "Pancoran",
+     "Pancoran Arah Barat",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Pancoran Arah Barat",
+     "Kejaksaan Agung",
+     "4K"
+    ],
+    [
+     "Kejaksaan Agung",
+     "Blok M",
+     "1"
+    ]
+   ],
+   "legFares": [
+    0,
+    3000,
+    0,
+    5700,
+    0,
+    3500,
+    0
+   ],
+   "fare": 12200
+  },
+  {
+   "id": "Rute-43",
+   "hops": [
+    [
+     "UI",
+     "Universitas Indonesia Train Station",
+     "Jalan Kaki"
+    ],
+    [
+     "Universitas Indonesia Train Station",
+     "Cawang",
+     "Bogor Line"
+    ],
+    [
+     "Cawang",
+     "Cikoko",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Cikoko",
+     "Pancoran",
+     "Cibubur Line"
+    ],
+    [
+     "Pancoran",
+     "Pancoran Arah Barat",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Pancoran Arah Barat",
+     "Tegal Parang Arah Barat",
+     "9"
+    ],
+    [
+     "Tegal Parang Arah Barat",
+     "Tegal Mampang",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Tegal Mampang",
+     "Kejaksaan Agung",
+     "6V"
+    ],
+    [
+     "Kejaksaan Agung",
+     "Blok M",
+     "1"
+    ]
+   ],
+   "legFares": [
+    0,
+    3000,
+    0,
+    5700,
+    0,
+    3500,
+    0,
+    0,
+    0
+   ],
+   "fare": 12200
+  },
+  {
+   "id": "Rute-44",
+   "hops": [
+    [
+     "UI",
+     "Universitas Indonesia Train Station",
+     "Jalan Kaki"
+    ],
+    [
+     "Universitas Indonesia Train Station",
+     "Cawang",
+     "Bogor Line"
+    ],
+    [
+     "Cawang",
+     "Cikoko",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Cikoko",
+     "Pancoran",
+     "Cibubur Line"
+    ],
+    [
+     "Pancoran",
+     "Pancoran Arah Barat",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Pancoran Arah Barat",
+     "Tegal Parang Arah Barat",
+     "9"
+    ],
+    [
+     "Tegal Parang Arah Barat",
+     "Tegal Mampang",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Tegal Mampang",
+     "Blok M Jalur 2",
+     "7B"
+    ],
+    [
+     "Blok M Jalur 2",
+     "Blok M",
+     "Jalan Kaki (Selesai)"
+    ]
+   ],
+   "legFares": [
+    0,
+    3000,
+    0,
+    5700,
+    0,
+    3500,
+    0,
+    0,
+    0
+   ],
+   "fare": 12200
+  },
+  {
+   "id": "Rute-45",
+   "hops": [
+    [
+     "UI",
+     "Universitas Indonesia Train Station",
+     "Jalan Kaki"
+    ],
+    [
+     "Universitas Indonesia Train Station",
+     "Cawang",
+     "Bogor Line"
+    ],
+    [
+     "Cawang",
+     "Cikoko",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Cikoko",
+     "Pancoran",
+     "Cibubur Line"
+    ],
+    [
+     "Pancoran",
+     "Pancoran Arah Barat",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Pancoran Arah Barat",
+     "Senayan Bank Jakarta",
+     "9C"
+    ],
+    [
+     "Senayan Bank Jakarta",
+     "Blok M",
+     "1"
+    ]
+   ],
+   "legFares": [
+    0,
+    3000,
+    0,
+    5700,
+    0,
+    3500,
+    0
+   ],
+   "fare": 12200
+  },
+  {
+   "id": "Rute-46",
+   "hops": [
+    [
+     "UI",
+     "Universitas Indonesia Train Station",
+     "Jalan Kaki"
+    ],
+    [
+     "Universitas Indonesia Train Station",
+     "Depok Baru",
+     "Bogor Line"
+    ],
+    [
+     "Depok Baru",
+     "Cawang-Sentral 2",
+     "TJ D11"
+    ],
+    [
+     "Cawang-Sentral 2",
+     "Cawang-Sentral",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Cawang-Sentral",
+     "Pancoran Arah Barat",
+     "9"
+    ],
+    [
+     "Pancoran Arah Barat",
+     "CSW 1",
+     "13B"
+    ],
+    [
+     "CSW 1",
+     "Kejaksaan Agung",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Kejaksaan Agung",
+     "Blok M",
+     "1"
+    ]
+   ],
+   "legFares": [
+    0,
+    3000,
+    3500,
+    0,
+    3500,
+    0,
+    0,
+    0
+   ],
+   "fare": 13500
+  },
+  {
+   "id": "Rute-47",
+   "hops": [
+    [
+     "UI",
+     "Universitas Indonesia Train Station",
+     "Jalan Kaki"
+    ],
+    [
+     "Universitas Indonesia Train Station",
+     "Depok Baru",
+     "Bogor Line"
+    ],
+    [
+     "Depok Baru",
+     "Cawang-Sentral 2",
+     "TJ D11"
+    ],
+    [
+     "Cawang-Sentral 2",
+     "Cawang-Sentral",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Cawang-Sentral",
+     "Pancoran Arah Barat",
+     "9"
+    ],
+    [
+     "Pancoran Arah Barat",
+     "Tegal Parang 1",
+     "9D"
+    ],
+    [
+     "Tegal Parang 1",
+     "Tegal Mampang",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Tegal Mampang",
+     "Kejaksaan Agung",
+     "6V"
+    ],
+    [
+     "Kejaksaan Agung",
+     "Blok M",
+     "1"
+    ]
+   ],
+   "legFares": [
+    0,
+    3000,
+    3500,
+    0,
+    3500,
+    0,
+    0,
+    0,
+    0
+   ],
+   "fare": 18500
+  },
+  {
+   "id": "Rute-48",
+   "hops": [
+    [
+     "UI",
+     "Universitas Indonesia Train Station",
+     "Jalan Kaki"
+    ],
+    [
+     "Universitas Indonesia Train Station",
+     "Depok Baru",
+     "Bogor Line"
+    ],
+    [
+     "Depok Baru",
+     "Cawang-Sentral 2",
+     "TJ D11"
+    ],
+    [
+     "Cawang-Sentral 2",
+     "Cawang-Sentral",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Cawang-Sentral",
+     "Pancoran Arah Barat",
+     "9"
+    ],
+    [
+     "Pancoran Arah Barat",
+     "Tegal Parang 1",
+     "9D"
+    ],
+    [
+     "Tegal Parang 1",
+     "Tegal Mampang",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Tegal Mampang",
+     "Blok M Jalur 2",
+     "7B"
+    ],
+    [
+     "Blok M Jalur 2",
+     "Blok M",
+     "Jalan Kaki (Selesai)"
+    ]
+   ],
+   "legFares": [
+    0,
+    3000,
+    3500,
+    0,
+    3500,
+    0,
+    0,
+    0,
+    0
+   ],
+   "fare": 10000
+  },
+  {
+   "id": "Rute-49",
+   "hops": [
+    [
+     "UI",
+     "Universitas Indonesia Train Station",
+     "Jalan Kaki"
+    ],
+    [
+     "Universitas Indonesia Train Station",
+     "Depok Baru",
+     "Bogor Line"
+    ],
+    [
+     "Depok Baru",
+     "Cawang-Sentral 2",
+     "TJ D11"
+    ],
+    [
+     "Cawang-Sentral 2",
+     "Cawang-Sentral",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Cawang-Sentral",
+     "Pancoran Arah Barat",
+     "9"
+    ],
+    [
+     "Pancoran Arah Barat",
+     "Kejaksaan Agung",
+     "4K"
+    ],
+    [
+     "Kejaksaan Agung",
+     "Blok M",
+     "1"
+    ]
+   ],
+   "legFares": [
+    0,
+    3000,
+    3500,
+    0,
+    3500,
+    0,
+    0
+   ],
+   "fare": 10000
+  },
+  {
+   "id": "Rute-50",
+   "hops": [
+    [
+     "UI",
+     "Universitas Indonesia Train Station",
+     "Jalan Kaki"
+    ],
+    [
+     "Universitas Indonesia Train Station",
+     "Depok Baru",
+     "Bogor Line"
+    ],
+    [
+     "Depok Baru",
+     "Cawang-Sentral 2",
+     "TJ D11"
+    ],
+    [
+     "Cawang-Sentral 2",
+     "Cawang-Sentral",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Cawang-Sentral",
+     "Tegal Parang Arah Barat",
+     "9"
+    ],
+    [
+     "Tegal Parang Arah Barat",
+     "Tegal Mampang",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Tegal Mampang",
+     "Kejaksaan Agung",
+     "6V"
+    ],
+    [
+     "Kejaksaan Agung",
+     "Blok M",
+     "1"
+    ]
+   ],
+   "legFares": [
+    0,
+    3000,
+    3500,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "fare": 10000
+  },
+  {
+   "id": "Rute-51",
+   "hops": [
+    [
+     "UI",
+     "Universitas Indonesia Train Station",
+     "Jalan Kaki"
+    ],
+    [
+     "Universitas Indonesia Train Station",
+     "Depok Baru",
+     "Bogor Line"
+    ],
+    [
+     "Depok Baru",
+     "Cawang-Sentral 2",
+     "TJ D11"
+    ],
+    [
+     "Cawang-Sentral 2",
+     "Cawang-Sentral",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Cawang-Sentral",
+     "Pancoran Arah Barat",
+     "9"
+    ],
+    [
+     "Pancoran Arah Barat",
+     "Tegal Parang Arah Barat",
+     "9"
+    ],
+    [
+     "Tegal Parang Arah Barat",
+     "Tegal Mampang",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Tegal Mampang",
+     "Blok M Jalur 2",
+     "7B"
+    ],
+    [
+     "Blok M Jalur 2",
+     "Blok M",
+     "Jalan Kaki (Selesai)"
+    ]
+   ],
+   "legFares": [
+    0,
+    3000,
+    3500,
+    0,
+    3500,
+    0,
+    0,
+    0,
+    0
+   ],
+   "fare": 10000
+  },
+  {
+   "id": "Rute-52",
+   "hops": [
+    [
+     "UI",
+     "Universitas Indonesia Train Station",
+     "Jalan Kaki"
+    ],
+    [
+     "Universitas Indonesia Train Station",
+     "Depok Baru",
+     "Bogor Line"
+    ],
+    [
+     "Depok Baru",
+     "Cawang-Sentral 2",
+     "TJ D11"
+    ],
+    [
+     "Cawang-Sentral 2",
+     "Cawang-Sentral",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Cawang-Sentral",
+     "Pancoran Arah Barat",
+     "9"
+    ],
+    [
+     "Pancoran Arah Barat",
+     "Senayan Bank Jakarta",
+     "9C"
+    ],
+    [
+     "Senayan Bank Jakarta",
+     "Blok M",
+     "1"
+    ]
+   ],
+   "legFares": [
+    0,
+    3000,
+    3500,
+    0,
+    3500,
+    0,
+    0
+   ],
+   "fare": 10000
+  },
+  {
+   "id": "Rute-53",
+   "hops": [
+    [
+     "UI",
+     "Universitas Indonesia Train Station",
+     "Jalan Kaki"
+    ],
+    [
+     "Universitas Indonesia Train Station",
+     "Depok Baru",
+     "Bogor Line"
+    ],
+    [
+     "Depok Baru",
+     "Cawang-Sentral 2",
+     "TJ D11"
+    ],
+    [
+     "Cawang-Sentral 2",
+     "Cawang-Sentral",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Cawang-Sentral",
+     "Tegal Parang Arah Barat",
+     "9"
+    ],
+    [
+     "Tegal Parang Arah Barat",
+     "Tegal Mampang",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Tegal Mampang",
+     "Kejaksaan Agung",
+     "6V"
+    ],
+    [
+     "Kejaksaan Agung",
+     "Blok M",
+     "1"
+    ]
+   ],
+   "legFares": [
+    0,
+    3000,
+    3500,
+    0,
+    3500,
+    0,
+    0,
+    0
+   ],
+   "fare": 10000
+  },
+  {
+   "id": "Rute-54",
+   "hops": [
+    [
+     "UI",
+     "Universitas Indonesia Train Station",
+     "Jalan Kaki"
+    ],
+    [
+     "Universitas Indonesia Train Station",
+     "Depok Baru",
+     "Bogor Line"
+    ],
+    [
+     "Depok Baru",
+     "Cawang-Sentral 2",
+     "TJ D11"
+    ],
+    [
+     "Cawang-Sentral 2",
+     "Cawang-Sentral",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Cawang-Sentral",
+     "Tegal Parang Arah Barat",
+     "9"
+    ],
+    [
+     "Tegal Parang Arah Barat",
+     "Tegal Mampang",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Tegal Mampang",
+     "Blok M Jalur 2",
+     "7B"
+    ],
+    [
+     "Blok M Jalur 2",
+     "Blok M",
+     "Jalan Kaki (Selesai)"
+    ]
+   ],
+   "legFares": [
+    0,
+    3000,
+    3500,
+    0,
+    3500,
+    0,
+    0,
+    0
+   ],
+   "fare": 10000
+  },
+  {
+   "id": "Rute-55",
+   "hops": [
+    [
+     "UI",
+     "Universitas Indonesia Train Station",
+     "Jalan Kaki"
+    ],
+    [
+     "Universitas Indonesia Train Station",
+     "Depok Baru",
+     "Bogor Line"
+    ],
+    [
+     "Depok Baru",
+     "Cawang-Sentral 2",
+     "TJ D11"
+    ],
+    [
+     "Cawang-Sentral 2",
+     "Cawang-Sentral",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Cawang-Sentral",
+     "Senayan Bank Jakarta",
+     "9C"
+    ],
+    [
+     "Senayan Bank Jakarta",
+     "Blok M",
+     "1"
+    ]
+   ],
+   "legFares": [
+    0,
+    3000,
+    3500,
+    0,
+    3500,
+    0
+   ],
+   "fare": 10000
+  },
+  {
+   "id": "Rute-56",
+   "hops": [
+    [
+     "UI",
+     "Universitas Indonesia Train Station",
+     "Jalan Kaki"
+    ],
+    [
+     "Universitas Indonesia Train Station",
+     "Depok Baru",
+     "Bogor Line"
+    ],
+    [
+     "Depok Baru",
+     "Cawang-Sentral 2",
+     "TJ D11"
+    ],
+    [
+     "Cawang-Sentral 2",
+     "Cawang-Sentral",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Cawang-Sentral",
+     "Bundaran Senayan",
+     "9C"
+    ],
+    [
+     "Bundaran Senayan",
+     "Blok M",
+     "1"
+    ]
+   ],
+   "legFares": [
+    0,
+    3000,
+    3500,
+    0,
+    3500,
+    0
+   ],
+   "fare": 10000
+  },
+  {
+   "id": "Rute-57",
+   "hops": [
+    [
+     "UI",
+     "Universitas Indonesia Train Station",
+     "Jalan Kaki"
+    ],
+    [
+     "Universitas Indonesia Train Station",
+     "Depok Baru",
+     "Bogor Line"
+    ],
+    [
+     "Depok Baru",
+     "Cawang-Sentral 2",
+     "TJ D11"
+    ],
+    [
+     "Cawang-Sentral 2",
+     "Cawang-Sentral",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Cawang-Sentral",
+     "Cikoko Arah Barat",
+     "9"
+    ],
+    [
+     "Cikoko Arah Barat",
+     "Kejaksaan Agung",
+     "4K"
+    ],
+    [
+     "Kejaksaan Agung",
+     "Blok M",
+     "1"
+    ]
+   ],
+   "legFares": [
+    0,
+    3000,
+    3500,
+    0,
+    0,
+    3500,
+    0
+   ],
+   "fare": 10000
+  },
+  {
+   "id": "Rute-58",
+   "hops": [
+    [
+     "UI",
+     "Universitas Indonesia Train Station",
+     "Jalan Kaki"
+    ],
+    [
+     "Universitas Indonesia Train Station",
+     "Depok Baru",
+     "Bogor Line"
+    ],
+    [
+     "Depok Baru",
+     "Cawang-Sentral 2",
+     "TJ D11"
+    ],
+    [
+     "Cawang-Sentral 2",
+     "Cawang-Sentral",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Cawang-Sentral",
+     "Simpang Kuningan",
+     "9"
+    ],
+    [
+     "Simpang Kuningan",
+     "Hotel Maharadja",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Hotel Maharadja",
+     "Blok M Jalur 3",
+     "6U"
+    ],
+    [
+     "Blok M Jalur 3",
+     "Blok M",
+     "Jalan Kaki (Selesai)"
+    ]
+   ],
+   "legFares": [
+    0,
+    3000,
+    3500,
+    0,
+    3500,
+    0,
+    0,
+    0
+   ],
+   "fare": 10000
+  },
+  {
+   "id": "Rute-65",
+   "hops": [
+    [
+     "UI",
+     "Universitas Indonesia Train Station",
+     "Jalan Kaki"
+    ],
+    [
+     "Universitas Indonesia Train Station",
+     "Depok Baru",
+     "Bogor Line"
+    ],
+    [
+     "Depok Baru",
+     "Cawang-Sentral 2",
+     "TJ D11"
+    ],
+    [
+     "Cawang-Sentral 2",
+     "Cawang-Sentral",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Cawang-Sentral",
+     "Cikoko",
+     "9"
+    ],
+    [
+     "Cikoko",
+     "Pancoran",
+     "Cibubur Line"
+    ],
+    [
+     "Pancoran",
+     "Pancoran Arah Barat",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Pancoran Arah Barat",
+     "CSW 1",
+     "13B"
+    ],
+    [
+     "CSW 1",
+     "Kejaksaan Agung",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Kejaksaan Agung",
+     "Blok M",
+     "1"
+    ]
+   ],
+   "legFares": [
+    0,
+    3000,
+    3500,
+    0,
+    3500,
+    5700,
+    0,
+    3500,
+    0,
+    0
+   ],
+   "fare": 15700
+  },
+  {
+   "id": "Rute-66",
+   "hops": [
+    [
+     "UI",
+     "Universitas Indonesia Train Station",
+     "Jalan Kaki"
+    ],
+    [
+     "Universitas Indonesia Train Station",
+     "Depok Baru",
+     "Bogor Line"
+    ],
+    [
+     "Depok Baru",
+     "Cawang-Sentral 2",
+     "TJ D11"
+    ],
+    [
+     "Cawang-Sentral 2",
+     "Cawang-Sentral",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Cawang-Sentral",
+     "Cikoko",
+     "9"
+    ],
+    [
+     "Cikoko",
+     "Pancoran",
+     "Cibubur Line"
+    ],
+    [
+     "Pancoran",
+     "Pancoran Arah Barat",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Pancoran Arah Barat",
+     "Tegal Parang 1",
+     "9D"
+    ],
+    [
+     "Tegal Parang 1",
+     "Tegal Mampang",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Tegal Mampang",
+     "Kejaksaan Agung",
+     "6V"
+    ],
+    [
+     "Kejaksaan Agung",
+     "Blok M",
+     "1"
+    ]
+   ],
+   "legFares": [
+    0,
+    3000,
+    3500,
+    0,
+    3500,
+    5700,
+    0,
+    3500,
+    0,
+    0,
+    0
+   ],
+   "fare": 19200
+  },
+  {
+   "id": "Rute-67",
+   "hops": [
+    [
+     "UI",
+     "Universitas Indonesia Train Station",
+     "Jalan Kaki"
+    ],
+    [
+     "Universitas Indonesia Train Station",
+     "Pasar Minggu",
+     "Bogor Line"
+    ],
+    [
+     "Pasar Minggu",
+     "Terminal Pasar Minggu",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Terminal Pasar Minggu",
+     "Simpang Kuningan",
+     "9D"
+    ],
+    [
+     "Simpang Kuningan",
+     "Semanggi",
+     "9"
+    ],
+    [
+     "Semanggi",
+     "Bendungan Hilir",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Bendungan Hilir",
+     "Blok M BCA",
+     "Bundaran HI - Lebak Bulus"
+    ],
+    [
+     "Blok M BCA",
+     "Blok M",
+     "Jalan Kaki (Selesai)"
+    ]
+   ],
+   "legFares": [
+    0,
+    3000,
+    0,
+    3500,
+    0,
+    0,
+    7000,
+    0
+   ],
+   "fare": 13500
+  },
+  {
+   "id": "Rute-68",
+   "hops": [
+    [
+     "UI",
+     "Universitas Indonesia Train Station",
+     "Jalan Kaki"
+    ],
+    [
+     "Universitas Indonesia Train Station",
+     "Depok Baru",
+     "Bogor Line"
+    ],
+    [
+     "Depok Baru",
+     "Cawang-Sentral 2",
+     "TJ D11"
+    ],
+    [
+     "Cawang-Sentral 2",
+     "Cawang-Sentral",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Cawang-Sentral",
+     "Cikoko",
+     "9"
+    ],
+    [
+     "Cikoko",
+     "Pancoran",
+     "Cibubur Line"
+    ],
+    [
+     "Pancoran",
+     "Pancoran Arah Barat",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Pancoran Arah Barat",
+     "Kejaksaan Agung",
+     "4K"
+    ],
+    [
+     "Kejaksaan Agung",
+     "Blok M",
+     "1"
+    ]
+   ],
+   "legFares": [
+    0,
+    3000,
+    3500,
+    0,
+    3500,
+    5700,
+    0,
+    3500,
+    0
+   ],
+   "fare": 19200
+  },
+  {
+   "id": "Rute-69",
+   "hops": [
+    [
+     "UI",
+     "Universitas Indonesia Train Station",
+     "Jalan Kaki"
+    ],
+    [
+     "Universitas Indonesia Train Station",
+     "Depok Baru",
+     "Bogor Line"
+    ],
+    [
+     "Depok Baru",
+     "Cawang-Sentral 2",
+     "TJ D11"
+    ],
+    [
+     "Cawang-Sentral 2",
+     "Cawang-Sentral",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Cawang-Sentral",
+     "Cikoko",
+     "9"
+    ],
+    [
+     "Cikoko",
+     "Pancoran",
+     "Cibubur Line"
+    ],
+    [
+     "Pancoran",
+     "Pancoran Arah Barat",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Pancoran Arah Barat",
+     "Tegal Parang Arah Barat",
+     "9"
+    ],
+    [
+     "Tegal Parang Arah Barat",
+     "Tegal Mampang",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Tegal Mampang",
+     "Kejaksaan Agung",
+     "6V"
+    ],
+    [
+     "Kejaksaan Agung",
+     "Blok M",
+     "1"
+    ]
+   ],
+   "legFares": [
+    0,
+    3000,
+    3500,
+    0,
+    3500,
+    5700,
+    0,
+    3500,
+    0,
+    0,
+    0
+   ],
+   "fare": 19200
+  },
+  {
+   "id": "Rute-70",
+   "hops": [
+    [
+     "UI",
+     "Universitas Indonesia Train Station",
+     "Jalan Kaki"
+    ],
+    [
+     "Universitas Indonesia Train Station",
+     "Depok Baru",
+     "Bogor Line"
+    ],
+    [
+     "Depok Baru",
+     "Cawang-Sentral 2",
+     "TJ D11"
+    ],
+    [
+     "Cawang-Sentral 2",
+     "Cawang-Sentral",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Cawang-Sentral",
+     "Cikoko",
+     "9"
+    ],
+    [
+     "Cikoko",
+     "Pancoran",
+     "Cibubur Line"
+    ],
+    [
+     "Pancoran",
+     "Pancoran Arah Barat",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Pancoran Arah Barat",
+     "Tegal Parang Arah Barat",
+     "9"
+    ],
+    [
+     "Tegal Parang Arah Barat",
+     "Tegal Mampang",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Tegal Mampang",
+     "Blok M Jalur 2",
+     "7B"
+    ],
+    [
+     "Blok M Jalur 2",
+     "Blok M",
+     "Jalan Kaki (Selesai)"
+    ]
+   ],
+   "legFares": [
+    0,
+    3000,
+    3500,
+    0,
+    3500,
+    5700,
+    0,
+    3500,
+    0,
+    0,
+    0
+   ],
+   "fare": 19200
+  },
+  {
+   "id": "Rute-71",
+   "hops": [
+    [
+     "UI",
+     "Universitas Indonesia Train Station",
+     "Jalan Kaki"
+    ],
+    [
+     "Universitas Indonesia Train Station",
+     "Depok Baru",
+     "Bogor Line"
+    ],
+    [
+     "Depok Baru",
+     "Cawang-Sentral 2",
+     "TJ D11"
+    ],
+    [
+     "Cawang-Sentral 2",
+     "Cawang-Sentral",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Cawang-Sentral",
+     "Cikoko",
+     "9"
+    ],
+    [
+     "Cikoko",
+     "Pancoran",
+     "Cibubur Line"
+    ],
+    [
+     "Pancoran",
+     "Pancoran Arah Barat",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Pancoran Arah Barat",
+     "Senayan Bank Jakarta",
+     "9C"
+    ],
+    [
+     "Senayan Bank Jakarta",
+     "Blok M",
+     "1"
+    ]
+   ],
+   "legFares": [
+    0,
+    3000,
+    3500,
+    0,
+    3500,
+    5700,
+    0,
+    3500,
+    0
+   ],
+   "fare": 19200
+  },
+  {
+   "id": "Rute-72",
+   "hops": [
+    [
+     "UI",
+     "Bus Stop Pasar Minggu",
+     "TJ 4B"
+    ],
+    [
+     "Bus Stop Pasar Minggu",
+     "St. MRT Blok A",
+     "6T"
+    ],
+    [
+     "St. MRT Blok A",
+     "St. MRT Blok M",
+     "Lebak Bulus - Bundaran HI"
+    ],
+    [
+     "St. MRT Blok M",
+     "Blok M",
+     "Jalan Kaki (Selesai)"
+    ]
+   ],
+   "legFares": [
+    3500,
+    3500,
+    3000,
+    0
+   ],
+   "fare": 10000
+  },
+  {
+   "id": "Rute-73",
+   "hops": [
+    [
+     "UI",
+     "Universitas Indonesia Train Station",
+     "Jalan Kaki"
+    ],
+    [
+     "Universitas Indonesia Train Station",
+     "Pasar Minggu",
+     "Bogor Line"
+    ],
+    [
+     "Pasar Minggu",
+     "St. MRT Blok A",
+     "6T"
+    ],
+    [
+     "St. MRT Blok A",
+     "St. MRT Blok M",
+     "Lebak Bulus - Bundaran HI"
+    ],
+    [
+     "St. MRT Blok M",
+     "Blok M",
+     "Jalan Kaki (Selesai)"
+    ]
+   ],
+   "legFares": [
+    0,
+    3000,
+    3500,
+    3000,
+    0
+   ],
+   "fare": 9500
+  },
+  {
+   "id": "Rute-74",
+   "hops": [
+    [
+     "UI",
+     "Universitas Indonesia Train Station",
+     "Jalan Kaki"
+    ],
+    [
+     "Universitas Indonesia Train Station",
+     "Duren Kalibata",
+     "Bogor Line"
+    ],
+    [
+     "Duren Kalibata",
+     "St. MRT Blok M",
+     "7Q"
+    ],
+    [
+     "St. MRT Blok M",
+     "Blok M",
+     "Jalan Kaki (Selesai)"
+    ]
+   ],
+   "legFares": [
+    0,
+    3000,
+    3500,
+    0
+   ],
+   "fare": 6500
+  },
+  {
+   "id": "Rute-75",
+   "hops": [
+    [
+     "UI",
+     "Universitas Indonesia Train Station",
+     "Jalan Kaki"
+    ],
+    [
+     "Universitas Indonesia Train Station",
+     "Cawang",
+     "Bogor Line"
+    ],
+    [
+     "Cawang",
+     "Cikoko",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Cikoko",
+     "Dukuh Atas",
+     "Cibubur Line"
+    ],
+    [
+     "Dukuh Atas",
+     "Dukuh Atas BNI",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "Dukuh Atas BNI",
+     "Blok M BCA",
+     "Bundaran HI - Lebak Bulus"
+    ],
+    [
+     "Blok M BCA",
+     "Blok M",
+     "Jalan Kaki (Selesai)"
+    ]
+   ],
+   "legFares": [
+    0,
+    3000,
+    0,
+    9900,
+    0,
+    7000,
+    0
+   ],
+   "fare": 19900
+  },
+  {
+   "id": "Rute-76",
+   "hops": [
+    [
+     "UI",
+     "Bus Stop Pasar Minggu",
+     "TJ 4B"
+    ],
+    [
+     "Bus Stop Pasar Minggu",
+     "Terminal Blok M",
+     "6U"
+    ],
+    [
+     "Terminal Blok M",
+     "Blok M",
+     "Jalan Kaki (Selesai)"
+    ]
+   ],
+   "legFares": [
+    3500,
+    3500,
+    0
+   ],
+   "fare": 7000
+  },
+  {
+   "id": "Rute-77",
+   "hops": [
+    [
+     "UI",
+     "St. Manggarai",
+     "TJ 4B"
+    ],
+    [
+     "St. Manggarai",
+     "Terminal Blok M",
+     "6M"
+    ],
+    [
+     "Terminal Blok M",
+     "Blok M",
+     "Jalan Kaki (Selesai)"
+    ]
+   ],
+   "legFares": [
+    3500,
+    3500,
+    0
+   ],
+   "fare": 7000
+  },
+  {
+   "id": "Rute-78",
+   "hops": [
+    [
+     "UI",
+     "Universitas Indonesia Train Station",
+     "Jalan Kaki"
+    ],
+    [
+     "Universitas Indonesia Train Station",
+     "St. Manggarai",
+     "Bogor Line"
+    ],
+    [
+     "St. Manggarai",
+     "Terminal Blok M",
+     "6M"
+    ],
+    [
+     "Terminal Blok M",
+     "Blok M",
+     "Jalan Kaki (Selesai)"
+    ]
+   ],
+   "legFares": [
+    0,
+    3000,
+    3500,
+    0
+   ],
+   "fare": 6500
+  },
+  {
+   "id": "Rute-86",
+   "hops": [
+    [
+     "UI",
+     "Manggarai",
+     "TJ 4B"
+    ],
+    [
+     "Manggarai",
+     "Cikini Station",
+     "Bogor Line"
+    ],
+    [
+     "Cikini Station",
+     "SMPN 8",
+     "Jalan Kaki (Integrasi)"
+    ],
+    [
+     "SMPN 8",
+     "Bundaran Senayan 1",
+     "4C"
+    ],
+    [
+     "Bundaran Senayan 1",
+     "Blok M Jalur 2",
+     "1P"
+    ],
+    [
+     "Blok M Jalur 2",
+     "Blok M",
+     "Jalan Kaki (Selesai)"
+    ]
+   ],
+   "legFares": [
+    3500,
+    3000,
+    0,
+    3500,
+    0,
+    0
+   ],
+   "fare": 10000
   }
  ]
 }

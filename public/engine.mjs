@@ -38,7 +38,9 @@ export function buildGraph(data) {
     adj.get(e.from).push(e);
   }
   const station = new Map(data.nodes.map(n => [n.id, n.station]));
-  return { adj, station, penalty: data.meta.transfer_penalty, tapIn: data.meta.tj_tap_in ?? 3500 };
+  // Surveyed routes keyed by their exact hop sequence: fare is the team's recorded total (column AJ).
+  const surveyed = new Map((data.routes || []).map(r => [r.hops.map(h => h.join('>')).join('|'), r]));
+  return { adj, station, penalty: data.meta.transfer_penalty, tapIn: data.meta.tj_tap_in ?? 3500, surveyed };
 }
 
 const isTransfer = (prev, mode) => prev && prev !== mode && mode !== 'walk';
@@ -92,7 +94,7 @@ const krlTariff = m => (m <= 25000 ? 3000 : 3000 + Math.ceil((m - 25000) / 10000
 function legFares(g, edges) {
   let prevBrt = false, krlSoFar = 0;
   return edges.map(e => {
-    if (e.mode === 'walk') { if (!/integrasi/i.test(e.route)) { prevBrt = false; krlSoFar = 0; } return 0; }
+    if (e.mode === 'walk') { if (e.open || !/integrasi/i.test(e.route)) { prevBrt = false; krlSoFar = 0; } return 0; }
     if (e.mode === 'transjakarta') { krlSoFar = 0; const f = prevBrt && e.brt ? 0 : g.tapIn; prevBrt = !!e.brt; return f; }
     prevBrt = false;
     if (e.mode === 'krl') { const before = krlSoFar ? krlTariff(krlSoFar) : 0; krlSoFar += e.dist || 0; return krlTariff(krlSoFar) - before; }
@@ -101,6 +103,10 @@ function legFares(g, edges) {
 }
 
 function summarize(g, start, edges) {
+  // A journey that is exactly one of the surveyed routes carries the fares the
+  // team recorded for it; anything stitched from pieces is priced by the rules.
+  const survey = g.surveyed.get(edges.map(e => `${e.from}>${e.to}>${e.route}`).join('|'));
+  const fares = survey ? survey.legFares.slice() : legFares(g, edges);
   let transfers = 0;
   for (let i = 1; i < edges.length; i++) if (isTransfer(edges[i - 1].mode, edges[i].mode)) transfers++;
   const raw = edges.reduce((s, e) => s + e.time, 0);
@@ -114,8 +120,8 @@ function summarize(g, start, edges) {
   return {
     path: edges, nodes, journey,
     stations: [...new Set(nodes.map(n => g.station.get(n) ?? n))],
-    legFares: legFares(g, edges),
-    fare: legFares(g, edges).reduce((s, f) => s + f, 0),
+    legFares: fares, fare: survey ? survey.fare : fares.reduce((s, f) => s + f, 0),
+    surveyed: survey?.id ?? null,
     rawTime: raw, time: raw + transfers * g.penalty,
     dist: edges.reduce((s, e) => s + e.dist, 0),
     transfers,

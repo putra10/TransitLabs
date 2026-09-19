@@ -27,30 +27,38 @@ assert.ok(!mrt.stops.some(stop => typeof stop === 'string' && stop.replace(/^~/,
 assert.ok(data.edges.some(e => e.from === 'CSW' && e.to === 'Kejaksaan Agung' && e.mode === 'walk'));
 assert.ok(!LINES.some(line => line.stops.includes('CSW') && line.stops.includes('Kejaksaan Agung')));
 
-// Baseline from the project spreadsheet: routes from the clean tab, field fares
-// from Rute Tabel, minutes from Sheet13. Cheapest is KRL then TransJakarta at
-// Rp 6,500 / 67 min; fastest is D21 then MRT at Rp 10,500 / 52 min.
+// Baseline from the project spreadsheet: routes from the clean tab, fares from
+// Rute Tabel (column AJ for a surveyed route, the field rules for a stitched
+// one), minutes from Sheet13. Fastest is D21 then MRT, Rp 10,500 / 52 min.
 const { paths, criticality } = solve(g, data);
 assert.equal(paths.length, 10, 'ten paths');
 assert.equal(new Set(paths.map(p => p.journey)).size, 10, 'distinct journeys');
 const best = paths[0];
-assert.equal(best.fare, 6500);
-assert.equal(best.time, 67);
 const fastest = paths.find(p => p.tags.includes('fastest'));
 assert.equal(fastest.fare, 10500);
 assert.equal(fastest.time, 52);
 assert.equal(fastest.transfers, 1);
 assert.deepEqual(fastest.path.map(e => e.mode).filter(m => m !== 'walk'), ['transjakarta', 'mrt']);
+assert.equal(Math.min(...paths.map(p => p.fare)), 6500, 'cheapest Rp 6,500');
 
-// Fare rules match the field fares. D21 is not BRT, so 1E after it pays again: Rp 7,000.
+// A surveyed route carries its recorded AJ total and per-hop fares verbatim.
 const d21 = paths.find(p => p.journey === 'UI:D21>Kantor Pos Fatmawati:1E');
+assert.equal(d21.surveyed, 'Rute-19');
 assert.equal(d21.fare, 7000);
 assert.deepEqual(d21.legFares.filter(Boolean), [3500, 3500]);
-// A BRT corridor after another BRT corridor is free; KRL Bogor then Cikarang is one tap.
 const viaMgr = paths.find(p => p.journey.includes('Cikarang Line'));
-assert.equal(viaMgr.legFares.filter((f, i) => viaMgr.path[i].mode === 'krl').reduce((a, b) => a + b, 0), 3000, 'one KRL fare across two lines');
+assert.equal(viaMgr.surveyed, 'Rute-11');
+assert.equal(viaMgr.fare, 11000);
+// A stitched journey is priced by the field rules: 6U after the street walk from
+// Simpang Kuningan pays again, so KRL + 9D + 6U is Rp 10,000, not 6,500.
+const stitched = paths.find(p => p.journey === 'Stasiun UI:Bogor Line>Pasar Minggu:9D>Hotel Maharadja:6U');
+assert.equal(stitched.surveyed, null);
+assert.equal(stitched.fare, 10000);
+// BRT after BRT is free (Rute-20: 9 then 13B then 1).
 const brt = paths.find(p => p.journey.includes('9>Pancoran:13B'));
 assert.deepEqual(brt.path.map((e, i) => e.mode === 'transjakarta' ? brt.legFares[i] : null).filter(x => x !== null), [3500, 0, 0]);
+// Nothing rides a service the team dropped.
+assert.ok(data.edges.every(e => e.route !== 'AC52A'));
 assert.ok(paths.every(p => p.nodes[0] === 'UI' && p.nodes.at(-1) === 'Blok M'));
 assert.ok(paths.every(p => new Set(p.nodes).size === p.nodes.length), 'simple paths');
 

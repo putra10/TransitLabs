@@ -119,6 +119,7 @@ h2 { font-size: 15px; font-weight: 550; letter-spacing: -.35px; margin: 0; }
 .tag { font: 600 9px var(--mono); text-transform: uppercase; letter-spacing: .5px; padding: 2px 5px; border-radius: 4px; background: var(--soft); color: var(--muted); margin-left: 4px; }
 .tag.pareto { background: #dcefe0; color: #1f6b3a; }
 .tag.cheapest, .tag.fastest { background: #fbe1e5; color: #9f1239; }
+.tag.surveyed { background: #e0e7ff; color: #3730a3; }
 
 /* experiment strip */
 .experiment { border: 1px solid var(--line); border-radius: 10px; margin-top: 26px; padding: 24px 28px; display: grid; grid-template-columns: 1fr 1.4fr; gap: 24px 30px; align-items: center; background: #eeefe7; }

@@ -19,6 +19,7 @@ minutes in the sheet and get WALK_MIN.
 from __future__ import annotations
 
 import json
+import math
 import re
 import sys
 import urllib.request
@@ -35,6 +36,7 @@ TIME_TAB, FARE_TAB, FIELD_TAB = "Sheet13", "Sheet12", "Rute Tabel"
 CLEAN_TAB = "Copy of Rute Mentah"   # the 64 vetted routes; other tabs carry drafts
 TJ_TAP_IN = 3500                    # flat TransJakarta fare
 NON_BRT = {"4B", "D11", "D21"}       # separate fare systems: boarding after them always pays
+EXCLUDED = {"AC52A"}                # services the team decided not to use: any route riding them is dropped
 
 TRANSFER_PENALTY = 5   # minutes per change of mode, as in the notebook
 WALK_MIN = 3           # the sheet leaves walking hops blank; notebook default
@@ -137,6 +139,15 @@ def load_field_fares(ws) -> dict[str, list[tuple]]:
     return out
 
 
+def field_total(ws, rid_col=0, total_col=35):
+    """Column AJ ('Total Harga') per route: the fare the team recorded for the whole trip."""
+    out = {}
+    for r in ws.iter_rows(min_row=2, values_only=True):
+        if r[rid_col] and isinstance(r[total_col], (int, float)):
+            out[str(r[rid_col]).strip()] = int(r[total_col])
+    return out
+
+
 def field_fare(prices, rid, o, d, mode):
     """The recorded fare for hop o->d on `rid`, matched by normalised stop names and mode class."""
     hops = prices.get(rid) or []
@@ -171,11 +182,22 @@ def main(refetch: bool = False) -> None:
     if refetch or not xlsx.exists():
         xlsx.write_bytes(urllib.request.urlopen(XLSX_URL, timeout=60).read())
         print("fetched", xlsx.name)
-    wb = openpyxl.load_workbook(xlsx, read_only=True)
-    clean = {str(r[0]).strip() for r in rows(wb[CLEAN_TAB]) if r[0]}
+    wb = openpyxl.load_workbook(xlsx, read_only=True, data_only=True)  # cached values, AJ is a formula
+    listed = {str(r[0]).strip() for r in rows(wb[CLEAN_TAB]) if r[0]}
+    field = load_field_fares(wb[FIELD_TAB])
+    totals = field_total(wb[FIELD_TAB])
+    # A route whose recorded total (column AJ) is 0 or missing was dropped by the
+    # team: it contributes nothing, not even hops for the engine to stitch.
+    dropped = sorted(rid for rid in listed if not totals.get(rid))
+    rides_excluded = {str(r[0]).strip() for r in rows(wb[TIME_TAB]) if label(r[5]) in EXCLUDED}
+    dropped += sorted(rid for rid in listed - set(dropped) if rid in rides_excluded)
+    clean = listed - set(dropped)
+    if dropped:
+        print(f"  dropped {len(dropped)} route(s) (no AJ total, or riding {'/'.join(sorted(EXCLUDED))}): {', '.join(dropped)}")
     times = [r for r in rows(wb[TIME_TAB]) if r[0] in clean]
     fares = [r for r in rows(wb[FARE_TAB]) if r[0] in clean]
-    field = load_field_fares(wb[FIELD_TAB])
+    geo = {m.group(1): (float(m.group(2)), float(m.group(3)))
+           for m in re.finditer(r"'([^']+)':\s*\[(-?\d+\.\d+),\s*(\d+\.\d+)\]", (ROOT.parent / "public" / "lines.mjs").read_text(encoding="utf-8"))}
 
     # Same hop sequence per route in both tabs; join by position and check.
     by_t, by_f = {}, {}
@@ -187,8 +209,10 @@ def main(refetch: bool = False) -> None:
         sys.exit(f"route sets differ: {sorted(set(by_t) ^ set(by_f))}")
 
     edges: dict[tuple, dict] = {}
+    routes: list[dict] = []          # surveyed routes: hop sequence, AJ total, per-hop field fares
     for rid, hops_t in by_t.items():
         hops_f = by_f[rid]
+        route = {"id": rid, "hops": [], "legFares": [], "fare": totals.get(rid)}
         if len(hops_t) != len(hops_f):
             sys.exit(f"{rid}: {len(hops_t)} time hops vs {len(hops_f)} fare hops")
         for t, f in zip(hops_t, hops_f):
@@ -197,6 +221,7 @@ def main(refetch: bool = False) -> None:
                 sys.exit(f"{rid}: hop mismatch {o}->{d} vs {f[2]}->{f[3]}")
             if o == d:
                 continue  # "Blok M -> Blok M (Selesai)" end marker
+            route["hops"].append([o, d, mode])
             minutes = num(t[7]) if ttype != "walk" else None
             if minutes is None:
                 if ttype != "walk":
@@ -206,6 +231,7 @@ def main(refetch: bool = False) -> None:
             dist = int(num(f[6]) or 0)
             recorded = None if ttype == "walk" else field_fare(field, rid, o, d, mode)
             fare = recorded if recorded is not None else int(num(f[7]) or 0)
+            route["legFares"].append(0 if ttype == "walk" else fare)
             key = (o, d, mode)
             if key in edges:
                 # Same hop priced in several routes: keep the tap-in fare so a TJ
@@ -216,6 +242,39 @@ def main(refetch: bool = False) -> None:
                           "fare": fare, "time": round(minutes, 2), "dist": dist}
             if ttype == "transjakarta":
                 edges[key]["brt"] = re.sub(r"^TJ\s+", "", mode) not in NON_BRT
+        if route["fare"] is not None:
+            if sum(route["legFares"]) != route["fare"]:
+                print(f"  note {rid}: hop fares sum to {sum(route['legFares'])} but AJ says {route['fare']}; AJ wins")
+            routes.append(route)
+
+    # Walks that leave the paid area: the field rows show a bus after them pays
+    # again. Evidence first; otherwise any walk over 300 m between different
+    # stations (a street walk, not a transfer inside one halte).
+    paid_after_walk: dict[tuple, bool] = {}
+    for rid, hops in field.items():
+        if rid not in clean:
+            continue
+        prev_brt = False
+        for i, (titik, moda, harga) in enumerate(hops[:-1]):
+            c = classify_mode(moda or "")
+            if c == "Walk":
+                nxt = hops[i + 1]
+                if classify_mode(nxt[1] or "") == "TJ" and nxt[2] is not None and prev_brt:
+                    paid_after_walk[(canon(titik), canon(nxt[0]))] = nxt[2] > 0
+                continue
+            prev_brt = c == "TJ" and re.sub(r"^TJ\s+", "", moda or "") not in NON_BRT
+    def hav(a, b):
+        la1, lo1, la2, lo2 = map(math.radians, (*a, *b))
+        h = math.sin((la2 - la1) / 2) ** 2 + math.cos(la1) * math.cos(la2) * math.sin((lo2 - lo1) / 2) ** 2
+        return 2 * 6371000 * math.asin(math.sqrt(h))
+    for e in edges.values():
+        if e["mode"] != "walk":
+            continue
+        a, b = canon(e["from"]), canon(e["to"])
+        if (a, b) in paid_after_walk:
+            e["open"] = paid_after_walk[(a, b)]
+        elif a != b and a in geo and b in geo and hav(geo[a], geo[b]) > 300:
+            e["open"] = True
 
     nodes = sorted({e["from"] for e in edges.values()} | {e["to"] for e in edges.values()})
     stations = sorted({canon(n) for n in nodes})
@@ -225,10 +284,12 @@ def main(refetch: bool = False) -> None:
         "stations": stations,  # layout + coordinates: public/lines.mjs
         "nodes": [{"id": n, "station": canon(n)} for n in nodes],
         "edges": list(edges.values()),
+        "routes": routes,
     }
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(out, ensure_ascii=False, indent=1), encoding="utf-8")
-    print(f"wrote {OUT.relative_to(ROOT.parent)}: {len(stations)} stations, {len(nodes)} nodes, {len(edges)} edges, {len(by_t)} routes")
+    print(f"wrote {OUT.relative_to(ROOT.parent)}: {len(stations)} stations, {len(nodes)} nodes, {len(edges)} edges, {len(routes)} routes with AJ totals, "
+          f"{sum(1 for e in edges.values() if e.get('open'))} open walks")
 
 
 if __name__ == "__main__":

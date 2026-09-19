@@ -87,17 +87,19 @@ allows light use like this; swap the tile URL if traffic ever grows.
 kept as `scripts/raw/sheet.xlsx`:
 
 - `Copy of Rute Mentah`: the 64 vetted routes; only these are used.
-- `Rute Tabel`: the fares the team paid, matched hop by hop. They are the
-  primary fare source. `Sheet12` (the notebook's fare export) only fills a
-  hop the field row leaves blank, and supplies distances.
+- `Rute Tabel`: the fares the team paid. A route whose total (column AJ)
+  is 0 was dropped by the team and is not used at all; routes riding the
+  AC52A service are excluded too. A journey that is exactly a surveyed route
+  shows that row's AJ total and per-hop fares verbatim. A journey stitched
+  from pieces of different routes is priced by the rules the field rows
+  show: a TransJakarta BRT corridor after another BRT corridor inside the
+  same halte is free, boarding after rail, after a street walk (over 300 m,
+  or one the field rows show being paid) or after a non-BRT service (4B,
+  D11, D21) pays the flat Rp 3,500, and consecutive KRL lines are one tap
+  on the official tariff. `Sheet12` fills a hop the field row leaves blank
+  and supplies distances.
 - `Sheet13`: minutes per hop. Walking hops are blank and get 3 minutes.
 
-The engine applies the fare rules the field rows show: a TransJakarta BRT
-corridor after another BRT corridor is free, boarding after rail or after a
-non-BRT service (4B, D11, D21) pays the flat Rp 3,500, and consecutive KRL
-lines are one tap priced by the official tariff on the combined distance.
-Replaying all 64 routes this way reproduces the field total for 56; the
-other 8 field rows are incomplete or describe an older version of the trip.
 Regenerate with:
 
 ```powershell

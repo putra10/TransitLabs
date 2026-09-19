@@ -14,7 +14,7 @@ const STR = {
     tip_closed: 'closed · line cut here · click to reopen', tip_must: 'must pass · shift-click to release',
     tip_on: (n, k) => `on ${n} of ${k} journeys`, tip_spof: ' · single point of failure', tip_none: 'on no current journey',
     gtip_closed: 'closed', gtip_must: 'must pass', gtip_on: (n, k) => `${n}/${k} journeys`,
-    w_speed: 'Speed first', w_budget: 'Budget first', w_balanced: 'Balanced', add_station: 'add a station…', remove: 'remove' },
+    w_speed: 'Speed first', w_budget: 'Budget first', w_balanced: 'Balanced', add_station: 'add a station…', remove: 'remove', surveyed: 'surveyed fare' },
   id: { walk: 'jalan kaki', via: 'lewat', direct: 'langsung', min: 'mnt', xfer: 'transit', of: (n, k) => `${n} dari k = ${k}`,
     transfers: n => `${n} kali transit`, unmeasured: '(jarak TJ tidak terukur)', rank: n => `peringkat #${n}`,
     cheapest: 'termurah', fastest: 'tercepat', pareto: 'pareto',
@@ -23,7 +23,7 @@ const STR = {
     tip_closed: 'ditutup · jalur terputus di sini · klik untuk membuka', tip_must: 'wajib lewat · shift-klik untuk melepas',
     tip_on: (n, k) => `dilewati ${n} dari ${k} perjalanan`, tip_spof: ' · titik kegagalan tunggal', tip_none: 'tidak dilewati perjalanan mana pun',
     gtip_closed: 'ditutup', gtip_must: 'wajib lewat', gtip_on: (n, k) => `${n}/${k} perjalanan`,
-    w_speed: 'Utamakan cepat', w_budget: 'Utamakan murah', w_balanced: 'Seimbang', add_station: 'tambah stasiun…', remove: 'hapus' },
+    w_speed: 'Utamakan cepat', w_budget: 'Utamakan murah', w_balanced: 'Seimbang', add_station: 'tambah stasiun…', remove: 'hapus', surveyed: 'tarif survei' },
 };
 let lang = 'en';
 const T = () => STR[lang];
@@ -225,7 +225,7 @@ function showPath(play) {
     return `<li><i style="--c:${line?.color ?? '#6b7280'}"></i>${label} · ${st(e.from)} → ${st(e.to)} <span>· ${e.time} ${T().min}${legFare ? ' · ' + rp(legFare) : ''}</span></li>`;
   });
   $('#best').innerHTML = `<div class="big">${rp(p.fare)} · ${p.time} min</div>
-    <div>${T().transfers(p.transfers)} · ${(p.dist / 1000).toFixed(1)} km${p.dist ? '' : ' ' + T().unmeasured} · ${T().rank(selected + 1)}${p.tags.map(t => `<span class="tag ${t}">${T()[t]}</span>`).join('')}</div>
+    <div>${T().transfers(p.transfers)} · ${(p.dist / 1000).toFixed(1)} km${p.dist ? '' : ' ' + T().unmeasured} · ${T().rank(selected + 1)}${p.tags.map(t => `<span class="tag ${t}">${T()[t]}</span>`).join('')}${p.surveyed ? `<span class="tag surveyed" title="${p.surveyed}">${T().surveyed}</span>` : ''}</div>
     <ul class="steps">${steps.join('')}</ul>`;
 
   // Route overlay: each hop drawn along its line's polyline, animated in sequence.
