@@ -876,7 +876,7 @@
    "route": "TJ D11",
    "mode": "transjakarta",
    "fare": 3500,
-   "time": 45.0,
+   "time": 119.0,
    "dist": 0,
    "brt": false
   },
@@ -983,7 +983,7 @@
    "route": "9D",
    "mode": "transjakarta",
    "fare": 3500,
-   "time": 5.0,
+   "time": 33.0,
    "dist": 0,
    "brt": true
   },

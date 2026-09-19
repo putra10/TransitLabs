@@ -51,7 +51,7 @@ assert.equal(viaMgr.surveyed, 'Rute-11');
 assert.equal(viaMgr.fare, 11000);
 // A stitched journey is priced by the field rules: 6U after the street walk from
 // Simpang Kuningan pays again, so KRL + 9D + 6U is Rp 10,000, not 6,500.
-const stitched = paths.find(p => p.journey === 'Stasiun UI:Bogor Line>Pasar Minggu:9D>Hotel Maharadja:6U');
+const stitched = yen(g, 'UI', 'Blok M', 40).find(p => p.journey === 'Stasiun UI:Bogor Line>Pasar Minggu:9D>Hotel Maharadja:6U');
 assert.equal(stitched.surveyed, null);
 assert.equal(stitched.fare, 10000);
 // BRT after BRT is free (Rute-20: 9 then 13B then 1).

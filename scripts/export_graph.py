@@ -5,7 +5,9 @@ The team's Google Sheet already holds every route broken into hops:
   Sheet13      route_id, origin, destination, mode, ttype, time_min
   Sheet12      route_id, origin, destination, mode, ttype, dist_m, fare, note
   Rute Tabel   ID, Titik 1, Moda 1, Harga 1, Titik 2, ...   (fares recorded in the field)
-Rows are joined hop by hop. Minutes come from Sheet13, distance from Sheet12,
+Rows are joined hop by hop. Minutes come from Sheet13, except a value that
+is wildly off the notebook's Maps snapshot for the same hop (under half or
+over double), which the snapshot replaces. Distance comes from Sheet12,
 and the fare from Rute Tabel first, because that is what the team paid; the
 Sheet12 fare is only the fallback when Rute Tabel has no value for the hop.
 Only routes listed in the clean tab are used. TransJakarta edges are marked
@@ -40,6 +42,8 @@ EXCLUDED = {"AC52A"}                # services the team decided not to use: any 
 
 TRANSFER_PENALTY = 5   # minutes per change of mode, as in the notebook
 WALK_MIN = 3           # the sheet leaves walking hops blank; notebook default
+SNAPSHOT = RAW / "maps_times_cache.json"   # the notebook's Google Maps minutes per hop
+ODD_RATIO = 2          # a sheet value under half or over double the snapshot is replaced by it
 
 
 # ── Station names ─────────────────────────────────────────────────────────────
@@ -183,6 +187,7 @@ def main(refetch: bool = False) -> None:
         xlsx.write_bytes(urllib.request.urlopen(XLSX_URL, timeout=60).read())
         print("fetched", xlsx.name)
     wb = openpyxl.load_workbook(xlsx, read_only=True, data_only=True)  # cached values, AJ is a formula
+    snapshot = json.loads(SNAPSHOT.read_text(encoding="utf-8")) if SNAPSHOT.exists() else {}
     listed = {str(r[0]).strip() for r in rows(wb[CLEAN_TAB]) if r[0]}
     field = load_field_fares(wb[FIELD_TAB])
     totals = field_total(wb[FIELD_TAB])
@@ -223,6 +228,10 @@ def main(refetch: bool = False) -> None:
                 continue  # "Blok M -> Blok M (Selesai)" end marker
             route["hops"].append([o, d, mode])
             minutes = num(t[7]) if ttype != "walk" else None
+            snap = snapshot.get(f"{o}||{d}||{mode}")
+            if minutes and snap and (minutes < snap / ODD_RATIO or minutes > snap * ODD_RATIO):
+                print(f"  odd minutes {rid}: {o} -> {d} ({mode}) sheet {minutes:g}, using snapshot {snap}")
+                minutes = float(snap)
             if minutes is None:
                 if ttype != "walk":
                     print(f"  [skip] {rid}: no minutes for {o} -> {d} ({mode})")
