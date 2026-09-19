@@ -7,7 +7,7 @@ const MODE_LABEL = { krl: 'KRL', mrt: 'MRT', lrt: 'LRT', transjakarta: 'TJ', wal
 // Dynamic strings in both languages; static copy lives in index.html as lang="" spans.
 const STR = {
   en: { walk: 'walk', via: 'via', direct: 'direct', min: 'min', xfer: 'xfer', of: (n, k) => `${n} of k = ${k}`,
-    transfers: n => `${n} transfer${n === 1 ? '' : 's'}`, unmeasured: '(TJ hops unmeasured)', rank: n => `rank #${n}`,
+    transfers: n => `${n} transfer${n === 1 ? '' : 's'}`, rank: n => `rank #${n}`,
     cheapest: 'cheapest', fastest: 'fastest', pareto: 'pareto',
     noroute: 'No route', noroute_why: why => `Blok M is unreachable with ${why}. Relax one constraint.`,
     closedN: n => `${n} station${n > 1 ? 's' : ''} closed`, mustN: list => `must pass ${list.join(' and ')}`, onlyModes: m => `only ${m}`,
@@ -16,7 +16,7 @@ const STR = {
     gtip_closed: 'closed', gtip_must: 'must pass', gtip_on: (n, k) => `${n}/${k} journeys`,
     w_speed: 'Speed first', w_budget: 'Budget first', w_balanced: 'Balanced', add_station: 'add a station…', remove: 'remove', surveyed: 'surveyed fare' },
   id: { walk: 'jalan kaki', via: 'lewat', direct: 'langsung', min: 'mnt', xfer: 'transit', of: (n, k) => `${n} dari k = ${k}`,
-    transfers: n => `${n} kali transit`, unmeasured: '(jarak TJ tidak terukur)', rank: n => `peringkat #${n}`,
+    transfers: n => `${n} kali transit`, rank: n => `peringkat #${n}`,
     cheapest: 'termurah', fastest: 'tercepat', pareto: 'pareto',
     noroute: 'Tidak ada rute', noroute_why: why => `Blok M tidak terjangkau dengan ${why}. Longgarkan satu batasan.`,
     closedN: n => `${n} stasiun ditutup`, mustN: list => `wajib lewat ${list.join(' dan ')}`, onlyModes: m => `hanya ${m}`,
@@ -225,7 +225,7 @@ function showPath(play) {
     return `<li><i style="--c:${line?.color ?? '#6b7280'}"></i>${label} · ${st(e.from)} → ${st(e.to)} <span>· ${e.time} ${T().min}${legFare ? ' · ' + rp(legFare) : ''}</span></li>`;
   });
   $('#best').innerHTML = `<div class="big">${rp(p.fare)} · ${p.time} min</div>
-    <div>${T().transfers(p.transfers)} · ${(p.dist / 1000).toFixed(1)} km${p.dist ? '' : ' ' + T().unmeasured} · ${T().rank(selected + 1)}${p.tags.map(t => `<span class="tag ${t}">${T()[t]}</span>`).join('')}${p.surveyed ? `<span class="tag surveyed" title="${p.surveyed}">${T().surveyed}</span>` : ''}</div>
+    <div>${T().transfers(p.transfers)}${p.path.every(e => e.mode === 'walk' || e.dist > 0) ? ` · ${(p.dist / 1000).toFixed(1)} km` : ''} · ${T().rank(selected + 1)}${p.tags.map(t => `<span class="tag ${t}">${T()[t]}</span>`).join('')}${p.surveyed ? `<span class="tag surveyed" title="${p.surveyed}">${T().surveyed}</span>` : ''}</div>
     <ul class="steps">${steps.join('')}</ul>`;
 
   // Route overlay: each hop drawn along its line's polyline, animated in sequence.
