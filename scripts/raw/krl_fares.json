@@ -16,7 +16,8 @@
   "Cawang|Cikini": 3000,
   "Depok Baru|Manggarai": 3000,
   "Depok Baru|Sudirman": 3000,
-  "Depok Baru|Cawang": 3000
+  "Depok Baru|Cawang": 3000,
+  "Stasiun UI|Sudirman": 3000
  },
  "distance_km": {
   "Stasiun UI|Manggarai": 17.374,
@@ -34,6 +35,7 @@
   "Cawang|Cikini": 5.517,
   "Depok Baru|Manggarai": 21.053,
   "Depok Baru|Sudirman": 24.239,
-  "Depok Baru|Cawang": 17.142
+  "Depok Baru|Cawang": 17.142,
+  "Stasiun UI|Sudirman": 20.56
  }
 }
