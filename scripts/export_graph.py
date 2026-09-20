@@ -5,9 +5,9 @@ The team's Google Sheet already holds every route broken into hops:
   Sheet13      route_id, origin, destination, mode, ttype, time_min
   Sheet12      route_id, origin, destination, mode, ttype, dist_m, fare, note
   Rute Tabel   ID, Titik 1, Moda 1, Harga 1, Titik 2, ...   (fares recorded in the field)
-Rows are joined hop by hop. Minutes come from Sheet13, except a value that
-is wildly off the notebook's Maps snapshot for the same hop (under half or
-over double), which the snapshot replaces. Distance comes from Sheet12,
+Rows are joined hop by hop. Minutes: KRL hops take the notebook's Maps
+snapshot; bus, MRT and LRT hops take Sheet13, except a value wildly off the
+snapshot for the same hop (under half or over double). Distance comes from Sheet12,
 and the fare from Rute Tabel first, because that is what the team paid; the
 Sheet12 fare is only the fallback when Rute Tabel has no value for the hop.
 Only routes listed in the clean tab are used. TransJakarta edges are marked
@@ -229,9 +229,11 @@ def main(refetch: bool = False) -> None:
             route["hops"].append([o, d, mode])
             minutes = num(t[7]) if ttype != "walk" else None
             snap = snapshot.get(f"{o}||{d}||{mode}")
-            if minutes and snap and (minutes < snap / ODD_RATIO or minutes > snap * ODD_RATIO):
+            if ttype == "krl" and snap:
+                minutes = float(snap)          # KRL: the Maps snapshot
+            elif minutes and snap and (minutes < snap / ODD_RATIO or minutes > snap * ODD_RATIO):
                 print(f"  odd minutes {rid}: {o} -> {d} ({mode}) sheet {minutes:g}, using snapshot {snap}")
-                minutes = float(snap)
+                minutes = float(snap)          # bus, MRT, LRT: the sheet, unless wildly off
             if minutes is None:
                 if ttype != "walk":
                     print(f"  [skip] {rid}: no minutes for {o} -> {d} ({mode})")

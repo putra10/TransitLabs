@@ -98,7 +98,9 @@ kept as `scripts/raw/sheet.xlsx`:
   D11, D21) pays the flat Rp 3,500, and consecutive KRL lines are one tap
   on the official tariff. `Sheet12` fills a hop the field row leaves blank
   and supplies distances.
-- `Sheet13`: minutes per hop. Walking hops are blank and get 3 minutes.
+- `Sheet13`: minutes per hop for bus, MRT and LRT. KRL hops use the
+  notebook's Maps snapshot instead. A sheet value under half or over double
+  the snapshot is replaced by it. Walking hops are blank and get 3 minutes.
 
 Regenerate with:
 
