@@ -47,7 +47,7 @@ assert.ok(fastest.every(p => [...new Set(p.path.map(e => e.mode).filter(m => m !
 // The same hop spelt two ways is one edge, and the slower survey wins: D21 UI -> Fatmawati is 54 min.
 assert.equal(data.edges.filter(e => e.from === 'UI' && e.to === 'St. MRT Fatmawati').length, 1);
 assert.equal(data.edges.find(e => e.from === 'UI' && e.to === 'St. MRT Fatmawati').time, 54);
-const deep = yen(g, 'UI', 'Blok M', 40);
+const deep = yen(g, 'UI', 'Blok M', 150);
 // A surveyed route carries its recorded AJ total and per-hop fares verbatim.
 const d21 = deep.find(p => p.journey === 'UI:D21>Kantor Pos Fatmawati:1E');
 assert.equal(d21.surveyed, 'Rute-19');
