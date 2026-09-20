@@ -314,7 +314,7 @@
   {
    "from": "UI",
    "to": "Manggarai",
-   "route": "TJ 4B",
+   "route": "4B",
    "mode": "transjakarta",
    "fare": 3500,
    "time": 110.0,
@@ -399,7 +399,7 @@
   {
    "from": "UI",
    "to": "St. MRT Fatmawati",
-   "route": "TJ D21",
+   "route": "D21",
    "mode": "transjakarta",
    "fare": 3500,
    "time": 54.0,
@@ -534,16 +534,6 @@
    "mode": "transjakarta",
    "fare": 3500,
    "time": 30.0,
-   "dist": 0,
-   "brt": false
-  },
-  {
-   "from": "UI",
-   "to": "St. MRT Fatmawati",
-   "route": "D21",
-   "mode": "transjakarta",
-   "fare": 3500,
-   "time": 31.0,
    "dist": 0,
    "brt": false
   },
@@ -873,10 +863,10 @@
   {
    "from": "Depok Baru",
    "to": "Cawang-Sentral 2",
-   "route": "TJ D11",
+   "route": "D11",
    "mode": "transjakarta",
    "fare": 3500,
-   "time": 119.0,
+   "time": 45.0,
    "dist": 0,
    "brt": false
   },
@@ -1000,7 +990,7 @@
   {
    "from": "UI",
    "to": "Bus Stop Pasar Minggu",
-   "route": "TJ 4B",
+   "route": "4B",
    "mode": "transjakarta",
    "fare": 3500,
    "time": 56.0,
@@ -1104,7 +1094,7 @@
   {
    "from": "UI",
    "to": "St. Manggarai",
-   "route": "TJ 4B",
+   "route": "4B",
    "mode": "transjakarta",
    "fare": 3500,
    "time": 110.0,
@@ -1197,7 +1187,7 @@
     [
      "UI",
      "Manggarai",
-     "TJ 4B"
+     "4B"
     ],
     [
      "Manggarai",
@@ -1235,7 +1225,7 @@
     [
      "UI",
      "Manggarai",
-     "TJ 4B"
+     "4B"
     ],
     [
      "Manggarai",
@@ -1267,7 +1257,7 @@
     [
      "UI",
      "Manggarai",
-     "TJ 4B"
+     "4B"
     ],
     [
      "Manggarai",
@@ -1299,7 +1289,7 @@
     [
      "UI",
      "St. MRT Fatmawati",
-     "TJ D21"
+     "D21"
     ],
     [
      "St. MRT Fatmawati",
@@ -2849,7 +2839,7 @@
     [
      "Depok Baru",
      "Cawang-Sentral 2",
-     "TJ D11"
+     "D11"
     ],
     [
      "Cawang-Sentral 2",
@@ -2905,7 +2895,7 @@
     [
      "Depok Baru",
      "Cawang-Sentral 2",
-     "TJ D11"
+     "D11"
     ],
     [
      "Cawang-Sentral 2",
@@ -2967,7 +2957,7 @@
     [
      "Depok Baru",
      "Cawang-Sentral 2",
-     "TJ D11"
+     "D11"
     ],
     [
      "Cawang-Sentral 2",
@@ -3029,7 +3019,7 @@
     [
      "Depok Baru",
      "Cawang-Sentral 2",
-     "TJ D11"
+     "D11"
     ],
     [
      "Cawang-Sentral 2",
@@ -3079,7 +3069,7 @@
     [
      "Depok Baru",
      "Cawang-Sentral 2",
-     "TJ D11"
+     "D11"
     ],
     [
      "Cawang-Sentral 2",
@@ -3135,7 +3125,7 @@
     [
      "Depok Baru",
      "Cawang-Sentral 2",
-     "TJ D11"
+     "D11"
     ],
     [
      "Cawang-Sentral 2",
@@ -3197,7 +3187,7 @@
     [
      "Depok Baru",
      "Cawang-Sentral 2",
-     "TJ D11"
+     "D11"
     ],
     [
      "Cawang-Sentral 2",
@@ -3247,7 +3237,7 @@
     [
      "Depok Baru",
      "Cawang-Sentral 2",
-     "TJ D11"
+     "D11"
     ],
     [
      "Cawang-Sentral 2",
@@ -3303,7 +3293,7 @@
     [
      "Depok Baru",
      "Cawang-Sentral 2",
-     "TJ D11"
+     "D11"
     ],
     [
      "Cawang-Sentral 2",
@@ -3359,7 +3349,7 @@
     [
      "Depok Baru",
      "Cawang-Sentral 2",
-     "TJ D11"
+     "D11"
     ],
     [
      "Cawang-Sentral 2",
@@ -3403,7 +3393,7 @@
     [
      "Depok Baru",
      "Cawang-Sentral 2",
-     "TJ D11"
+     "D11"
     ],
     [
      "Cawang-Sentral 2",
@@ -3447,7 +3437,7 @@
     [
      "Depok Baru",
      "Cawang-Sentral 2",
-     "TJ D11"
+     "D11"
     ],
     [
      "Cawang-Sentral 2",
@@ -3497,7 +3487,7 @@
     [
      "Depok Baru",
      "Cawang-Sentral 2",
-     "TJ D11"
+     "D11"
     ],
     [
      "Cawang-Sentral 2",
@@ -3553,7 +3543,7 @@
     [
      "Depok Baru",
      "Cawang-Sentral 2",
-     "TJ D11"
+     "D11"
     ],
     [
      "Cawang-Sentral 2",
@@ -3621,7 +3611,7 @@
     [
      "Depok Baru",
      "Cawang-Sentral 2",
-     "TJ D11"
+     "D11"
     ],
     [
      "Cawang-Sentral 2",
@@ -3751,7 +3741,7 @@
     [
      "Depok Baru",
      "Cawang-Sentral 2",
-     "TJ D11"
+     "D11"
     ],
     [
      "Cawang-Sentral 2",
@@ -3813,7 +3803,7 @@
     [
      "Depok Baru",
      "Cawang-Sentral 2",
-     "TJ D11"
+     "D11"
     ],
     [
      "Cawang-Sentral 2",
@@ -3887,7 +3877,7 @@
     [
      "Depok Baru",
      "Cawang-Sentral 2",
-     "TJ D11"
+     "D11"
     ],
     [
      "Cawang-Sentral 2",
@@ -3961,7 +3951,7 @@
     [
      "Depok Baru",
      "Cawang-Sentral 2",
-     "TJ D11"
+     "D11"
     ],
     [
      "Cawang-Sentral 2",
@@ -4013,7 +4003,7 @@
     [
      "UI",
      "Bus Stop Pasar Minggu",
-     "TJ 4B"
+     "4B"
     ],
     [
      "Bus Stop Pasar Minggu",
@@ -4165,7 +4155,7 @@
     [
      "UI",
      "Bus Stop Pasar Minggu",
-     "TJ 4B"
+     "4B"
     ],
     [
      "Bus Stop Pasar Minggu",
@@ -4191,7 +4181,7 @@
     [
      "UI",
      "St. Manggarai",
-     "TJ 4B"
+     "4B"
     ],
     [
      "St. Manggarai",
@@ -4249,7 +4239,7 @@
     [
      "UI",
      "Manggarai",
-     "TJ 4B"
+     "4B"
     ],
     [
      "Manggarai",

@@ -99,7 +99,7 @@ export const LINES = [
   { id: '13E', color: COLORS.tj13, routes: ['13E'], stops: ['CSW', 'Tegal Mampang', 'Kuningan'] },
   { id: 'D21', color: COLORS.tjD, routes: ['D21', 'TJ D21'], stops: ['UI', 'Tanjung Barat', [720, 520], [640, 600], [230, 600], 'Fatmawati'] },
   { id: 'BgrBM', color: COLORS.tjD, routes: ['Bogor - Blok M'], stops: ['Bundaran Senayan', '~Kejaksaan Agung', 'Blok M'] },
-  { id: 'D11', color: COLORS.tjD, routes: ['TJ D11'], stops: ['Depok Baru', [820, 560], [820, 290], 'Cawang-Sentral'] },
+  { id: 'D11', color: COLORS.tjD, routes: ['D11', 'TJ D11'], stops: ['Depok Baru', [820, 560], [820, 290], 'Cawang-Sentral'] },
   { id: 'LRT', color: COLORS.lrt, rail: true, routes: ['Cibubur Line'], stops: ['Cikoko', 'Pancoran', '~Tegal Parang', 'Kuningan', 'Dukuh Atas'] },
   { id: 'MRT', color: COLORS.mrt, rail: true, routes: ['Bundaran HI - Lebak Bulus', 'Lebak Bulus - Bundaran HI'], stops: ['Fatmawati', 'Blok A', 'Blok M', '~Kejaksaan Agung', '~Bundaran Senayan', '~Senayan', 'Bendungan Hilir', 'Dukuh Atas'] },
   { id: 'Cikarang', color: COLORS.krl_cikarang, rail: true, routes: ['Cikarang Line'], stops: ['Manggarai', 'Sudirman'] },

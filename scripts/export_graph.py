@@ -173,8 +173,9 @@ def rows(ws):
 
 
 def label(v):
-    """Corridor numbers arrive from the workbook as floats: 1.0 -> "1"."""
-    return str(int(v)) if isinstance(v, float) and v.is_integer() else str(v).strip()
+    """Service name as one spelling: 1.0 -> "1", "TJ D21" -> "D21"."""
+    s = str(int(v)) if isinstance(v, float) and v.is_integer() else str(v).strip()
+    return re.sub(r"^TJ\s+", "", s)
 
 
 def num(v):
@@ -245,14 +246,18 @@ def main(refetch: bool = False) -> None:
             route["legFares"].append(0 if ttype == "walk" else fare)
             key = (o, d, mode)
             if key in edges:
-                # Same hop priced in several routes: keep the tap-in fare so a TJ
-                # edge is never free out of context.
+                # The same hop surveyed on several routes: keep the tap-in fare so a
+                # TJ edge is never free out of context, and the longer minutes,
+                # because this is Jakarta and the slower measurement is the honest one.
                 edges[key]["fare"] = max(edges[key]["fare"], fare)
+                if minutes > edges[key]["time"]:
+                    print(f"  same hop, longer time kept: {o} -> {d} ({mode}) {edges[key]['time']:g} -> {minutes:g} min")
+                    edges[key]["time"] = round(minutes, 2)
                 continue
             edges[key] = {"from": o, "to": d, "route": mode, "mode": ttype,
                           "fare": fare, "time": round(minutes, 2), "dist": dist}
             if ttype == "transjakarta":
-                edges[key]["brt"] = re.sub(r"^TJ\s+", "", mode) not in NON_BRT
+                edges[key]["brt"] = mode not in NON_BRT
         if route["fare"] is not None:
             if sum(route["legFares"]) != route["fare"]:
                 print(f"  note {rid}: hop fares sum to {sum(route['legFares'])} but AJ says {route['fare']}; AJ wins")
@@ -273,7 +278,7 @@ def main(refetch: bool = False) -> None:
                 if classify_mode(nxt[1] or "") == "TJ" and nxt[2] is not None and prev_brt:
                     paid_after_walk[(canon(titik), canon(nxt[0]))] = nxt[2] > 0
                 continue
-            prev_brt = c == "TJ" and re.sub(r"^TJ\s+", "", moda or "") not in NON_BRT
+            prev_brt = c == "TJ" and label(moda or "") not in NON_BRT
     def hav(a, b):
         la1, lo1, la2, lo2 = map(math.radians, (*a, *b))
         h = math.sin((la2 - la1) / 2) ** 2 + math.cos(la1) * math.cos(la2) * math.sin((lo2 - lo1) / 2) ** 2
