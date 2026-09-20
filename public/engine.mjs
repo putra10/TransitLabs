@@ -117,9 +117,13 @@ function summarize(g, start, edges) {
   const rides = [];
   for (const e of edges) if (e.mode !== 'walk' && e.route !== rides.at(-1)?.route) rides.push(e);
   const journey = rides.map(e => `${stOf(e.from)}:${e.route}`).join('>');
+  const stations = [...new Set(nodes.map(stOf))];
   return {
     path: edges, nodes, journey,
-    stations: [...new Set(nodes.map(n => g.station.get(n) ?? n))],
+    stations,
+    // Same stations, same rides = one entry, however the walk between two raw
+    // stops of one station (Dukuh Atas / Dukuh Atas BNI) was chained.
+    key: `${stations.join('>')}#${rides.map(e => e.route).join('>')}`,
     legFares: fares, fare: survey ? survey.fare : fares.reduce((s, f) => s + f, 0),
     surveyed: survey?.id ?? null,
     rawTime: raw, time: raw + transfers * g.penalty,
@@ -150,7 +154,7 @@ export function yen(g, start, end, K, { closed = new Set(), modes = null, must =
   const A = [summarize(g, start, first)];
   const B = new Heap();
   const seen = new Set([A[0].nodes.join('>')]);
-  const journeys = new Set(ok(A[0]) ? [A[0].nodes.join('>')] : []);
+  const journeys = new Set(ok(A[0]) ? [A[0].key] : []);
   const cap = (must.length ? 60 : 10) * K;
   for (let k = 1; journeys.size < K && k < cap; k++) {
     const prevPath = A[k - 1].path, prevNodes = A[k - 1].nodes;
@@ -174,9 +178,10 @@ export function yen(g, start, end, K, { closed = new Set(), modes = null, must =
     }
     if (!B.size) break;
     const next = B.pop()[1];
-    A.push(next); if (ok(next)) journeys.add(next.nodes.join('>'));
+    A.push(next); if (ok(next)) journeys.add(next.key);
   }
-  return A.filter(ok).slice(0, K);
+  const kept = new Set();
+  return A.filter(p => ok(p) && !kept.has(p.key) && kept.add(p.key)).slice(0, K);
 }
 
 /** Indices of paths not dominated on (fare, time). */

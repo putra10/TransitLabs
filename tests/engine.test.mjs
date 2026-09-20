@@ -117,3 +117,10 @@ assert.equal(criticality.get('UI'), 10);
 assert.equal(criticality.get('Blok M'), 10);
 
 console.log('ok:', paths.map(p => `${p.fare}/${p.time}`).join(' '));
+
+// One entry per station sequence + rides: the walk Sudirman > Dukuh Atas >
+// Dukuh Atas BNI must not duplicate the Rute-11 / Rute-34 journeys.
+{
+  const keys = solve(g, data, { wFare: 0 }).paths.map(p => p.key);
+  assert.equal(new Set(keys).size, keys.length, 'no duplicate station+ride sequences');
+}

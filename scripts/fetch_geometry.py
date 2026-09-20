@@ -203,6 +203,24 @@ def main(refresh: bool):
                 if path:
                     out.setdefault(lid, {}).pop(f"{b}|{a}", None)
                     out[lid][f"{a}|{b}"] = path
+    # Buses between Tegal Mampang and Kejaksaan Agung turn at the CSW junction;
+    # the road graph has no link there, so the hop is the two traces joined.
+    def find(a, b):
+        for d in out.values():
+            if f"{a}|{b}" in d:
+                return d[f"{a}|{b}"]
+            if f"{b}|{a}" in d:
+                return list(reversed(d[f"{b}|{a}"]))
+    for lid, stops in lines:
+        if lid in RAIL_TYPE:
+            continue
+        for a, b in zip(stops, stops[1:]):
+            if {a, b} != {"Tegal Mampang", "Kejaksaan Agung"}:
+                continue
+            p1, p2 = find(a, "CSW"), find("CSW", b)
+            if p1 and p2:
+                out[lid].pop(f"{b}|{a}", None)
+                out[lid][f"{a}|{b}"] = p1 + p2[1:]
     OUT.write_text(json.dumps(out, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     print("wrote", OUT.relative_to(ROOT), f"{OUT.stat().st_size // 1024} KB")
 
