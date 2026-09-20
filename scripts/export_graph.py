@@ -40,7 +40,7 @@ TIME_TAB, FARE_TAB, FIELD_TAB = "Sheet13", "Sheet12", "Rute Tabel"
 CLEAN_TAB = "Copy of Rute Mentah"   # the 64 vetted routes; other tabs carry drafts
 TJ_TAP_IN = 3500                    # flat TransJakarta fare
 NON_BRT = {"4B", "D11", "D21"}       # separate fare systems: boarding after them always pays
-EXCLUDED = {"AC52A"}                # services the team decided not to use: any route riding them is dropped
+EXCLUDED = {"AC52A", "Bogor - Blok M"}   # services the team decided not to use: any route riding them is dropped
 # Blank cells in Rute Tabel filled here, since the sheet itself is read-only for
 # this script: {route: {(origin, destination, service): fare}}. A route with a
 # fix gets its total recomputed from its legs instead of column AJ.
