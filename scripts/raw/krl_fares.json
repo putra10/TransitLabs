@@ -1,0 +1,18 @@
+{
+ "source": "api.commute.shiorilabs.id/fares (KCI), fetched 2026-09-20, display-station names",
+ "fares": {
+  "Stasiun UI|Manggarai": 3000,
+  "Stasiun UI|Sudirman": 3000,
+  "Manggarai|Sudirman": 3000,
+  "Stasiun UI|Cawang": 3000,
+  "Cawang|Manggarai": 3000,
+  "Cawang|Sudirman": 3000,
+  "Stasiun UI|Tebet": 3000,
+  "Stasiun UI|Cikini": 3000,
+  "Stasiun UI|Pasar Minggu": 3000,
+  "Stasiun UI|Duren Kalibata": 3000,
+  "Stasiun UI|Tanjung Barat": 3000,
+  "Stasiun UI|Depok Baru": 3000,
+  "Manggarai|Cikini": 3000
+ }
+}

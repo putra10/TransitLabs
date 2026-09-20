@@ -10,7 +10,9 @@ snapshot; bus, MRT and LRT hops take Sheet13, except a value wildly off the
 snapshot for the same hop (under half or over double). Distance comes from Sheet12,
 and the fare from Rute Tabel first, because that is what the team paid; the
 Sheet12 fare is only the fallback when Rute Tabel has no value for the hop.
-Only routes listed in the clean tab are used. TransJakarta edges are marked
+Only routes listed in the clean tab are used. KRL legs are re-priced from the
+official KCI fare matrix (scripts/raw/krl_fares.json): one tap from first
+boarding to last alighting, so a Bogor -> Cikarang continuation costs nothing extra. TransJakarta edges are marked
 BRT or not; the engine charges the flat tap-in except when a BRT corridor
 follows another BRT corridor, which is the pattern in the field fares. Walking hops have no
 minutes in the sheet and get WALK_MIN.
@@ -51,6 +53,7 @@ FIELD_FIXES = {
 TRANSFER_PENALTY = 5   # minutes per change of mode, as in the notebook
 WALK_MIN = 3           # the sheet leaves walking hops blank; notebook default
 SNAPSHOT = RAW / "maps_times_cache.json"   # the notebook's Google Maps minutes per hop
+KRL_FARES = RAW / "krl_fares.json"         # official KCI fares per station pair (commute.shiorilabs.id)
 ODD_RATIO = 2          # a sheet value under half or over double the snapshot is replaced by it
 
 
@@ -200,6 +203,9 @@ def main(refetch: bool = False) -> None:
         print("fetched", xlsx.name)
     wb = openpyxl.load_workbook(xlsx, read_only=True, data_only=True)  # cached values, AJ is a formula
     snapshot = json.loads(SNAPSHOT.read_text(encoding="utf-8")) if SNAPSHOT.exists() else {}
+    krl = json.loads(KRL_FARES.read_text(encoding="utf-8"))["fares"] if KRL_FARES.exists() else {}
+    def krl_fare(a, b):
+        return krl.get(f"{canon(a)}|{canon(b)}") or krl.get(f"{canon(b)}|{canon(a)}")
     listed = {str(r[0]).strip() for r in rows(wb[CLEAN_TAB]) if r[0]}
     field = load_field_fares(wb[FIELD_TAB])
     totals = field_total(wb[FIELD_TAB])
@@ -269,6 +275,26 @@ def main(refetch: bool = False) -> None:
                           "fare": fare, "time": round(minutes, 2), "dist": dist}
             if ttype == "transjakarta":
                 edges[key]["brt"] = mode not in NON_BRT
+        # KRL: one tap from first boarding to last alighting, priced by the official
+        # matrix; continuation legs on the same tap are 0. Overrides the field row.
+        hops, lf = route["hops"], route["legFares"]
+        i = 0
+        while i < len(hops):
+            if edges[tuple(hops[i])]["mode"] != "krl":
+                i += 1; continue
+            j = i
+            while j + 1 < len(hops) and edges[tuple(hops[j + 1])]["mode"] == "krl":
+                j += 1
+            official = krl_fare(hops[i][0], hops[j][1])
+            if official is not None:
+                block = [lf[k] for k in range(i, j + 1)]
+                if sum(block) != official:
+                    print(f"  KRL {rid}: {hops[i][0]} -> {hops[j][1]} field {block} -> official {official}")
+                    route["fare"] = (route["fare"] or 0) - sum(block) + official
+                lf[i] = official
+                for k in range(i + 1, j + 1):
+                    lf[k] = 0
+            i = j + 1
         if rid in FIELD_FIXES:
             route["fare"] = sum(route["legFares"])
             print(f"  fixed {rid}: filled {len(FIELD_FIXES[rid])} blank fare(s), total now {route['fare']}")
