@@ -79,7 +79,10 @@ function offset(pts, d) {
 }
 const toD = pts => pts.map((p, i) => `${i ? 'L' : 'M'}${p[0].toFixed(1)} ${p[1].toFixed(1)}`).join(' ');
 
-// Which lines share each consecutive pair → their slot for the parallel offset.
+// Which lines share each consecutive pair → their lane for the parallel offset.
+// Lanes are anchored, not centred: rail first, then LINES order, so a line keeps
+// its lane along a corridor instead of jogging every time another line joins.
+const rank = new Map(LINES.map((l, i) => [l.id, i - (l.rail ? LINES.length : 0)]));
 const shared = new Map();
 for (const line of LINES) {
   for (let i = 1; i < line.stops.length; i++) {
@@ -88,7 +91,8 @@ for (const line of LINES) {
     shared.get(k).push(line.id);
   }
 }
-const slot = (k, id) => { const ids = shared.get(k); return (ids.indexOf(id) - (ids.length - 1) / 2) * GAP; };
+for (const ids of shared.values()) ids.sort((a, b) => rank.get(a) - rank.get(b));
+const slot = (k, id) => shared.get(k).indexOf(id) * GAP;
 
 // Polyline of `line` between two of its stations (either direction), no offset.
 function slice(line, a, b) {
@@ -146,8 +150,9 @@ for (const line of LINES) {
   for (let i = 1; i < line.stops.length; i++) {
     const p = ptOf(line.stops[i - 1]), q = ptOf(line.stops[i]);
     const pts = elbow(p, q), k = key(p, q);
-    // Offset sign follows the canonical direction so shared pairs stack consistently.
-    const d = slot(k, line.id) * (pts[0] === p ? 1 : -1);
+    // Offset side follows the canonical direction so shared pairs stack on one side.
+    const canon = q[0] > p[0] || (q[0] === p[0] && q[1] > p[1]);
+    const d = slot(k, line.id) * (canon ? 1 : -1);
     const el = svgEl('path', { d: toD(offset(pts, d)), class: 'line' + (line.rail ? ' rail' : ''), stroke: line.color });
     el.dataset.a = nameOf(line.stops[i - 1]) || ''; el.dataset.b = nameOf(line.stops[i]) || '';
     gLines.append(el); els.push(el);

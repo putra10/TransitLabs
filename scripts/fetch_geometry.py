@@ -41,7 +41,7 @@ RAIL_TYPE = {"Bogor": "rail", "Cikarang": "rail", "MRT": "subway", "LRT": "light
 # Buses on Sudirman run straight through the Semanggi interchange under the MRT
 # viaduct; the road graph would send them round the cloverleaf ramps. Any bus
 # hop between two of these stops is drawn along the MRT alignment instead.
-SUDIRMAN = ["Blok M", "Kejaksaan Agung", "Bundaran Senayan", "Senayan", "Bendungan Hilir", "Dukuh Atas"]
+SUDIRMAN = ["Bundaran Senayan", "Senayan", "Bendungan Hilir", "Dukuh Atas"]
 ROADS = "motorway|trunk|primary|secondary|tertiary|busway|motorway_link|trunk_link|primary_link|secondary_link|tertiary_link"
 
 
@@ -82,9 +82,11 @@ def haversine(a, b):
     return 2 * 6371000 * math.asin(math.sqrt(h))
 
 
-def network(label: str, selector: str, stitch_m: float):
+def network(label: str, selector: str, stitch_m: float, directed: bool = False):
     """Graph over OSM ways. Nodes closer than stitch_m are joined so parallel
-    tracks / carriageways are traversable without hunting for a crossover."""
+    tracks / carriageways are traversable without hunting for a crossover.
+    With `directed`, one-way ways (dual carriageways) are followed in their
+    direction only, so a hop is drawn on the carriageway the bus actually uses."""
     print(f"fetching {label} ways…")
     data = overpass(f'[out:json][timeout:180];way[{selector}]({BBOX});out geom;')
     coords, adj = {}, {}
@@ -92,10 +94,15 @@ def network(label: str, selector: str, stitch_m: float):
         ids, pts = w["nodes"], [(p["lat"], p["lon"]) for p in w["geometry"]]
         for i, nid in enumerate(ids):
             coords[nid] = pts[i]
+        tags = w.get("tags", {})
+        oneway = tags.get("oneway", "yes" if tags.get("junction") == "roundabout" else "no") if directed else "no"
+        if oneway == "-1":
+            ids = ids[::-1]
         for x, y in zip(ids, ids[1:]):
             d = haversine(coords[x], coords[y])
             adj.setdefault(x, []).append((y, d))
-            adj.setdefault(y, []).append((x, d))
+            if oneway not in ("yes", "true", "1", "-1"):
+                adj.setdefault(y, []).append((x, d))
     cell = stitch_m / 111000
     grid = {}
     for nid, (la, lo) in coords.items():
@@ -106,18 +113,29 @@ def network(label: str, selector: str, stitch_m: float):
         for x in ids:
             for y in near:
                 if x < y and haversine(coords[x], coords[y]) <= stitch_m:
-                    d = haversine(coords[x], coords[y]) + 1.0
+                    # Stitches bridge gaps only: priced so a path never uses one
+                    # to hop across to the other carriageway for a shortcut.
+                    d = haversine(coords[x], coords[y]) + 100.0
                     adj.setdefault(x, []).append((y, d)); adj.setdefault(y, []).append((x, d)); joined += 1
     print(f"  {len(data['elements'])} ways, {len(coords)} nodes, {joined} stitches")
     return coords, adj
 
 
-def nearest(coords, pt, limit=400):
-    nid = min(coords, key=lambda n: haversine(coords[n], pt))
-    return nid if haversine(coords[nid], pt) <= limit else None
+def nearest(coords, pt, limit=400, k=4):
+    """The k closest nodes within `limit` m, with their distance."""
+    near = sorted(((haversine(coords[n], pt), n) for n in coords), key=lambda t: t[0])[:k]
+    return [(d, n) for d, n in near if d <= limit]
 
 
-def dijkstra(adj, coords, s, t):
+def dijkstra(adj, coords, pa, pb, starts, ends):
+    """Shortest path from stop pa to stop pb, entering the network at any of
+    `starts` and leaving at any of `ends` (a halte in a median can snap to either
+    carriageway; the one the direction allows wins)."""
+    s, t = "S", "T"
+    coords = {**coords, s: tuple(pa), t: tuple(pb)}
+    adj = {**adj, s: [(n, d) for d, n in starts]}
+    for d, n in ends:
+        adj[n] = adj.get(n, []) + [(t, d)]
     best, prev, pq = {s: 0.0}, {}, [(0.0, s)]
     while pq:
         d, n = heapq.heappop(pq)
@@ -179,7 +197,9 @@ def along_mrt(out, geo, a, b):
 
 def main(refresh: bool):
     geo, lines = load_lines()
-    out = {} if refresh or not OUT.exists() else json.loads(OUT.read_text(encoding="utf-8"))
+    out = {} if not OUT.exists() else json.loads(OUT.read_text(encoding="utf-8"))
+    if refresh:   # re-trace the bus lines; rail alignments do not change
+        out = {lid: hops for lid, hops in out.items() if lid in RAIL_TYPE}
     nets = {}
     down = False
     for lid, stops in lines:
@@ -194,7 +214,7 @@ def main(refresh: bool):
                 continue
             if kind not in nets:
                 try:
-                    nets[kind] = (network(f"highway~{ROADS}", f'"highway"~"^({ROADS})$"', 30) if kind == "road"
+                    nets[kind] = (network(f"highway~{ROADS}", f'"highway"~"^({ROADS})$"', 30, directed=True) if kind == "road"
                                   else network(f"railway={kind}", f'"railway"="{kind}"', 15))
                 except OverpassDown as e:
                     print(f"  {e}; leaving the remaining pairs untraced for now")
@@ -202,9 +222,7 @@ def main(refresh: bool):
                     continue
             coords, adj = nets[kind]
             s, t = nearest(coords, pa), nearest(coords, pb)
-            path = dijkstra(adj, coords, s, t) if s and t else None
-            if path:
-                path = [[*pa]] + path + [[*pb]]   # snap the ends onto the stops themselves
+            path = dijkstra(adj, coords, pa, pb, s, t) if s and t else None
             if path:
                 cache[key] = path
                 straight, along = haversine(pa, pb), sum(haversine(p, q) for p, q in zip(path, path[1:]))

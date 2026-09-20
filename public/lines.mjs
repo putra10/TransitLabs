@@ -74,8 +74,8 @@ export const COLORS = {
 export const LINES = [
   // Corridor 1 serves Bendungan Hilir. Semanggi is a separate stop reached
   // from Bendungan Hilir by the walking transfer encoded in optg.json.
-  { id: '1', color: COLORS.tj1, routes: ['1'], stops: ['Blok M', 'Kejaksaan Agung', 'Bundaran Senayan', 'Senayan', 'Bendungan Hilir', 'Dukuh Atas'] },
-  { id: '1P', color: COLORS.tj1, routes: ['1P'], stops: ['Blok M', '~Kejaksaan Agung', 'Bundaran Senayan'] },
+  { id: '1', color: COLORS.tj1, routes: ['1'], stops: ['Dukuh Atas', 'Bendungan Hilir', 'Senayan', 'Bundaran Senayan', 'Kejaksaan Agung', 'Blok M'] },
+  { id: '1P', color: COLORS.tj1, routes: ['1P'], stops: ['Bundaran Senayan', '~Kejaksaan Agung', 'Blok M'] },
   { id: '1E', color: COLORS.tj1, routes: ['1E'], stops: ['Kantor Pos Fatmawati', 'Blok A', 'Blok M'] },   // stops at St. Blok A Petogogan
   { id: '4', color: COLORS.tj4, routes: ['4'], stops: ['Manggarai', [600, 140], [410, 140], 'Galunggung'] },
   { id: '4B', color: COLORS.tj4, routes: ['TJ 4B', '4B'], stops: ['UI', 'Tanjung Barat', 'Pasar Minggu', [700, 380], [700, 200], [640, 140], 'Manggarai'] },
@@ -85,7 +85,7 @@ export const LINES = [
   { id: '6', color: COLORS.tj6, routes: ['6'], stops: ['~Hotel Maharadja', 'Kuningan', [410, 140], 'Galunggung'] },   // Mampang Prapatan, Rasuna Said; not Tegal Mampang
   { id: '6C', color: COLORS.tj6, routes: ['6C'], stops: ['Tebet', 'Kuningan'] },
   { id: '6D', color: COLORS.tj6, routes: ['6D'], stops: ['Tebet', [640, 210], 'Bendungan Hilir', '~Senayan', 'Bundaran Senayan'] },   // Casablanca, Satrio, Karet, then Sudirman
-  { id: '6M', color: COLORS.tj6, routes: ['6M'], stops: ['Blok M', 'Kejaksaan Agung', 'Bundaran Senayan', 'Senayan', 'Semanggi', '~Simpang Kuningan', 'Kuningan', [410, 140], [600, 140], 'Manggarai'] },   // Sudirman, Gatot Subroto, Rasuna Said
+  { id: '6M', color: COLORS.tj6, routes: ['6M'], stops: ['Manggarai', [600, 140], [410, 140], 'Kuningan', '~Simpang Kuningan', 'Semanggi', 'Senayan', 'Bundaran Senayan', 'Kejaksaan Agung', 'Blok M'] },   // Sudirman, Gatot Subroto, Rasuna Said
   { id: '6T', color: COLORS.tj6, routes: ['6T'], stops: ['Pasar Minggu', [640, 500], 'Blok A'] },
   { id: '6U', color: COLORS.tj6, routes: ['6U'], stops: ['Pasar Minggu', [640, 470], 'Hotel Maharadja', 'Blok M'] },
   { id: '6V', color: COLORS.tj6, routes: ['6V'], stops: ['Tegal Mampang', [240, 360], 'Kejaksaan Agung'] },
@@ -94,9 +94,9 @@ export const LINES = [
   { id: '9', color: COLORS.tj9, routes: ['9'], stops: ['Cawang-Sentral', 'Cikoko', 'Pancoran', 'Tegal Parang', 'Simpang Kuningan', 'Semanggi'] },
   { id: '9C', color: COLORS.tj9, routes: ['9C'], stops: ['Cawang-Sentral', 'Cikoko', 'Pancoran', 'Tegal Parang', 'Simpang Kuningan', 'Semanggi', 'Senayan', 'Bundaran Senayan'] },
   { id: '9D', color: COLORS.tj9, routes: ['9D'], stops: ['Pasar Minggu', [640, 360], 'Pancoran', 'Tegal Parang', 'Simpang Kuningan', 'Semanggi'] },
-  { id: '13', color: COLORS.tj13, routes: ['13'], stops: ['CSW', 'Tegal Mampang'] },
-  { id: '13B', color: COLORS.tj13, routes: ['13B'], stops: ['CSW', 'Tegal Mampang', 'Pancoran'] },
-  { id: '13E', color: COLORS.tj13, routes: ['13E'], stops: ['CSW', 'Tegal Mampang', 'Simpang Kuningan', 'Kuningan'] },
+  { id: '13', color: COLORS.tj13, routes: ['13'], stops: ['Tegal Mampang', 'CSW'] },
+  { id: '13B', color: COLORS.tj13, routes: ['13B'], stops: ['Pancoran', 'Tegal Mampang', 'CSW'] },
+  { id: '13E', color: COLORS.tj13, routes: ['13E'], stops: ['Kuningan', 'Simpang Kuningan', 'Tegal Mampang', 'CSW'] },
   { id: 'D21', color: COLORS.tjD, routes: ['D21', 'TJ D21'], stops: ['UI', 'Tanjung Barat', [720, 520], [640, 600], [230, 600], 'Fatmawati'] },
   { id: 'D11', color: COLORS.tjD, routes: ['D11', 'TJ D11'], stops: ['Depok Baru', [820, 560], [820, 290], 'Cawang-Sentral'] },
   { id: 'LRT', color: COLORS.lrt, rail: true, routes: ['Cibubur Line'], stops: ['Cikoko', 'Pancoran', '~Tegal Parang', 'Kuningan', 'Dukuh Atas'] },
