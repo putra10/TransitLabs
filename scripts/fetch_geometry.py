@@ -38,6 +38,10 @@ UA = {"User-Agent": "transitlab-portfolio/1.0 (github.com/putra10)"}
 BBOX = "-6.42,106.75,-6.15,106.93"
 OVERPASS = ["https://overpass-api.de/api/interpreter", "https://overpass.kumi.systems/api/interpreter", "https://overpass.private.coffee/api/interpreter"]
 RAIL_TYPE = {"Bogor": "rail", "Cikarang": "rail", "MRT": "subway", "LRT": "light_rail"}
+# Buses on Sudirman run straight through the Semanggi interchange under the MRT
+# viaduct; the road graph would send them round the cloverleaf ramps. Any bus
+# hop between two of these stops is drawn along the MRT alignment instead.
+SUDIRMAN = ["Blok M", "Kejaksaan Agung", "Bundaran Senayan", "Senayan", "Bendungan Hilir", "Dukuh Atas"]
 ROADS = "motorway|trunk|primary|secondary|tertiary|busway|motorway_link|trunk_link|primary_link|secondary_link|tertiary_link"
 
 
@@ -56,6 +60,10 @@ def load_lines():
 
 
 # ── Rail: Overpass network + Dijkstra ─────────────────────────────────────────
+class OverpassDown(Exception):
+    pass
+
+
 def overpass(query: str):
     for host in OVERPASS:
         for attempt in range(2):
@@ -65,7 +73,7 @@ def overpass(query: str):
             except Exception as e:  # noqa: BLE001
                 print(f"  overpass {host.split('/')[2]} attempt {attempt + 1}: {e}")
                 time.sleep(5)
-    sys.exit("Overpass unreachable; try again later")
+    raise OverpassDown("Overpass unreachable; try again later")
 
 
 def haversine(a, b):
@@ -131,10 +139,29 @@ def dijkstra(adj, coords, s, t):
     return [[round(la, 6), round(lo, 6)] for la, lo in reversed(path)]
 
 
+def along_mrt(out, geo, a, b):
+    """Slice of the MRT trace between the points nearest to stops a and b."""
+    mrt = out.get("MRT", {})
+    path = None
+    for key in ("Blok M|Bendungan Hilir", "Bendungan Hilir|Dukuh Atas"):
+        seg = mrt.get(key)
+        if seg:
+            path = seg if path is None else path + seg[1:]
+    if not path:
+        return None
+    i = min(range(len(path)), key=lambda k: haversine(path[k], geo[a]))
+    j = min(range(len(path)), key=lambda k: haversine(path[k], geo[b]))
+    if i == j:
+        return None
+    core = path[i:j + 1] if i < j else list(reversed(path[j:i + 1]))
+    return [[*geo[a]]] + core + [[*geo[b]]]
+
+
 def main(refresh: bool):
     geo, lines = load_lines()
     out = {} if refresh or not OUT.exists() else json.loads(OUT.read_text(encoding="utf-8"))
     nets = {}
+    down = False
     for lid, stops in lines:
         cache = out.setdefault(lid, {})
         kind = RAIL_TYPE.get(lid, "road")
@@ -143,9 +170,16 @@ def main(refresh: bool):
             if key in cache or f"{b}|{a}" in cache:
                 continue
             pa, pb = geo[a], geo[b]
+            if down:
+                continue
             if kind not in nets:
-                nets[kind] = (network(f"highway~{ROADS}", f'"highway"~"^({ROADS})$"', 30) if kind == "road"
-                              else network(f"railway={kind}", f'"railway"="{kind}"', 15))
+                try:
+                    nets[kind] = (network(f"highway~{ROADS}", f'"highway"~"^({ROADS})$"', 30) if kind == "road"
+                                  else network(f"railway={kind}", f'"railway"="{kind}"', 15))
+                except OverpassDown as e:
+                    print(f"  {e}; leaving the remaining pairs untraced for now")
+                    down = True
+                    continue
             coords, adj = nets[kind]
             s, t = nearest(coords, pa), nearest(coords, pb)
             path = dijkstra(adj, coords, s, t) if s and t else None
@@ -159,6 +193,17 @@ def main(refresh: bool):
             else:
                 print(f"{lid:9} {a} → {b}: NO PATH (falls back to straight)")
             OUT.write_text(json.dumps(out, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+    # Sudirman bus hops follow the MRT alignment through Semanggi.
+    for lid, stops in lines:
+        if lid in RAIL_TYPE:
+            continue
+        for a, b in zip(stops, stops[1:]):
+            if a in SUDIRMAN and b in SUDIRMAN:
+                path = along_mrt(out, geo, a, b)
+                if path:
+                    out.setdefault(lid, {}).pop(f"{b}|{a}", None)
+                    out[lid][f"{a}|{b}"] = path
+    OUT.write_text(json.dumps(out, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     print("wrote", OUT.relative_to(ROOT), f"{OUT.stat().st_size // 1024} KB")
 
 
