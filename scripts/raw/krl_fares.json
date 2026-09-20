@@ -1,8 +1,7 @@
 {
- "source": "api.commute.shiorilabs.id/fares (KCI), fetched 2026-09-20, display-station names",
+ "source": "kci.id/perjalanan-krl/info-tarif official fare calculator (api/krl/fare), fetched 2026-09-20; display-station names",
  "fares": {
   "Stasiun UI|Manggarai": 3000,
-  "Stasiun UI|Sudirman": 3000,
   "Manggarai|Sudirman": 3000,
   "Stasiun UI|Cawang": 3000,
   "Cawang|Manggarai": 3000,
@@ -13,6 +12,28 @@
   "Stasiun UI|Duren Kalibata": 3000,
   "Stasiun UI|Tanjung Barat": 3000,
   "Stasiun UI|Depok Baru": 3000,
-  "Manggarai|Cikini": 3000
+  "Manggarai|Cikini": 3000,
+  "Cawang|Cikini": 3000,
+  "Depok Baru|Manggarai": 3000,
+  "Depok Baru|Sudirman": 3000,
+  "Depok Baru|Cawang": 3000
+ },
+ "distance_km": {
+  "Stasiun UI|Manggarai": 17.374,
+  "Manggarai|Sudirman": 3.186,
+  "Stasiun UI|Cawang": 13.463,
+  "Cawang|Manggarai": 3.911,
+  "Cawang|Sudirman": 7.097,
+  "Stasiun UI|Tebet": 14.764,
+  "Stasiun UI|Cikini": 18.98,
+  "Stasiun UI|Pasar Minggu": 8.784,
+  "Stasiun UI|Duren Kalibata": 11.988,
+  "Stasiun UI|Tanjung Barat": 5.753,
+  "Stasiun UI|Depok Baru": 3.679,
+  "Manggarai|Cikini": 1.606,
+  "Cawang|Cikini": 5.517,
+  "Depok Baru|Manggarai": 21.053,
+  "Depok Baru|Sudirman": 24.239,
+  "Depok Baru|Cawang": 17.142
  }
 }
