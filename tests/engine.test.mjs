@@ -38,9 +38,9 @@ const best = paths[0];
 assert.equal(best.fare, 6500);
 assert.equal(best.time, 67);
 // Rute-34 and Rute-11 are the same rides (Bogor, Cikarang, MRT) listed with
-// and without a Cawang stop; both stay in the list, each with its own total.
+// and without a Cawang stop; the list shows that journey once.
 const fastest = paths.filter(p => p.tags.includes('fastest'));
-assert.deepEqual(fastest.map(p => p.surveyed).sort(), ['Rute-11', 'Rute-34']);
+assert.deepEqual(fastest.map(p => p.surveyed), ['Rute-11']);
 assert.ok(fastest.every(p => p.time === 61));
 assert.ok(fastest.every(p => [...new Set(p.path.map(e => e.mode).filter(m => m !== 'walk'))].join() === 'krl,mrt'));
 
@@ -118,9 +118,9 @@ assert.equal(criticality.get('Blok M'), 10);
 
 console.log('ok:', paths.map(p => `${p.fare}/${p.time}`).join(' '));
 
-// One entry per station sequence + rides: the walk Sudirman > Dukuh Atas >
-// Dukuh Atas BNI must not duplicate the Rute-11 / Rute-34 journeys.
+// One entry per journey: Rute-11 / Rute-34 (same rides, Cawang listed or not)
+// and the Sudirman > Dukuh Atas > Dukuh Atas BNI walk variants collapse.
 {
   const keys = solve(g, data, { wFare: 0 }).paths.map(p => p.key);
-  assert.equal(new Set(keys).size, keys.length, 'no duplicate station+ride sequences');
+  assert.equal(new Set(keys).size, keys.length, 'no duplicate journeys');
 }

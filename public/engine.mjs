@@ -112,8 +112,8 @@ function summarize(g, start, edges) {
   const raw = edges.reduce((s, e) => s + e.time, 0);
   const nodes = [start, ...edges.map(e => e.to)];
   const stOf = n => g.station.get(n) ?? n;
-  // Same rides boarded at the same stations = same journey, however the
-  // line's intermediate-stop edges were chained. Used to dedupe Yen output.
+  // Same rides boarded at the same stations = one journey, however the
+  // line's intermediate stops or the transfer walks were chained. Yen keeps one.
   const rides = [];
   for (const e of edges) if (e.mode !== 'walk' && e.route !== rides.at(-1)?.route) rides.push(e);
   const journey = rides.map(e => `${stOf(e.from)}:${e.route}`).join('>');
@@ -121,9 +121,7 @@ function summarize(g, start, edges) {
   return {
     path: edges, nodes, journey,
     stations,
-    // Same stations, same rides = one entry, however the walk between two raw
-    // stops of one station (Dukuh Atas / Dukuh Atas BNI) was chained.
-    key: `${stations.join('>')}#${rides.map(e => e.route).join('>')}`,
+    key: journey,
     legFares: fares, fare: survey ? survey.fare : fares.reduce((s, f) => s + f, 0),
     surveyed: survey?.id ?? null,
     rawTime: raw, time: raw + transfers * g.penalty,

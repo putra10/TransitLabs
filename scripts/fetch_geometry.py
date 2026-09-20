@@ -139,6 +139,26 @@ def dijkstra(adj, coords, s, t):
     return [[round(la, 6), round(lo, 6)] for la, lo in reversed(path)]
 
 
+def trim_overshoot(path):
+    """A stop that sits mid-segment snaps to the segment's far node, so the trace
+    runs past the stop and doubles back. Replace such an end node by the foot of
+    the stop on the last segment, at both ends."""
+    def foot(a, b, p):
+        k = math.cos(math.radians(p[0]))
+        ax, ay, bx, by, px, py = a[1] * k, a[0], b[1] * k, b[0], p[1] * k, p[0]
+        dx, dy = bx - ax, by - ay
+        t = ((px - ax) * dx + (py - ay) * dy) / (dx * dx + dy * dy or 1)
+        return t, [round(ay + t * dy, 6), round((ax + t * dx) / k, 6)]
+    path = list(path)
+    for _ in range(2):
+        if len(path) > 3:
+            t, f = foot(path[-3], path[-2], path[-1])
+            if 0 < t < 1:
+                path[-2:-1] = [] if haversine(f, path[-1]) < 1 else [f]
+        path.reverse()
+    return path
+
+
 def along_mrt(out, geo, a, b):
     """Slice of the MRT trace between the points nearest to stops a and b."""
     mrt = out.get("MRT", {})
@@ -221,6 +241,9 @@ def main(refresh: bool):
             if p1 and p2:
                 out[lid].pop(f"{b}|{a}", None)
                 out[lid][f"{a}|{b}"] = p1 + p2[1:]
+    for cache in out.values():
+        for key, path in cache.items():
+            cache[key] = trim_overshoot(path)
     OUT.write_text(json.dumps(out, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     print("wrote", OUT.relative_to(ROOT), f"{OUT.stat().st_size // 1024} KB")
 
