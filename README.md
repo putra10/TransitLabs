@@ -30,9 +30,9 @@ The choice persists in `localStorage` and defaults to Indonesian on a first visi
 
 - **Dijkstra** on state (station, arriving mode) with a 5-minute penalty per
   mode change. Keying on the arriving mode keeps the penalty exact.
-- **Yen's k-shortest paths** for the 10 best distinct journeys. The line
-  graph reaches the same ride through several intermediate-stop edges, so
-  paths are deduplicated by journey (which line boarded at which station).
+- **Yen's k-shortest paths** for the 10 best routes. Two surveyed routes that
+  share every ride but list different intermediate stops stay separate; the
+  team treats them as different trips.
 - **Pareto front** on (fare, time), and a score `w·fare + (1−w)·time` on
   min-max normalised values that the slider controls.
 - **Criticality** on hover: how many of the 10 routes pass through a station.

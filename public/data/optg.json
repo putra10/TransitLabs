@@ -306,7 +306,7 @@
    "to": "Blok M",
    "route": "1",
    "mode": "transjakarta",
-   "fare": 0,
+   "fare": 3500,
    "time": 3.0,
    "dist": 0,
    "brt": true
@@ -866,7 +866,7 @@
    "route": "D11",
    "mode": "transjakarta",
    "fare": 3500,
-   "time": 45.0,
+   "time": 119.0,
    "dist": 0,
    "brt": false
   },
@@ -2875,7 +2875,7 @@
     3500,
     0,
     0,
-    0
+    3500
    ],
    "fare": 13500
   },

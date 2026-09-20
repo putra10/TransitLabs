@@ -33,15 +33,16 @@ assert.ok(!LINES.some(line => line.stops.includes('CSW') && line.stops.includes(
 // longer value kept when a hop was surveyed twice.
 const { paths, criticality } = solve(g, data);
 assert.equal(paths.length, 10, 'ten paths');
-assert.equal(new Set(paths.map(p => p.journey)).size, 10, 'distinct journeys');
+assert.equal(new Set(paths.map(p => p.nodes.join('>'))).size, 10, 'distinct paths');
 const best = paths[0];
 assert.equal(best.fare, 6500);
 assert.equal(best.time, 67);
-const fastest = paths.find(p => p.tags.includes('fastest'));
-assert.equal(fastest.surveyed, 'Rute-11');
-assert.equal(fastest.fare, 11000);
-assert.equal(fastest.time, 61);
-assert.deepEqual(fastest.path.map(e => e.mode).filter(m => m !== 'walk'), ['krl', 'krl', 'mrt']);
+// Rute-34 and Rute-11 are the same rides (Bogor, Cikarang, MRT) listed with
+// and without a Cawang stop; both stay in the list, each with its own total.
+const fastest = paths.filter(p => p.tags.includes('fastest'));
+assert.deepEqual(fastest.map(p => p.surveyed).sort(), ['Rute-11', 'Rute-34']);
+assert.ok(fastest.every(p => p.time === 61));
+assert.ok(fastest.every(p => p.path.map(e => e.mode).filter(m => m !== 'walk').join() === 'krl,krl,mrt'));
 
 // The same hop spelt two ways is one edge, and the slower survey wins: D21 UI -> Fatmawati is 54 min.
 assert.equal(data.edges.filter(e => e.from === 'UI' && e.to === 'St. MRT Fatmawati').length, 1);
@@ -74,7 +75,7 @@ const closed = new Set(['Manggarai']);
 const rerouted = solve(g, data, { closed }).paths;
 assert.ok(rerouted.length > 0, 'still reachable');
 assert.ok(rerouted.every(p => !p.stations.includes('Manggarai')));
-assert.ok(Math.min(...rerouted.map(p => p.time)) >= fastest.time, 'closure never speeds things up');
+assert.ok(Math.min(...rerouted.map(p => p.time)) >= fastest[0].time, 'closure never speeds things up');
 
 // A closed station cuts the line through it: with Duren Kalibata closed, no KRL
 // ride from Stasiun UI can reach Cawang or anything beyond, even though the

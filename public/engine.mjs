@@ -133,9 +133,8 @@ export const passes = (p, station) => p.stations.includes(station) || p.path.som
 
 /**
  * Yen's k-shortest simple paths by time (transfer penalty included).
- * Enumerates in the usual order but returns K *distinct journeys*: the line
- * graph reaches the same ride through several intermediate-stop edges, and
- * those would otherwise fill the list with copies.
+ * Returns K distinct paths. Two surveyed routes that share every ride but list
+ * different intermediate stops stay separate: they are different trips.
  *   closed  stations that cut the line (Set)
  *   modes   allowed ride modes (Set), walk always allowed; null = all
  *   must    stations every returned journey has to pass (array)
@@ -151,7 +150,7 @@ export function yen(g, start, end, K, { closed = new Set(), modes = null, must =
   const A = [summarize(g, start, first)];
   const B = new Heap();
   const seen = new Set([A[0].nodes.join('>')]);
-  const journeys = new Set(ok(A[0]) ? [A[0].journey] : []);
+  const journeys = new Set(ok(A[0]) ? [A[0].nodes.join('>')] : []);
   const cap = (must.length ? 60 : 10) * K;
   for (let k = 1; journeys.size < K && k < cap; k++) {
     const prevPath = A[k - 1].path, prevNodes = A[k - 1].nodes;
@@ -175,18 +174,9 @@ export function yen(g, start, end, K, { closed = new Set(), modes = null, must =
     }
     if (!B.size) break;
     const next = B.pop()[1];
-    A.push(next); if (ok(next)) journeys.add(next.journey);
+    A.push(next); if (ok(next)) journeys.add(next.nodes.join('>'));
   }
-  // One entry per journey. When two node sequences are the same journey (the
-  // same train reached through different intermediate-stop edges), keep the
-  // one with fewer edges, which is the directly surveyed route.
-  const byJourney = new Map();
-  for (const p of A) {
-    if (!ok(p)) continue;
-    const cur = byJourney.get(p.journey);
-    if (!cur || p.path.length < cur.path.length) byJourney.set(p.journey, p);
-  }
-  return [...byJourney.values()].slice(0, K);
+  return A.filter(ok).slice(0, K);
 }
 
 /** Indices of paths not dominated on (fare, time). */

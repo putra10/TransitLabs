@@ -168,7 +168,10 @@ def field_fare(prices, rid, o, d, mode):
     best = (0, None)
     for i in range(len(hops) - 1):
         titik, moda, harga = hops[i]
-        if harga is None or classify_mode(moda or "") != cls:
+        if harga is None:
+            continue
+        # A fare with the service cell left blank is a bus leg in this table.
+        if (classify_mode(moda) if moda else "TJ") != cls:
             continue
         so, sd = normalize(apply_alias(titik)), normalize(apply_alias(hops[i + 1][0]))
         best = max(best, ((so == o) + (sd == d), harga), key=lambda t: t[0])
@@ -237,7 +240,7 @@ def main(refetch: bool = False) -> None:
                 continue  # "Blok M -> Blok M (Selesai)" end marker
             route["hops"].append([o, d, mode])
             minutes = num(t[7]) if ttype != "walk" else None
-            snap = snapshot.get(f"{o}||{d}||{mode}")
+            snap = snapshot.get(f"{o}||{d}||{mode}") or snapshot.get(f"{o}||{d}||TJ {mode}")
             if ttype == "krl" and snap:
                 minutes = float(snap)          # KRL: the Maps snapshot
             elif minutes and snap and (minutes < snap / ODD_RATIO or minutes > snap * ODD_RATIO):
