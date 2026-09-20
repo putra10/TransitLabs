@@ -39,6 +39,14 @@ CLEAN_TAB = "Copy of Rute Mentah"   # the 64 vetted routes; other tabs carry dra
 TJ_TAP_IN = 3500                    # flat TransJakarta fare
 NON_BRT = {"4B", "D11", "D21"}       # separate fare systems: boarding after them always pays
 EXCLUDED = {"AC52A"}                # services the team decided not to use: any route riding them is dropped
+# Blank cells in Rute Tabel filled here, since the sheet itself is read-only for
+# this script: {route: {(origin, destination, service): fare}}. A route with a
+# fix gets its total recomputed from its legs instead of column AJ.
+FIELD_FIXES = {
+    "Rute-13": {("Dukuh Atas", "Blok M", "1"): TJ_TAP_IN},                              # TJ 1 leg left blank
+    "Rute-36": {("Dukuh Atas", "Blok M", "1"): TJ_TAP_IN},                              # same
+    "Rute-34": {("Dukuh Atas BNI", "Blok M BCA", "Bundaran HI - Lebak Bulus"): 7000},  # MRT leg left blank (Rute-11 records 7,000)
+}
 
 TRANSFER_PENALTY = 5   # minutes per change of mode, as in the notebook
 WALK_MIN = 3           # the sheet leaves walking hops blank; notebook default
@@ -241,7 +249,7 @@ def main(refetch: bool = False) -> None:
                     continue
                 minutes = WALK_MIN
             dist = int(num(f[6]) or 0)
-            recorded = None if ttype == "walk" else field_fare(field, rid, o, d, mode)
+            recorded = None if ttype == "walk" else FIELD_FIXES.get(rid, {}).get((o, d, mode), field_fare(field, rid, o, d, mode))
             fare = recorded if recorded is not None else int(num(f[7]) or 0)
             route["legFares"].append(0 if ttype == "walk" else fare)
             key = (o, d, mode)
@@ -258,6 +266,9 @@ def main(refetch: bool = False) -> None:
                           "fare": fare, "time": round(minutes, 2), "dist": dist}
             if ttype == "transjakarta":
                 edges[key]["brt"] = mode not in NON_BRT
+        if rid in FIELD_FIXES:
+            route["fare"] = sum(route["legFares"])
+            print(f"  fixed {rid}: filled {len(FIELD_FIXES[rid])} blank fare(s), total now {route['fare']}")
         if route["fare"] is not None:
             if sum(route["legFares"]) != route["fare"]:
                 print(f"  note {rid}: hop fares sum to {sum(route['legFares'])} but AJ says {route['fare']}; AJ wins")

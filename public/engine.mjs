@@ -177,9 +177,16 @@ export function yen(g, start, end, K, { closed = new Set(), modes = null, must =
     const next = B.pop()[1];
     A.push(next); if (ok(next)) journeys.add(next.journey);
   }
-  const out = [], done = new Set();
-  for (const p of A) if (ok(p) && !done.has(p.journey)) { done.add(p.journey); out.push(p); }
-  return out.slice(0, K);
+  // One entry per journey. When two node sequences are the same journey (the
+  // same train reached through different intermediate-stop edges), keep the
+  // one with fewer edges, which is the directly surveyed route.
+  const byJourney = new Map();
+  for (const p of A) {
+    if (!ok(p)) continue;
+    const cur = byJourney.get(p.journey);
+    if (!cur || p.path.length < cur.path.length) byJourney.set(p.journey, p);
+  }
+  return [...byJourney.values()].slice(0, K);
 }
 
 /** Indices of paths not dominated on (fare, time). */
