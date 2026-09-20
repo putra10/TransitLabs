@@ -77,9 +77,18 @@ road, and marked as such in that file.
 
 The **Map** toggle shows the same network, closures and route playback on
 OpenStreetMap tiles. Station positions in `GEO` were geocoded from OSM via
-Nominatim and Overpass. Lines run straight between consecutive stops rather than tracing the
-road, which is honest about what the data holds. OSM's tile usage policy
-allows light use like this; swap the tile URL if traffic ever grows.
+Nominatim and Overpass. Lines follow the real track and road:
+`scripts/fetch_geometry.py` pulls OSM railway ways and the busway plus
+major-road network from Overpass and takes the shortest path between each
+pair of consecutive stops, ignoring one-way rules so a hop never snaps to
+the wrong carriageway. Bus hops between the Sudirman stops (Blok M to Dukuh
+Atas) are drawn along the MRT alignment instead, so they run straight
+through the Semanggi interchange rather than round its ramps. The result is
+cached in `public/data/geometry.json`; rerun the script when a stop list
+changes. Stop lists in `lines.mjs` were checked against Transjakarta's
+official route diagrams (transjakarta.co.id/rute) and the halte data used
+by commute.shiorilabs.id. OSM's tile usage policy allows light use like
+this; swap the tile URL if traffic ever grows.
 
 ## Data
 
