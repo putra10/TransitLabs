@@ -96,7 +96,9 @@ kept as `scripts/raw/sheet.xlsx`:
   same halte is free, boarding after rail, after a street walk (over 300 m,
   or one the field rows show being paid) or after a non-BRT service (4B,
   D11, D21) pays the flat Rp 3,500, and consecutive KRL lines are one tap
-  on the official tariff. `Sheet12` fills a hop the field row leaves blank
+  priced by the official KCI fare matrix in `scripts/raw/krl_fares.json`
+  (from commute.shiorilabs.id), which also re-prices KRL legs of surveyed
+  routes `Sheet12` fills a hop the field row leaves blank
   and supplies distances.
 - `Sheet13`: minutes per hop for bus, MRT and LRT. A service spelt two ways
   (`TJ D21` / `D21`) is one service; when the same hop was surveyed on several

@@ -44,6 +44,11 @@ assert.deepEqual(fastest.map(p => p.surveyed).sort(), ['Rute-11', 'Rute-34']);
 assert.ok(fastest.every(p => p.time === 61));
 assert.ok(fastest.every(p => [...new Set(p.path.map(e => e.mode).filter(m => m !== 'walk'))].join() === 'krl,mrt'));
 
+// KRL is one tap priced by the official matrix: Bogor then Cikarang to Sudirman is Rp 3,000, not 4,000.
+const viaMgr = paths.find(p => p.surveyed === 'Rute-11');
+assert.equal(viaMgr.fare, 10000);
+assert.deepEqual(viaMgr.legFares.filter((f, i) => viaMgr.path[i].mode === 'krl'), [3000, 0]);
+
 // The same hop spelt two ways is one edge, and the slower survey wins: D21 UI -> Fatmawati is 54 min.
 assert.equal(data.edges.filter(e => e.from === 'UI' && e.to === 'St. MRT Fatmawati').length, 1);
 assert.equal(data.edges.find(e => e.from === 'UI' && e.to === 'St. MRT Fatmawati').time, 54);
