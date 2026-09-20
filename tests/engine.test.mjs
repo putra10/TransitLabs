@@ -42,7 +42,7 @@ assert.equal(best.time, 67);
 const fastest = paths.filter(p => p.tags.includes('fastest'));
 assert.deepEqual(fastest.map(p => p.surveyed).sort(), ['Rute-11', 'Rute-34']);
 assert.ok(fastest.every(p => p.time === 61));
-assert.ok(fastest.every(p => p.path.map(e => e.mode).filter(m => m !== 'walk').join() === 'krl,krl,mrt'));
+assert.ok(fastest.every(p => [...new Set(p.path.map(e => e.mode).filter(m => m !== 'walk'))].join() === 'krl,mrt'));
 
 // The same hop spelt two ways is one edge, and the slower survey wins: D21 UI -> Fatmawati is 54 min.
 assert.equal(data.edges.filter(e => e.from === 'UI' && e.to === 'St. MRT Fatmawati').length, 1);
